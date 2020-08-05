@@ -5,7 +5,7 @@
 ### Joseph
 - Component Card Dashboard = 1 
 - Analytics component = 3 
-- API Dashboard
+- API Dashboard = 1
 
 ### Caesar
 - Token Admin API = 2
