@@ -21,7 +21,7 @@
 - Base Code = 3
 
 ### Sekar
-- Component Navbar UI = 3
+- Component Sidebar UI = 3
 - Dashboard Page Components Handling = 1
 - Component Pagination UI = 1
 
