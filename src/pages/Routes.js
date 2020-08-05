@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import PageNotFound from "../components/PageNotFound";
+import PageNotFound from "./PageNotFound";
 
 export default function Routes() {
   return (
