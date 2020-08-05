@@ -1,0 +1,12 @@
+{
+  "apiHost": "",
+  "server": {
+    "port": ""
+  },
+  "menuData": [
+    {
+      "title": "",
+      "url": ""
+    }
+  ]
+}
