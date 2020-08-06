@@ -1,0 +1,18 @@
+.container {
+  padding: 20px;
+  background-image: linear-gradient(to bottom right, #8c0618, #d11154);
+  width: 500px;
+  height: 300px;
+  border-radius: 15px;
+}
+
+.image-logo { 
+    width: 70px;
+    height: 60px;
+}
+
+.valid {
+    color: 'grey';
+    font-family: 'serif';
+    font-size: 12;
+}
