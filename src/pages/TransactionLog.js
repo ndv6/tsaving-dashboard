@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 
+import NavigationBar from '../components/NavigationBar'
 import DataTable from '../components/DataTable'
 import '../styles/TransactionLog.css'
 
@@ -77,12 +78,19 @@ export default function TransactionLog() {
 
 
     return (    
-        <div className="content-table-tl">
-            <div className="tl-title">Transaction List :</div>
-            <button>filter</button>
-            <div className="table-tl-list">
-                <DataTable columns={columns} data={dataSource} pagePosition="bottomRight"/>
-            </div>   
+        <div className="transaction-log-constraint">
+            <NavigationBar></NavigationBar>
+            <div className="transaction-log-content">
+                    <div className="content-table-tl">
+                    <div className="tl-title">Transaction List :</div>
+                    <button>filter</button>
+                    <div className="table-tl-list">
+                        <DataTable columns={columns} data={dataSource} pagePosition="bottomRight"/>
+                    </div>   
+                </div>
+            </div>
         </div>
+
+        
     );
   }
