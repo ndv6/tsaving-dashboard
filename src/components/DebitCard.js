@@ -8,7 +8,7 @@ const { Title, Text } = Typography;
 
 export default function DebitCard(props) {
     return (
-        <div className="container">
+        <div className="card-container">
             <Row>
                 <Col>
                     <Title style={{ color: 'white', fontFamily: 'serif' }}>BAIT BANK</Title>
