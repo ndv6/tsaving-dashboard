@@ -3,50 +3,59 @@
 ## Task List
 
 ### Joseph
-- Component Card Dashboard UI + Function = 2 
-- Analytics Component UI + Function = 3
+- Component Card Dashboard UI = 1
+    - Active user
+    - Inactive user
+    - Total user
+- Integration Card Dashboard (Call API) = 1
+- Analytics Component UI + Integration = 3
+    - Total transaction
 
 ### Caesar
 - Build Token Admin API = 2
 - Build Login Admin API = 1
 - Database (Fix Connection Table, Create Admin Table, + Field Table Customer) = 1
-- Build API Get Card Details = 1
+- Error Page UI + Integration = 1
+- Build API All Transaction History = 1
 
 ### Yuly
-- Component Table UI = 3
-- Component Tab UI = 2
+- Component Table UI = 1
+- Component Tab UI = 1
+- Customer Transaction History Page Layouting + Integration = 2
+- Integration Resend Email = 1
+- Add Limit to Send Mail API = 1
 
 ### Vici
-- Component Modal UI = 2
+- Edit Profile UI + Integration = 2
 - Base Code = 3
+- Refactor Code = 1
 
 ### Sekar
-- Component Sidebar UI = 3
-- Dashboard Page Components Handling = 1
-- Component Pagination UI = 1
+- Component Sidebar UI = 1
+- Sidebar Redirect = 2
+    - Page Navigation
+    - Logout
+- Sidebar Integration = 1
+- App Context + Token = 1
 
 ### Azizah
 - Download Button UI + Function = 2
-- Filter Bar UI = 1
-- Login Page UI + Function = 1
-- Build API All Transaction History = 1
+- Filter Bar UI + Function = 1
+- Login Page UI + Validation + Integration = 3
 
 ### Andreas
-- Component Profile UI = 1
-- Details Profile Page Components Handling = 1
-- VA List Page Components Handling = 1
-- Transaction History Page Components Handling = 1
-- Debit Card Component UI + Function = 1
+- Profile Page Layouting + Integration = 2
+- VA List Page Layouting + Integration = 2
+- Debit Card Component UI + Integration = 2
 
 ### Jocelyn
-- Log Admin Page Components Handling = 1
-- Bulid Get Log API = 1 
+- Log Admin Page Layouting + Integration = 2
+- Build Get Log API = 1 
 - Build Create Log API = 1
-- Customer List Page Components Handling = 1
-- Edit Page Function = 1
+- Customer List Page Layouting + Integration = 2
 
 ### David
 - Search Bar UI + Function = 1
 - Build List All Customer API = 1
 - Database (Create Log Admin Table) = 1
-- All Transaction History Page Components Handling = 1
+- All Transaction History Page Layouting + Integration = 2
