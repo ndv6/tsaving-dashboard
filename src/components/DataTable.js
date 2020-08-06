@@ -8,10 +8,10 @@ export default function DataTable(props) {
         columns={props.columns}
         dataSource={props.data}
         size="middle"
-        loading={props.loading}
-        onChange={props.onChange}
+        // loading={props.loading}
+        // onChange={props.onChange}s
         pagination={{ position: [props.pagePosition] }}
-        scroll={{ x: props.x, y: props.y }}
+        // scroll={{ x: props.x, y: props.y }}
       />
     </div>
   );

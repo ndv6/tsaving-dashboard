@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./styles/index.css";
 import * as serviceWorker from "./serviceWorker";
 import 'antd/dist/antd.css';
+import 'font-awesome/css/font-awesome.min.css';
 import Routes from "./pages/Routes";
 
 ReactDOM.render(
