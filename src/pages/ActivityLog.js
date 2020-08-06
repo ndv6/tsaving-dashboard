@@ -7,11 +7,9 @@ import '../styles/ActivityLog.css';
 export default function ActivityLog() {
     return(
         <div className="activity-log-constraint">
-            <div className="activity-log-navbar">
-                <NavigationBar></NavigationBar>
-            </div>
+            <NavigationBar></NavigationBar>
             <div className="activity-log-content">
-            ActivityLog Content
+                ActivityLog Content
             </div>
         </div>
     )

@@ -7,9 +7,7 @@ import '../styles/Dashboard.css';
 export default function Dashboard() {
     return(
         <div className="dashboard-constraint">
-            <div className="dashboard-navbar">
-                <NavigationBar></NavigationBar>
-            </div>
+            <NavigationBar></NavigationBar>
             <div className="dashboard-content">
                 Dashboard Content
             </div>

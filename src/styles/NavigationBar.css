@@ -60,6 +60,7 @@ button{
     padding: 15px 20px;
     color: white;
     background-color: #d5152b;
+    text-align: left;
 }
 
 button:hover {

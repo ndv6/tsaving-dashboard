@@ -7,9 +7,7 @@ import '../styles/Customers.css';
 export default function Customers() {
     return(
         <div className="customers-constraint">
-            <div className="customers-navbar">
-                <NavigationBar></NavigationBar>
-            </div>
+            <NavigationBar></NavigationBar>
             <div className="customers-content">
                 Customers Content
             </div>

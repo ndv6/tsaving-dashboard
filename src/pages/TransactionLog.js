@@ -7,11 +7,9 @@ import '../styles/TransactionLog.css';
 export default function TransactionLog() {
     return(
         <div className="transaction-log-constraint">
-            <div className="transaction-log-navbar">
-                <NavigationBar></NavigationBar>
-            </div>
+            <NavigationBar></NavigationBar>
             <div className="transaction-log-content">
-            TransactionLog Content
+                TransactionLog Content
             </div>
         </div>
     )
