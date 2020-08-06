@@ -19,7 +19,7 @@
 - Build Login Admin API = 1
 - Database (Fix Connection Table, Create Admin Table, + Field Table Customer) = 1
 - Error Page UI + Integration = 1
-- Build API All Transaction History = 1
+- Build API Card Details = 1
 
 ### Yuly
 - Component Table UI = 1
