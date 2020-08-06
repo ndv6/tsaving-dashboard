@@ -16,3 +16,18 @@
     font-family: 'serif';
     font-size: 12;
 }
+
+.title .ant-typography{
+  color: white;
+  font-family: monospace;
+}
+
+.validLabel {
+  color: grey;
+  font-family: serif;
+  font-size: 12;
+}
+
+.validThru {
+  color: white;
+}
