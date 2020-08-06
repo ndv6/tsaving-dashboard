@@ -31,7 +31,7 @@
 ### Vici
 - Edit Profile UI + Integration = 2
 - Base Code = 3
-- Build Edit Profile (Admin) API = 1
+- Build Customer Edit Profile for Admin API = 1
 
 ### Sekar
 - Component Sidebar UI = 1
