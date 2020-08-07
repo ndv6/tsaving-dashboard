@@ -1,28 +1,41 @@
-import React from 'react';
-import { Row, Col, Typography, Divider } from 'antd';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Row, Col, Typography, Divider, Spin, Button } from 'antd';
 import {
     UserOutlined,
     MailOutlined,
     HomeOutlined,
     PhoneOutlined,
-    BankOutlined
+    BankOutlined,
+    ReloadOutlined
 } from '@ant-design/icons';
 import Tab from '../components/Tab'
 import ProfilePlaceholder from '../static/profile_placeholder.svg'
 import DebitCard from '../components/DebitCard'
-import DataTable from '../components/DataTable'
+import VAList from '../pages/VAList'
 import '../styles/CustomerProfile.css'
 
 const { Title, Text } = Typography;
 
-// TODO : use real data
+const DEFAULT_PROFILE = {
+    name: "",
+    email: "",
+    accNum: "",
+    address: "",
+    phone: ""
+}
+
+const DEFAULT_CARD = {
+    cardNum: "",
+    validThru: "",
+    name: ""
+}
 
 export default function CustomerProfile() {
     return (
         <div>
             <div className="title-row">
                 <Row>
-                    {/* TODO : link to home page */}
                     <Title level={3}>Tsaving</Title>
                 </Row>
             </div>
@@ -38,71 +51,84 @@ export default function CustomerProfile() {
             </Row>
             <Row>
                 <Col flex={1}>
-                    {/* TODO : tab type? */}
-                    <Tab tabs={[{ tabname: "Profile", components: <VAList /> }, { tabname: "Virtual Account List", components: <ProfilePage /> }, { tabname: "Profile 3", components: <ProfilePage /> }]} size={3} />
+                    <Tab tabs={[{ tabname: "Profile", components: <ProfileTab /> }, { tabname: "Virtual Account List", components: <VAList custId={1} /> }, { tabname: "Profile 3", components: <ProfileTab /> }]} size={3} />
                 </Col>
             </Row>
         </div>
     );
 }
 
-function ProfilePage() {
+function ProfileTab() {
+    const [profileData, setProfileData] = useState(DEFAULT_PROFILE);
+    const [cardData, setCardData] = useState(DEFAULT_CARD);
+    const [fetching, setFetching] = useState(true);
+    const [reload, setReload] = useState(false)
+
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: 'http://localhost:8000/v2/customers/cards/2008071802',
+            headers: { Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZHMiLCJleHBpcmVkIjoiMjAyMC0wOC0wN1QxNjo1NDowMS42MzMwNzIrMDc6MDAifQ.BrwjhRlGVPuFFAdJpAimppKKt2VksVQ0PJCI4DXoCnk" }
+        })
+            .then(function (response) {
+                if (response.data.status === "SUCCESS") {
+                    let validYear = response.data.data.expired.substring(2, 4);
+                    let validMonth = response.data.data.expired.substring(5, 7);
+                    setCardData({
+                        cardNum: response.data.data.card_num,
+                        validThru: `${validMonth}/${validYear}`,
+                        name: ""
+                    })
+                }
+            })
+            .catch(function (error) {
+                setReload(true)
+            })
+            .finally(function () {
+                setFetching(false)
+            });
+
+        axios({
+            method: 'get',
+            url: 'http://localhost:8000/v2/customers/1',
+            headers: { Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZHMiLCJleHBpcmVkIjoiMjAyMC0wOC0wN1QxNjo1NDowMS42MzMwNzIrMDc6MDAifQ.BrwjhRlGVPuFFAdJpAimppKKt2VksVQ0PJCI4DXoCnk" }
+        })
+            .then(function (response) {
+                if (response.data.status === "SUCCESS") {
+                    setProfileData({
+                        name: response.data.data.cust_name,
+                        email: response.data.data.cust_email,
+                        accNum: response.data.data.account_num,
+                        address: response.data.data.cust_address,
+                        phone: response.data.data.cust_phone
+                    })
+                }
+            })
+            .catch(function (error) {
+                setReload(true)
+            })
+            .finally(function () {
+                setFetching(false)
+            });
+    }, [fetching]);
+
+    if (fetching) {
+        return <Loader />
+    }
+
+    if (!fetching && reload) {
+        return <Reloader reload={() => setFetching(true)} />
+    }
+
     return (
         <div className="top-space">
             <Row>
                 <Col span={3}></Col>
                 <Col span={9}>
-                    <ProfileDetail name="Andreas" email="sayaandreas@gmail.com" accNum="77777777777" address="Jakarta" phone="0808080808080" />
+                    <ProfileDetail {...profileData} />
                 </Col>
                 <Col span={9}>
-                    <DebitCard name="Andreas" cardNum="0222 0111 0022 9999" validThru="19/20" />
-                </Col>
-                <Col span={4}></Col>
-            </Row>
-        </div>
-    )
-}
-
-const dataSource = [
-    {
-        key: '1',
-        name: 'Mike',
-        age: 32,
-        address: '10 Downing Street',
-    },
-    {
-        key: '2',
-        name: 'John',
-        age: 42,
-        address: '10 Downing Street',
-    },
-];
-
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-    },
-];
-
-function VAList() {
-    return (
-        <div className="top-space">
-            <Row>
-                <Col span={4}></Col>
-                <Col span={16}>
-                    <DataTable columns={columns} data={dataSource} pagePosition="bottomRight" />
+                    <DebitCard {...cardData} />
                 </Col>
                 <Col span={4}></Col>
             </Row>
@@ -155,4 +181,38 @@ function ProfileDetail(props) {
             </Col>
         </Row >
     );
+}
+
+export function Loader() {
+    return (
+        <div className="top-space">
+            <Row justify="center">
+                <Col>
+                    <Spin size="large" />
+                </Col>
+            </Row>
+        </div>
+    )
+}
+
+export function Reloader({ reload }) {
+    return (
+        <div className="top-space">
+            <Row gutter={[0, 16]} justify="center">
+                <Col>
+                    <Text>Network error</Text>
+                </Col>
+            </Row>
+            <Row justify="center">
+                <Col>
+                    <Button onClick={() => reload()} shape="circle" icon={<ReloadOutlined />} />
+                </Col>
+            </Row>
+            <Row justify="center">
+                <Col>
+                    <Text>Retry</Text>
+                </Col>
+            </Row>
+        </div>
+    )
 }
