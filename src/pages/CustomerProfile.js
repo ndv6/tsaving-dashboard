@@ -8,6 +8,7 @@ import NavigationBar from '../components/NavigationBar';
 import ProfilePlaceholder from '../static/profile_placeholder.svg'
 import VAListTab from './VAListTab'
 import ProfileTab from './ProfileTab'
+import CustomerTransactionLog from './CustomerTransactionLog'
 import '../styles/CustomerProfile.css'
 
 const { Title, Text } = Typography;
@@ -39,7 +40,7 @@ export default function CustomerProfile() {
                     </Row>
                     <Row>
                         <Col flex={1}>
-                            <Tab tabs={[{ tabname: "Profile", components: <ProfileTab /> }, { tabname: "Virtual Accounts", components: <VAListTab custId={1} /> }, { tabname: "Transaction History", components: <ProfileTab /> }]} size={3} />
+                            <Tab tabs={[{ tabname: "Profile", components: <ProfileTab /> }, { tabname: "Virtual Accounts", components: <VAListTab custId={1} /> }, { tabname: "Transaction History", components: <CustomerTransactionLog /> }]} size={3} />
                         </Col>
                     </Row>
                 </div>
