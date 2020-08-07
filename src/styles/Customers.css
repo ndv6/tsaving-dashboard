@@ -21,5 +21,17 @@
 .cl-search{
     max-width: 300px !important;
 }
-
+.verified{
+    color : green;
+}
+.not-verified{
+    color: red;
+}
+.filter-search{
+    display:flex;
+    justify-content: space-between;
+}
+.wrapper ant-input-wrapper{
+    width: 360px;
+}
 
