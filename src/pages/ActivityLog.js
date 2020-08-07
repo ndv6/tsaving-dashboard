@@ -2,14 +2,19 @@ import React, {useState} from 'react';
 import DataTable from '../components/DataTable'
 import "../styles/ActivityLog.css"
 import axios from 'axios';
-import { Table, Tag, Radio, Space } from 'antd';
+import NavigationBar from "../components/NavigationBar"
+import FilterBar from "../components/FilterBar"
+
 
 function getActivityLog(setList){
     //catch untuk nge throw error. kalau success bakal ke then.
     console.log("tes")
     axios({
       method : "GET",
-      url : "http://localhost:8000/admin/log/1"
+      url : "http://localhost:8000/v2/log/1",
+      headers:{
+        authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA3VDE1OjM2OjAzLjQ4NTAxNiswNzowMCJ9.UvM_vkPr9tib--hC1BP3zAWiamqArl_wTHw0_b-fL1Q'
+      }
     }).then((res) => {
       //success
       console.log(res.data)
@@ -93,16 +98,24 @@ export default function ActivityLog(){
     },[])
 
     return(
-    
-        <div className = "ActivityLog">
-                <DataTable 
+        <div className = "activity-log-constraint">
+           <NavigationBar></NavigationBar>
+           <div className = "activity-log-content">
+              <h1>Activity Log</h1>
+              <FilterBar></FilterBar>
+              <div className = "table">
+              <DataTable 
                   columns={columns}
                   data={list}
                   size="middle"
                   pagePosition = {"bottomRight"}
+                  x = "10px"
                 />
-                 
-            
+              </div>
+                
+           </div>
         </div>
+       
+                 
     )
 }

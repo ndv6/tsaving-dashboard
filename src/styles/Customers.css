@@ -1,17 +1,16 @@
-.activity-log-constraint {
+.customers-constraint {
     width: 100%;
     height: 100%;
 }
 
-.activity-log-navbar {
+.customers-navbar {
     width: 20%;
     height: 100%;
     position: fixed;
 }
 
-.activity-log-content {
+.customers-content {
     width: 80%;
     height: 100%;
     margin-left: 20%;
-    padding: 50px 50px;
 }
