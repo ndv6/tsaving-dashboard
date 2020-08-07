@@ -10,35 +10,35 @@ body {
     overflow: hidden;
 }
 
-.ant-form {
+.login-form .ant-form {
     margin-top: 10%;
 }
 
-.ant-col {
+.login-form .ant-col {
     display: contents;
 }
 
-.ant-row {
+.login-form .ant-row {
     display: grid;
 }
 
-.ant-form-item-explain div {
+.login-form .ant-form-item-explain div {
     text-align: left;
 }
 
-.ant-btn-primary {
+.login-form .ant-btn-primary {
     width: auto;
     background: #d5152b;
     border-color: #d5152b;
 }
 
-.ant-btn-primary:hover {
+.login-form .ant-btn-primary:hover {
     width: auto;
     background: #d5152b;
     border-color: #d5152b;
 }
 
-.ant-btn-primary:focus {
+.login-form .ant-btn-primary:focus {
     background: #d5152b;
     border-color: #d5152b;
 }
