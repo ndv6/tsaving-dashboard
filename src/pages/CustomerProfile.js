@@ -10,6 +10,7 @@ import {
 import Tab from '../components/Tab'
 import ProfilePlaceholder from '../static/profile_placeholder.svg'
 import DebitCard from '../components/DebitCard'
+import DataTable from '../components/DataTable'
 import '../styles/CustomerProfile.css'
 
 const { Title, Text } = Typography;
@@ -38,7 +39,7 @@ export default function CustomerProfile() {
             <Row>
                 <Col flex={1}>
                     {/* TODO : tab type? */}
-                    <Tab tabs={[{tabname: "Profile", components: <ProfilePage />}, {tabname: "Profile 2", components: <ProfilePage />}, {tabname: "Profile 3", components: <ProfilePage />}]} size={3} />
+                    <Tab tabs={[{ tabname: "Profile", components: <VAList /> }, { tabname: "Virtual Account List", components: <ProfilePage /> }, { tabname: "Profile 3", components: <ProfilePage /> }]} size={3} />
                 </Col>
             </Row>
         </div>
@@ -56,7 +57,54 @@ function ProfilePage() {
                 <Col span={9}>
                     <DebitCard name="Andreas" cardNum="0222 0111 0022 9999" validThru="19/20" />
                 </Col>
-                <Col span={3}></Col>
+                <Col span={4}></Col>
+            </Row>
+        </div>
+    )
+}
+
+const dataSource = [
+    {
+        key: '1',
+        name: 'Mike',
+        age: 32,
+        address: '10 Downing Street',
+    },
+    {
+        key: '2',
+        name: 'John',
+        age: 42,
+        address: '10 Downing Street',
+    },
+];
+
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+        key: 'age',
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+    },
+];
+
+function VAList() {
+    return (
+        <div className="top-space">
+            <Row>
+                <Col span={4}></Col>
+                <Col span={16}>
+                    <DataTable columns={columns} data={dataSource} pagePosition="bottomRight" />
+                </Col>
+                <Col span={4}></Col>
             </Row>
         </div>
     )
