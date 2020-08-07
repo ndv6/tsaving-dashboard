@@ -7,7 +7,7 @@ export default function Tab(props) {
   return (
     <div>
       <Tabs
-        defaultActiveKey="1"
+        defaultActiveKey="0"
         centered
         size={props.size}
         tabPosition={props.position}
