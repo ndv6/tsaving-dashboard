@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useHistory } from 'react-router-dom'
+import { NavLink, useHistory, Redirect } from 'react-router-dom'
 
 import logo from "../static/ic_tsaving.png";
 import '../styles/NavigationBar.css'; 
@@ -12,11 +12,14 @@ import {
 } from '@ant-design/icons';
 
 export default function NavigationBar(){
-    const history = useHistory()
+    const history = useHistory();
     function doLogout(){
-        // window.localStorage.removeItem('token');
+        window.localStorage.removeItem("token");
         history.push('/admin/login');
     }
+    if(!window.localStorage.getItem("token")){
+    return <Redirect to="/admin/login" />;
+  }
     return (
         <div className="navbar">
             <div className="navbar-logo">

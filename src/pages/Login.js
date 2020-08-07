@@ -1,31 +1,55 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import axios from 'axios';
+import { useHistory, Redirect } from 'react-router-dom';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import logo from "../static/ic_tsaving.png";
 import '../styles/Login.css';
+import config from "../config/config.json"
 
-export default function Dashboard() {
-    const layout = {
-        labelCol: {
-          span: 8,
-        },
-        wrapperCol: {
-          span: 16,
-        },
-      };
-      const tailLayout = {
-        wrapperCol: {
-          offset: 8,
-          span: 16,
-        },
-      };
-    
-        const onFinish = values => {
-          console.log('Success:', values);
-        };
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
+
+export default function Login() {
+  const history = useHistory();
+
+  const onFinish = (values) => {
+    axios.post(config.apiHost + "/v2/login", {
+      username : values.username,
+      password : values.password,
+    })
+    .then(function(res){
+      // success
+      window.localStorage.setItem("token", res.data.data.token)
+      history.push('/admin/dashboard')
+      console.log(res.data.data.token)
+    })
+    .catch((err) => {
+      //error
+      message.error("Username and password doesn't match");
+      console.log(err, "error");
+    })
+  };
       
-        const onFinishFailed = errorInfo => {
-          console.log('Failed:', errorInfo);
-        };
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+  };
+
+  if(window.localStorage.getItem("token")){
+    return <Redirect to="/admin/dashboard" />;
+  }
+
     return(
         <div className="login-form">
           <div className="login-logo">
