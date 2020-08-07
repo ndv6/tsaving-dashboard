@@ -3,7 +3,7 @@ import { Row, Col, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import DataTable from '../components/DataTable'
-import { Loader, Reloader } from './CustomerProfile'
+import { Loader, Reloader, reqBuilder } from './CustomerProfile'
 import '../styles/CustomerProfile.css'
 
 const columns = [
@@ -44,11 +44,7 @@ export default function VAList({ custId }) {
 
     useEffect(() => {
         if (fetching) {
-            axios({
-                method: 'get',
-                url: `http://localhost:8000/v2/va/${custId}/${page}`,
-                headers: { Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZHMiLCJleHBpcmVkIjoiMjAyMC0wOC0wN1QxNjo1NDowMS42MzMwNzIrMDc6MDAifQ.BrwjhRlGVPuFFAdJpAimppKKt2VksVQ0PJCI4DXoCnk" }
-            })
+            axios(reqBuilder('get', `http://localhost:8000/v2/va/${custId}/${page}`))
                 .then(function (response) {
                     console.log(response.data.data.data)
                     if (response.data.status === "SUCCESS") {
