@@ -8,7 +8,7 @@ import axios from "axios";
 function getDownloadButton(setList) {
     axios({
         method: "GET",
-        url: "http://localhost:8000/admin/transactions"
+        url: "http://localhost:8000/v2/transactions"
     }).then((res) => {
         //success
         setList(res.data.data)
