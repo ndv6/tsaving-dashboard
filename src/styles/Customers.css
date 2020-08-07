@@ -13,4 +13,13 @@
     width: 80%;
     height: 100%;
     margin-left: 20%;
+    padding: 24px;
 }
+.cl-title{
+    font-weight: bold;
+}
+.cl-search{
+    max-width: 300px !important;
+}
+
+

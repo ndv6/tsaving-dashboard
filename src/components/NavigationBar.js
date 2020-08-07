@@ -53,7 +53,7 @@ export default function NavigationBar(){
                     </li>
                 </ul>
                 <div className="navbar-bottom">
-                    <button activeClassName="navbar-logout-active" className="navbar-logout" onClick={doLogout}>
+                    <button className="navbar-logout" onClick={doLogout}>
                         <span className="navbar-icon"><LogoutOutlined/></span>
                         <span className="navbar-item">Logout</span> 
                     </button>  

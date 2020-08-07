@@ -49,7 +49,7 @@ ul li a:hover {
     padding: 0px 20px;
 }
 
-button{
+.navbar-logout{
     width: 20%;
     position: fixed;
     bottom: 0;
@@ -63,7 +63,7 @@ button{
     text-align: left;
 }
 
-button:hover {
+.navbar-logout:hover {
     background-color: white;
     color: #d5152b;
     font-weight: bold;
