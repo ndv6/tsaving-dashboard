@@ -10,13 +10,11 @@ function getDownloadButton(setList) {
         method: "GET",
         url: "http://localhost:8000/v2/transactions"
     }).then((res) => {
-        //success
+        
         setList(res.data.data)
-        console.log(res.data.data, 'success')
 
     }).catch((err) => {
-        //failed
-        console.log(err, 'error')
+
     }).finally(() => {
     })
 }
