@@ -3,7 +3,7 @@ import { DatePicker, Space } from 'antd';
 import moment from 'moment';
 
 
-export default function FilterBar(onChange) {
+export default function FilterBar(props) {
   const [startDate, setStartDate] = useState(moment())
   const [dataFilter, setDataFilter] = useState([])
 
@@ -19,7 +19,7 @@ export default function FilterBar(onChange) {
   return (
       <div>
         <Space direction="vertical" size={12}>
-          <DatePicker onChange={onChange} defaultValue={moment()} />
+          <DatePicker onChange={props.onChange} defaultValue={moment()} />
         </Space>
       </div>
   );
