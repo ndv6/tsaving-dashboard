@@ -8,7 +8,7 @@ const { Search } = Input;
 export default function SearchBar(props) {
     return (
         <div className="wrapper">
-        <Search className="searchbar-style" onSearch={props.onSearch} placeholder="Enter Keyword Here. . ." enterButton />
+        <Search onSearch={props.onSearch} placeholder="Enter Keyword Here. . ."/>
         </div>
     );
 }
