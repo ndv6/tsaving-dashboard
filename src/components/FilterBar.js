@@ -10,7 +10,6 @@ export default function FilterBar(props) {
   function onChange(date) {
     setStartDate(date)
     const newData = list.filter(item => moment(item.created_at.substring(0, 10)).isSame(date, 'date'))
-    console.log(JSON.stringify(newData), "filter data")
     setDataFilter(newData)
   }
 
