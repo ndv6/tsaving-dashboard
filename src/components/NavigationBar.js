@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, useHistory, Redirect } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 import logo from "../static/ic_tsaving.png";
 import "../styles/NavigationBar.css";
@@ -12,7 +13,10 @@ import {
 } from "@ant-design/icons";
 
 export default function NavigationBar() {
+  const context = useContext(AppContext);
+
   const history = useHistory();
+
   function doLogout() {
     window.localStorage.removeItem("token");
     history.push("/admin/login");
@@ -25,7 +29,7 @@ export default function NavigationBar() {
       <div className="navbar-logo">
         <img src={logo} alt="tsaving-logo" />
       </div>
-      <div className="navbar-admin">Hello Admin!</div>
+      <div className="navbar-admin">Hello {context.store.username}!</div>
       <div className="navbar-menu">
         <ul>
           <li>

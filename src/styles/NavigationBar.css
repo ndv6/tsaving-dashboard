@@ -1,70 +1,70 @@
 .navbar {
-    width: 20%;
-    height: 100%;
-    position: fixed;
-    background-color: #d5152b;
-    text-align: center;
+  min-width: 210px;
+  height: 100vh;
+  background-color: #d5152b;
+  text-align: center;
 }
 
 .navbar .navbar-logo img {
-    margin: 20px 0px;
+  max-width: 130px;
+  margin: 20px 0px;
 }
 
 .navbar .navbar-admin {
-    color: white;
-    margin: 20px 0px;
-    font-size: 14pt;
-    font-weight: bold;
-    font-style: italic;
+  color: white;
+  margin: 15px 10px 30px 10px;
+  font-size: 14pt;
+  font-weight: bold;
+  font-style: italic;
 }
 
 .navbar ul {
-    list-style-type: none;
-    margin: 0px;
-    padding: 0px;
-    text-align: left;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
 }
 
-.navbar ul li a{
-    display: block;
-    padding: 15px 20px;
-    color: white;
+.navbar ul li a {
+  display: block;
+  padding: 15px 20px;
+  color: white;
 }
 
 .navbar ul li a:hover {
-    width: 99%;
-    background-color: white;
-    color: #d5152b;
-    font-weight: bold;
+  width: 99%;
+  background-color: rgba(238, 207, 207, 0.966);
+  color: #d5152b;
+  font-weight: bold;
 }
 
 .navbar .navbar-list-active {
-    width: 99%;
-    background-color: white;
-    color: #d5152b;
-    font-weight: bold;
+  width: 99%;
+  background-color: white;
+  color: #d5152b;
+  font-weight: bold;
 }
 
 .navbar .navbar-item {
-    padding: 0px 20px;
+  padding: 0px 20px;
 }
 
-.navbar button{
-    width: 20%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: inline-block;
-    border: none;
-    margin: 0;
-    padding: 15px 20px;
-    color: white;
-    background-color: #d5152b;
-    text-align: left;
+.navbar .navbar-bottom .navbar-logout {
+  min-width: 210px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: left;
+  border: none;
+  margin: 0;
+  padding: 15px 20px;
+  color: white;
+  background-color: #d5152b;
+  text-align: left;
 }
 
-.navbar button:hover {
-    background-color: white;
-    color: #d5152b;
-    font-weight: bold;
+.navbar .navbar-logout:hover {
+  background-color: rgba(238, 207, 207, 0.966);
+  color: #d5152b;
+  font-weight: bold;
 }

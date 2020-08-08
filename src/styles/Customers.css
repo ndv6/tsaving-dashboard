@@ -1,16 +1,11 @@
 .customers-constraint {
-    width: 100%;
-    height: 100%;
-}
-
-.customers-navbar {
-    width: 20%;
-    height: 100%;
-    position: fixed;
+  width: 100%;
+  height: 100vh;
+  display: flex;
 }
 
 .customers-content {
-    width: 80%;
-    height: 100%;
-    margin-left: 20%;
+  width: 80%;
+  height: 100%;
+  overflow: auto;
 }
