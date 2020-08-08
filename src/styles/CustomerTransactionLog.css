@@ -1,0 +1,26 @@
+.customerTransaction {
+  margin-left: 10vh;
+  margin-right: 10vh;
+}
+
+.customerTransaction pageTitle {
+  margin-bottom: 5vh;
+}
+
+.customerTransaction filterBar {
+  margin-top: 5vh;
+}
+
+.customerTransaction wrapper{
+  justify-content: right;
+} 
+
+.customerTransaction ant-input {
+  width: 100vh;
+  display: flex;
+}
+
+.customerTransaction searchFilter {
+  margin-left: 0vh;
+  margin-right: 0vh;
+}

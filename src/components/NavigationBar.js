@@ -81,19 +81,15 @@ export default function NavigationBar() {
               <span className="navbar-item">Activity Log</span>
             </NavLink>
           </li>
+          <li>
+            <div className="navbar-list" onClick={doLogout}>
+              <span className="navbar-icon">
+                <LogoutOutlined />
+              </span>
+              <span className="navbar-item">Logout</span>
+            </div>
+          </li>
         </ul>
-        <div className="navbar-bottom">
-          <button
-            activeClassName="navbar-logout-active"
-            className="navbar-logout"
-            onClick={doLogout}
-          >
-            <span className="navbar-icon">
-              <LogoutOutlined />
-            </span>
-            <span className="navbar-item">Logout</span>
-          </button>
-        </div>
       </div>
     </div>
   );

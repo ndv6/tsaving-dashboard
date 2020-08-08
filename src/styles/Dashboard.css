@@ -1,11 +1,11 @@
 .dashboard-constraint {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   display: flex;
 }
 
 .dashboard-content {
-  width: 100%;
+  width: 100vw;
   height: 100%;
   overflow: auto;
 }
