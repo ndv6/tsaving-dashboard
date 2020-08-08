@@ -56,7 +56,7 @@ const columns = [
         dataIndex: 'is_deleted',
         key: 'is_deleted',
         render: (text) => {
-            if (text === true){
+            if (text){
                 return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
             }
             else{
@@ -173,11 +173,11 @@ function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, s
 
 export default function Customers() {
     const [listCust,setListCust] = useState([]);
-    const [countData, setCountData] = React.useState(0)
-    const [loading, setLoading] = React.useState(false)
-    const [paramDate, setDate] = React.useState(null)
-    const [paramSearch, setSearch] = React.useState("")
-    const [paramPage, setPage] = React.useState(1)
+    const [countData, setCountData] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [paramDate, setDate] = useState(null)
+    const [paramSearch, setSearch] = useState("")
+    const [paramPage, setPage] = useState(1)
     
     function pageChange(page){
         setPage(page)
