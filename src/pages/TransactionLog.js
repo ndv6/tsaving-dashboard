@@ -28,6 +28,11 @@ function getTransactionLog(setListTL){
   }
 export default function TransactionLog() {
     const [listTL,setListTL] = useState([]);
+    const [countData, setCountData] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [paramDate, setDate] = useState(null);
+    const [paramSearch, setSearch] = useState("");
+    const [paramPage, setPage] = useState(1);
 
     //prepare column
     const columns = [
@@ -68,22 +73,11 @@ export default function TransactionLog() {
         }
 
     ];
-    const dataSource = [
-        {   
-            key: '1',
-            accnum : "8220912312",
-            from : "main acc",
-            to : "882727282",
-            desc: "asdsad",
-            amount: "87.000",
-            date: "19-10-2020 08:00"
-        },        
-    ];
 
     React.useEffect(() => {
         getTransactionLog(setListTL)
         console.log(listTL);
-      },[])
+      },[setListTL])
 
     return ( 
         // <div className="content-table-tl">
@@ -106,7 +100,7 @@ export default function TransactionLog() {
                 <div className="table-tl-list">
                     <Table 
                     columns={columns} 
-                    data={dataSource} 
+                    data={listTL} 
                     size="middle"
                     pagePosition="bottomRight"/>
                 </div>  
