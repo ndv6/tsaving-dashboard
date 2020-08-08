@@ -1,64 +1,68 @@
 # tsaving-dashboard
 
-## Backlog
-- Refactor Code = 1
-
 ## Task List
 
 ### Joseph
-- Component Card Dashboard UI = 1
-    - Active user
-    - Inactive user
-    - Total user
-- Integration Card Dashboard (Call API) = 1
-- Analytics Component UI + Integration = 3
-    - Total transaction
+- User Statistic UI = 1
+- User Statistic Integration = 2
+- Transaction Statistic UI = 1
+- Transaction Statistic Integration = 2
 
 ### Caesar
-- Build Token Admin API = 2
-- Build Login Admin API = 1
-- Database (Fix Connection Table, Create Admin Table, + Field Table Customer) = 1
-- Error Page UI + Integration = 1
-- Build API Card Details = 1
+- Build Admin API + Database = 2
+- Build User Statistic API = 1
+- Build Card Details API = 1
+- Build Customer Details API = 1
+- Error Page UI = 1
 
 ### Yuly
-- Component Table UI = 1
+- Customer Transaction History Page UI = 1
+- Customer Transaction History Page Integration = 1
+- Build API Search Customer Transaction History = 2
+- Rate Limiter Send Mail = 2
 - Component Tab UI = 1
-- Customer Transaction History Page Layouting + Integration = 2
-- Integration Resend Email = 1
-- Add Limit to Send Mail API = 1
 
 ### Vici
-- Edit Profile UI + Integration = 2
-- Base Code = 3
-- Build Customer Edit Profile for Admin API = 1
+- Edit Customer UI = 1
+- Edit Customer UI Integration = 2
+- Build Customer Edit Profile for Admin API = 2
+- Base Code = 2
 
 ### Sekar
-- Component Sidebar UI = 1
-- Sidebar Redirect = 2
-    - Page Navigation
-    - Logout
-- Sidebar Integration = 1
-- App Context + Token = 1
+- Login Page UI = 1
+- Login Page Integration = 2
+- Sidebar + Logout = 1
+- App Context = 3
 
 ### Azizah
-- Download Button UI + Function = 2
-- Filter Bar UI + Function = 1
-- Login Page UI + Validation + Integration = 3
+- Build Transaction Statistic API = 1
+- Build Transaction History List API = 1
+- Build Filter by Date and Account for Transaction History API = 1
+- Export Function + CSV = 1
+- Build Filter by Date and Account for Admin Activity API = 1
+- Component Table + Filter Bar UI = 1
 
 ### Andreas
-- Profile Page Layouting + Integration = 2
-- VA List Page Layouting + Integration = 2
-- Debit Card Component UI + Integration = 2
+- Customer Detail Page UI = 2
+- Customer Detail Page Integration = 1
+- VA List Page UI = 1
+- VA List Page Integration = 1
+- Build VA List API = 1
 
 ### Jocelyn
-- Log Admin Page Layouting + Integration = 2
-- Build Get Log API = 1 
-- Build Create Log API = 1
-- Customer List Page Layouting + Integration = 2
+- Build Add Admin Log API = 1
+- Soft Delete Customer Integration = 1
+- Build Soft Delete Customer API = 1
+- Admin Activity Page UI = 1
+- Admin Activity Page Integration = 1
+- Build Admin Activity List API = 1 
+- Build Log Admin API = 1
 
 ### David
-- Search Bar UI + Function = 1
+- Customer List Page UI = 1
+- Customer List Page Integration
+    - Filter = 1
+    - Search = 1
 - Build List All Customer API = 1
-- Database (Create Log Admin Table) = 1
-- All Transaction History Page Layouting + Integration = 2
+- Transaction History List Page UI = 1
+- Transaction History List Page Integration = 1
