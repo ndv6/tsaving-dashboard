@@ -15,8 +15,25 @@
     margin-left: 20%;
 }
 
-.dashboard-content-user {
-    width: 80%;
+.dashboard-content-section {
+    width: 90%;
     margin: auto;
     padding-top: 2%;
+}
+
+.dashboard-content-left {
+    width: 30%;
+}
+
+.dashboard-content-right {
+    width: 70%;
+}
+
+.dashboard-content-chart {
+    display: flex;
+    height: 100%;
+}
+
+.dashboard-chart-card{
+    width: 48%;
 }
