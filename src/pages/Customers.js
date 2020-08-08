@@ -125,8 +125,44 @@ function clickEditCustomer(rowData){
 function clickDeleteCustomer(rowData){
     console.log(rowData, "delete here");
 }
-function clickMailCustomer(rowData){
-    console.log(rowData, "sendmail here");
+
+async function clickMailCustomer(rowData){
+    let customerToken = await getTokenCustomer(rowData.cust_email)
+    axios({
+        headers: {
+            'Content-Type': "application/json",
+          },
+          method: 'POST',
+          url: "http://localhost:8082/sendMail",
+          data: {
+              email: rowData.cust_email,
+              token: customerToken
+          }
+    }).then((res) => {
+        console.log(res.data)
+    }).catch((err) =>{
+        console.log(JSON.stringify(err), 'error')
+    })
+}
+
+function getTokenCustomer(customerEmail) {
+    return new Promise(function (resolve, reject) {
+        axios({
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization' : window.localStorage.getItem("token"),
+            },
+            method: 'POST',
+            url: 'http://localhost:8000/v2/get-token',
+            data: {
+                email: customerEmail
+            }
+        }).then((res) => {
+            resolve(res.data.data.token)
+        }).catch((err) => {
+            reject(err)
+        })
+    })
 }
 
 function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){

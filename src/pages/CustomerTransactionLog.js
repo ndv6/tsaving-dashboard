@@ -5,7 +5,7 @@ import FilterBar from '../components/FilterBar'
 import SearchBar from '../components/SearchBar'
 import { Row, Col } from 'antd';
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
+import { Redirect } from "react-router-dom";
 
 const columns = [
   {
@@ -35,7 +35,7 @@ const columns = [
   },
 ];
 
-function GetTransaction(accNum, page, day, month, year, search, setList, setCountData, setLoading) {
+function GetTransaction(token, accNum, page, day, month, year, search, setList, setCountData, setLoading) {
   accNum = 2007236310
   let url = ""
   if ((day == null) && (month == null) && (year == null) && (search === "")) {
@@ -52,7 +52,7 @@ function GetTransaction(accNum, page, day, month, year, search, setList, setCoun
   axios({
     headers: {
       'Content-Type': "application/json",
-      "Authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA3VDE5OjU4OjEwLjgxMzgwMyswNzowMCJ9.aHdQS5-sXPzCpqPoprE2UvyBY19cNS_H1X8D3djazFY",
+      "Authorization" : token,
     },
     method: 'GET',
     url: url,
@@ -93,37 +93,54 @@ export default function CustomerTransactionLog(props) {
   const [date, setDate] = React.useState(null)
   const [search, setSearch] = React.useState("")
   const [loading, setLoading] = React.useState(false)
+  const token = window.localStorage.getItem("token")
 
   React.useEffect(() => {
-    GetTransaction(props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
+    GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
   }, [setList, setLoading])
 
   function pageChange(page) {
     setPage(page)
     if (date === null) {
-      GetTransaction(props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
     } else {
-      GetTransaction(props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), search, setList, setCountData, setLoading)
     }
   }
 
+  if (!window.localStorage.getItem("token")) {
+    return <Redirect to="/admin/login" />;
+  }
+
   function filterDate(date) {
+    setPage(1)
     if (date !== null) {
       let day = date.date().toString()
       let month = (date.month() + 1).toString()
       let year = date.year().toString()
       setDate(date)
-      GetTransaction(props.accNum, page, day, month, year, search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, day, month, year, search, setList, setCountData, setLoading)
+    } else {
+      setDate(null)
+      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
     }
   }
 
   function filterSearch(keyword) {
+    setPage(1)
     if (keyword !== "") {
       setSearch(keyword)
       if (date === null) {
-        GetTransaction(props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
       } else {
-        GetTransaction(props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
+      }
+    } else {
+      setSearch("")
+      if (date === null) {
+        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
+      } else {
+        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
       }
     }
   }
@@ -134,20 +151,17 @@ export default function CustomerTransactionLog(props) {
         <h1>Transaction History</h1>
       </div>
       <div style={{ marginBottom : '5vh'}}>
-        <Row>
-          <Col span={6}>
-            <FilterBar onChange={(date) => filterDate(date)}/>
-          </Col>
-          <Col span={18}>
-            <SearchBar onSearch={(value) => filterSearch(value)}/>
-          </Col>
-        </Row>
+        <div className = "filter-search">
+          <FilterBar onChange={(date) => filterDate(date)}/>
+          <SearchBar onSearch={(value) => filterSearch(value)} className="search-content"/>
+        </div>
       </div>
       <div>
         <p>Total Data : {countData}</p>
       </div>
       <div className="dataTable">
         <DataTable 
+          current={page}
           columns={columns} 
           data={list} 
           pagePosition="bottomRight" 
