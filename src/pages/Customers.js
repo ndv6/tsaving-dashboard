@@ -6,23 +6,17 @@ import FilterBar from '../components/FilterBar'
 
 import axios from 'axios'
 
-import { Tag } from 'antd'
-
 import {
-    HomeOutlined,
-    SettingFilled,
-    SmileOutlined,
-    SyncOutlined,
-    LoadingOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    EyeTwoTone,
+    EditOutlined,
+    DeleteTwoTone,
+    LockTwoTone
   } from '@ant-design/icons';
   
 import '../styles/Customers.css'; 
 
-
-
-function searchCust(value){
-    console.log(value);
-}
 const columns = [
     {
         title: 'Name',
@@ -40,129 +34,199 @@ const columns = [
         key: 'cust_email'
     },
     {
-        title: 'Status',
+        title: 'Verified',
         dataIndex: 'is_verified',
         key: 'is_verified',
         render: (text) => {
-
-            if (text == 'Verified'){
-                return <div onClick={test} className = "verified"> <HomeOutlined /> {text}</div>
+            if (text === 'Verified'){
+                return <CheckCircleOutlined className = "cus-icon verified" />
             }
             else{
-                return <div className = "not-verified">{text}</div>
+                return <CloseCircleOutlined className = "cus-icon warn "/>
             }
-            
         }
     },
     {
-        title: 'Amount',
-        dataIndex: 'channel',
-        key: 'channel'
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date'
     },
     {
-        title: '',
-        dataIndex: 'IsDeleted',
-        key: 'IsDeleted'
+        title: 'Status',
+        dataIndex: 'is_deleted',
+        key: 'is_deleted',
+        render: (text) => {
+            if (text === true){
+                return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
+            }
+            else{
+                return <CheckCircleOutlined className = "cus-icon verified" />
+            }
+        }
+    },
+    {
+        title: 'Action',
+        dataIndex: 'action',
+        key: 'action',
+        render: (text) => {
+            if(text.is_deleted){
+                return (
+                    <div className="field-action">
+                    <EyeTwoTone 
+                    className = "cus-icon" 
+                    onClick={() => clickDetailCustomer(text)} />
+                    
+                    <EditOutlined 
+                    className = "cus-icon-action edit" 
+                    onClick={() => clickEditCustomer(text)} />
+                    </div>
+                )
+            }else{
+                return (
+                    <div className="field-action">
+                    <EyeTwoTone 
+                    className = "cus-icon" 
+                    onClick={() => clickDetailCustomer(text)} />
+                    
+                    <EditOutlined 
+                    className = "cus-icon-action edit" 
+                    onClick={() => clickEditCustomer(text)} />
+                    
+                    <DeleteTwoTone 
+                    twoToneColor = "red" 
+                    className = "cus-icon-action" 
+                    onClick={() => clickDeleteCustomer(text)} />
+                    </div>
+                )
+            }
+        },
     }
 
 ];
-const dataSource = [
-    {   
-        key: '1',
-        account_num : "8220912312",
-        from_account : "main acc",
-        dest_account : "882727282",
-        tran_amount: "asdsad",
-        description: "87.000",
-        created_at: "19-10-2020 08:00"
-    },        
-];
-function test(){
-    console.log('asd');
+
+function clickDetailCustomer(rowData){
+    console.log(rowData, "detail here");
+}
+function clickEditCustomer(rowData){
+    console.log(rowData, "edit here");
+}
+function clickDeleteCustomer(rowData){
+    console.log(rowData, "delete here");
 }
 
+function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
+    setLoading(true)
+    axios({
+        headers: {
+        'Content-Type': "application/json",
+        "Authorization" : window.localStorage.getItem("token"),
+        },
+        method : "POST",
+        url : "http://localhost:8000/v2/customers/list/" + paramPage,
+        data:   {
+                    filter_date: paramDate,
+                    filter_search: paramSearch
+                }
+    }).then((res) => {
+        setCountData(res.data.data.total)
+        const tableData = (res.data.data.list || []).map((value, index) => {
+            let singleRow = {}
+            let field_verif = "";
+            if(value.is_verified === true){
+                field_verif = "Verified";
+            }
+            else{field_verif = "Unverified"}
+            let created = value.created_at.split('T');
+
+            //checkdeleted
+            let deletedraw = value.is_deleted.split('T');
+            let deletedfix =true;
+            if(deletedraw[0] === '1970-01-01'){
+                deletedfix = false;
+            }
+            singleRow['key'] = index
+            singleRow['cust_name'] = value.cust_name
+            singleRow['account_num'] = value.account_num
+            singleRow['cust_email'] = value.cust_email
+            singleRow['is_verified'] =  field_verif //value.is_verified
+            singleRow['date'] = created[0]
+            singleRow['is_deleted'] = deletedfix
+            //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
+            let dataRow = {}
+            dataRow['cust_name'] = value.cust_name
+            dataRow['account_num'] = value.account_num
+            dataRow['cust_email'] = value.cust_email
+            dataRow['is_verified'] =  field_verif
+            dataRow['cust_phone'] = value.cust_phone
+            dataRow['is_deleted'] = deletedfix
+
+            singleRow['action'] = dataRow
+            return singleRow
+        })
+        setListCust(tableData)
+    }).catch((err) => {
+        console.log(JSON.stringify(err), 'error');
+    }).finally(() => {
+        setLoading(false);
+    })
+}
 
 export default function Customers() {
-    function getCustomerList(setListCust,paramDate='',paramSearch=''){
-        //catch untuk nge throw error. kalau success bakal ke then.
-        axios({
-            headers: {
-            'Content-Type': "application/json",
-            "Authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkYXZpZCIsImV4cGlyZWQiOiIyMDIwLTA4LTA3VDE5OjQyOjQ0LjM5Mjc2NSswNzowMCJ9.n_cYlxYUyBA8JYEAPLaHPd-xXyixcDX9WDsAC5qRCWc",
-            },
-          method : "POST",
-          url : "http://localhost:8000/v2/customers/list/1",
-          data: {
-            filter_date: paramDate,
-            filter_search: paramSearch
-          }
-        }).then((res) => {
-            //success
-            let tableData = []
-            console.log(res.data.data.list)
-            res.data.data.list.map((value, index) => {
-                let singleRow = {}
-                const formatter = new Intl.NumberFormat('id', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 2
-                })
-                let field_verif = "";
-                if(value.is_verified == true){
-                    field_verif = "Verified";
-                }
-                else{field_verif = "Unverified"}
-                // console()
-                singleRow['key'] = index
-                singleRow['cust_name'] = value.cust_name
-                singleRow['account_num'] = value.account_num
-                singleRow['cust_email'] = value.cust_email
-                singleRow['is_verified'] =  field_verif //value.is_verified
-                singleRow['channel'] = value.channel
-                singleRow['IsDeleted'] = value.IsDeleted
-                tableData.push(singleRow)
-            })
-            setListCust(tableData)
-        }).catch((err) => {
-          //failed
-          console.log(err,'error')
-        }).finally(() => {
-          console.log("finally")
-          // setLoading(false);
-        })
-    }
-    function pageChange(page){
-        console.log(page)
-    }
-    React.useEffect(() => {
-        getCustomerList(setListCust)
-      },[])
-
     const [listCust,setListCust] = useState([]);
+    const [countData, setCountData] = React.useState(0)
+    const [loading, setLoading] = React.useState(false)
+    const [paramDate, setDate] = React.useState(null)
+    const [paramSearch, setSearch] = React.useState("")
+    const [paramPage, setPage] = React.useState(1)
+    
+    function pageChange(page){
+        setPage(page)
+    }
+    function filterDate(date) {
+        if (date !== null) {
+          let day = date.date().toString();
+          let month = (date.month() + 1).toString();
+          let year = date.year().toString();
+          let fixdate = year + "-" + month + "-" + day;
+          setDate(fixdate);
+        }
+        else{
+            setDate("")
+        }
+    }
+    function searchCust(value){
+        setSearch(value)
+    }
+
+    React.useEffect(() => {
+        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading)
+    },[setListCust,paramPage,paramDate,paramSearch])
+    
     return(
         <div className="customers-constraint">
             <NavigationBar></NavigationBar>
             <div className="customers-content">
-                <div className="cl-title"> List All Customers :</div>
+                <div className="cl-title"> List All Customers </div>
                 <div className = "filter-search">
-                    <FilterBar />
+                    <FilterBar  onChange={(date) => filterDate(date)} />
                     <SearchBar 
                     className="search-content"
-                    style ={{width:"500px"}}
                     onSearch={(value) => searchCust(value)} />
 
                 </div>
                 
-
+                <p>Total Data : {countData}</p>
                 <div className="cl-table">
                     <DataTable 
                     columns={columns} 
                     data={listCust} 
-                    size="middle"
-                    onPageChange={(page) =>  pageChange(page)}
-                    pagePosition="bottomRight"/>
-                </div>
-                
+                    pagePosition="bottomRight" 
+                    pageSize={20} 
+                    totalData={countData} 
+                    onPageChange={(page) => pageChange(page)}
+                    loading={loading}
+                    />
+                </div>         
             </div>
         </div>
     )
