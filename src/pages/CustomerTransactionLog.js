@@ -3,9 +3,9 @@ import DataTable from '../components/DataTable'
 import '../styles/CustomerTransactionLog.css'
 import FilterBar from '../components/FilterBar'
 import SearchBar from '../components/SearchBar'
-import { Row, Col } from 'antd';
 import axios from 'axios'
 import { Redirect } from "react-router-dom";
+import { FormatLogDescription } from '../utils/Helper'
 
 const columns = [
   {
@@ -69,7 +69,7 @@ function GetTransaction(token, accNum, page, day, month, year, search, setList, 
         singleData['key'] = index
         singleData['from_account'] = value.from_account
         singleData['dest_account'] = value.dest_account
-        singleData['description'] = value.description
+        singleData['description'] = FormatLogDescription(value.description)
         singleData['tran_amount'] = formatter.format(value.tran_amount)
         singleData['created_at'] = new Date(value.created_at).toUTCString()
         return singleData

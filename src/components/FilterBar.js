@@ -18,7 +18,7 @@ export default function FilterBar(props) {
   return (
       <div>
         <Space direction="vertical" size={12}>
-          <DatePicker onChange={props.onChange} defaultValue={moment()} />
+          <DatePicker onChange={props.onChange} />
         </Space>
       </div>
   );

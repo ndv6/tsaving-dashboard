@@ -6,11 +6,15 @@ import Customers from "./Customers";
 import TransactionLog from "./TransactionLog";
 import ActivityLog from "./ActivityLog";
 import PageNotFound from "./PageNotFound";
+import CustomerTransactionLog from "./CustomerTransactionLog";
 
 export default function Routes() {
   return (
     <Router>
       <Switch>
+        <Route exact path="/admin">
+          <CustomerTransactionLog />
+        </Route>
         <Route exact path="/admin/login">
           <Login />
         </Route>
