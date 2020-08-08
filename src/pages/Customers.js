@@ -12,7 +12,8 @@ import {
     EyeTwoTone,
     EditOutlined,
     DeleteTwoTone,
-    LockTwoTone
+    LockTwoTone,
+    MailTwoTone
   } from '@ant-design/icons';
   
 import '../styles/Customers.css'; 
@@ -79,7 +80,14 @@ const columns = [
                     <EditOutlined 
                     className = "cus-icon-action edit" 
                     onClick={() => clickEditCustomer(text)} />
+
+                    <MailTwoTone 
+                    className = "cus-icon-action" 
+                    onClick={() => clickMailCustomer(text)} />
+                    
                     </div>
+
+                    
                 )
             }else{
                 return (
@@ -92,6 +100,10 @@ const columns = [
                     className = "cus-icon-action edit" 
                     onClick={() => clickEditCustomer(text)} />
                     
+                    <MailTwoTone 
+                    className = "cus-icon-action" 
+                    onClick={() => clickMailCustomer(text)} />
+
                     <DeleteTwoTone 
                     twoToneColor = "red" 
                     className = "cus-icon-action" 
@@ -112,6 +124,9 @@ function clickEditCustomer(rowData){
 }
 function clickDeleteCustomer(rowData){
     console.log(rowData, "delete here");
+}
+function clickMailCustomer(rowData){
+    console.log(rowData, "sendmail here");
 }
 
 function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
