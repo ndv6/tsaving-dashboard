@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import DataTable from '../components/DataTable';
-import FilterBar from '../components/FilterBar'
+import FilterBar from '../components/FilterBar';
+import { Popconfirm, message, Button } from 'antd';
 
 import axios from 'axios'
 
@@ -17,6 +18,7 @@ import {
   } from '@ant-design/icons';
   
 import '../styles/Customers.css'; 
+import { render } from '@testing-library/react';
 
 const columns = [
     {
@@ -104,11 +106,14 @@ const columns = [
                     className = "cus-icon-action" 
                     onClick={() => clickMailCustomer(text)} />
 
-                    <DeleteTwoTone 
-                    twoToneColor = "red" 
-                    className = "cus-icon-action" 
-                    onClick={() => clickDeleteCustomer(record.account_num)} />
+                    <Popconfirm placement="top" title="Are you sure?" onConfirm={() => clickDeleteCustomer(record.account_num)} okText="Yes" cancelText="No">
+                        <DeleteTwoTone 
+                        twoToneColor = "red" 
+                        className = "cus-icon-action" 
+                         />
+                    </Popconfirm>
                     </div>
+                    
                 )
             }
         },
@@ -123,6 +128,7 @@ function clickEditCustomer(rowData){
     console.log(rowData, "edit here");
 }
 function clickDeleteCustomer(account_num){
+ 
     axios({
         method : "POST",
         url : "http://localhost:8000/v2/customers/delete",
@@ -130,19 +136,26 @@ function clickDeleteCustomer(account_num){
             account_num : account_num,
         },
         headers:{
-          authorization: window.localStorage.getItem("token")
+            authorization: window.localStorage.getItem("token")
         }
-      }).then((res) => {
-            alert("Customer Deleted Successfully!")
-      }).catch((err) => {
+        }).then((res) => {
+            message.info(res.data.message);
+            setTimeout(function() {
+                window.location.reload()
+                }, 1500);
+            
+        }).catch((err) => {
         
-      }).finally(() => {
+        }).finally(() => {
         
-      })
+        })
+          
+   
 }
 function clickMailCustomer(rowData){
     console.log(rowData, "sendmail here");
 }
+
 
 function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
     setLoading(true)
