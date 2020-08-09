@@ -6,29 +6,57 @@ import '../styles/Dashboard.css';
 import ComponentCard from '../components/Card';
 import Axios from 'axios';
 import { DASHBOARD_ENDPOINT } from '../constants/ApiEndpoints';
+import { Pie } from "ant-design-pro/lib/Charts"
+import { Card, Divider } from 'antd';
 
-function getDashboardData(setList, setLoading){
+function getDashboardData(setData, setState){
     Axios({
-        headers: {
-            "Content-Type": "null",
-            "Accept": "application/json",
-            "Access-Control-Allow-Origin" : "*"
-        },
         method: "GET",
-        url: "http://localhost:8000/v2/dashboard"
+        url: config.apiHost + DASHBOARD_ENDPOINT
     }).then(function(res){
       //Success
-      setList(res.data)
-      console.log(res.data,'success');
+      setData(res.data)
+      userComponentUI(res.data.data.dashboard_user)
+      console.log("success")
     })
     .catch(function(err){
       //Error
-      console.log(err,'error');
+      console.log(err, "error");
     })
     .finally(function(){
-      setLoading(false);
+      setState(false);
     });
-  }
+}
+
+function userComponentUI(dashboardUserData) {
+    var total = 0
+    var pieData = []
+    if (dashboardUserData ) {
+        total = dashboardUserData.active_user + dashboardUserData.inact_user
+        pieData = 
+        [
+            {
+                x: "Active User",
+                y: dashboardUserData.active_user
+            },
+            {
+                x: "Inactive User",
+                y: dashboardUserData.inact_user
+            }
+        ];
+    }
+    return <Pie
+        hasLegend
+        total={[
+            <Divider></Divider>,
+            <h3>Total Users {total}</h3>
+        ]}
+        animate={true}
+        valueFormat={val => <span dangerouslySetInnerHTML={{ __html: " - " + val + " users" } } />}
+        data={pieData}
+        height={225}
+    />   
+}
 
 export default function Dashboard() {
     const [state, setState] = React.useState({
@@ -37,8 +65,8 @@ export default function Dashboard() {
     const [data, setData] = React.useState({})
 
     React.useEffect(function () {
+        console.log("get dashboard data")
         getDashboardData(setData, setState)
-        console.log(data)
     }, [])
 
     return(
@@ -46,15 +74,10 @@ export default function Dashboard() {
             <NavigationBar></NavigationBar>
             <div className="dashboard-content">
                 <div className="dashboard-content-user">
-                    <ComponentCard 
-                    className={"card-dashboard-act-user"} 
-                    title={"Users"} 
-                    isSmall={false} 
-                    isLoading={state.loading} 
-                    isBordered={true}
-                    hover_effect={true}
-                    cover={""}
-                    extra={""}/>
+                    <Card 
+                    title={<h1>Number of users</h1>}
+                    size={"small"}
+                    loading={state}>{userComponentUI(state ? null : data.data.dashboard_user)} </Card>
                 </div>
             </div>
         </div>

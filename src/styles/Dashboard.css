@@ -15,7 +15,8 @@
     margin-left: 20%;
 }
 
-.card-dashboard-act-user {
-    margin-left: 20px;
-    padding-top: 20px;
+.dashboard-content-user {
+    width: 80%;
+    margin: auto;
+    padding-top: 2%;
 }
