@@ -5,7 +5,7 @@ import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
 import { Popconfirm, message, Button } from 'antd';
 
-import axios from 'axios'
+import axios from "axios";
 
 import {
     CheckCircleOutlined,
@@ -21,11 +21,11 @@ import '../styles/Customers.css';
 import { useHistory } from 'react-router-dom';
 
 
-function clickDetailCustomer(rowData){
-    console.log(rowData, "detail here");
+function clickDetailCustomer(rowData) {
+  console.log(rowData, "detail here");
 }
-function clickEditCustomer(rowData){
-    console.log(rowData, "edit here");
+function clickEditCustomer(rowData) {
+  console.log(rowData, "edit here");
 }
 function clickMailCustomer(rowData){
     console.log(rowData, "sendmail here");
@@ -59,62 +59,72 @@ function clickDeleteCustomer(account_num,setLoading,history){
    
 }
 
+function getCustomerList(
+  paramPage = 1,
+  paramDate = "",
+  paramSearch = "",
+  setListCust,
+  setCountData,
+  setLoading
+) {
+  setLoading(true);
+  axios({
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: window.localStorage.getItem("token"),
+    },
+    method: "POST",
+    url: "http://localhost:8000/v2/customers/list/" + paramPage,
+    data: {
+      filter_date: paramDate,
+      filter_search: paramSearch,
+    },
+  })
+    .then((res) => {
+      setCountData(res.data.data.total);
+      const tableData = (res.data.data.list || []).map((value, index) => {
+        let singleRow = {};
+        let field_verif = "";
+        if (value.is_verified === true) {
+          field_verif = "Verified";
+        } else {
+          field_verif = "Unverified";
+        }
+        let created = value.created_at.split("T");
 
-function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading,history){
-    setLoading(true)
-    axios({
-        headers: {
-        'Content-Type': "application/json",
-        "Authorization" : window.localStorage.getItem("token"),
-        },
-        method : "POST",
-        url : "http://localhost:8000/v2/customers/list/" + paramPage,
-        data:   {
-                    filter_date: paramDate,
-                    filter_search: paramSearch
-                }
-    }).then((res) => {
-        setCountData(res.data.data.total)
-        const tableData = (res.data.data.list || []).map((value, index) => {
-            let singleRow = {}
-            let field_verif = "";
-            if(value.is_verified === true){
-                field_verif = "Verified";
-            }
-            else{field_verif = "Unverified"}
-            let created = value.created_at.split('T');
+        //checkdeleted
+        let deletedraw = value.is_deleted.split("T");
+        let deletedfix = true;
+        if (deletedraw[0] === "1970-01-01") {
+          deletedfix = false;
+        }
+        singleRow["key"] = index;
+        singleRow["cust_name"] = value.cust_name;
+        singleRow["account_num"] = value.account_num;
+        singleRow["cust_email"] = value.cust_email;
+        singleRow["is_verified"] = field_verif; //value.is_verified
+        singleRow["date"] = created[0];
+        singleRow["is_deleted"] = deletedfix;
+        //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
+        let dataRow = {};
+        dataRow["cust_name"] = value.cust_name;
+        dataRow["account_num"] = value.account_num;
+        dataRow["cust_email"] = value.cust_email;
+        dataRow["is_verified"] = field_verif;
+        dataRow["cust_phone"] = value.cust_phone;
+        dataRow["is_deleted"] = deletedfix;
 
-            //checkdeleted
-            let deletedraw = value.is_deleted.split('T');
-            let deletedfix =true;
-            if(deletedraw[0] === '1970-01-01'){
-                deletedfix = false;
-            }
-            singleRow['key'] = index
-            singleRow['cust_name'] = value.cust_name
-            singleRow['account_num'] = value.account_num
-            singleRow['cust_email'] = value.cust_email
-            singleRow['is_verified'] =  field_verif //value.is_verified
-            singleRow['date'] = created[0]
-            singleRow['is_deleted'] = deletedfix
-            //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
-            let dataRow = {}
-            dataRow['cust_name'] = value.cust_name
-            dataRow['account_num'] = value.account_num
-            dataRow['cust_email'] = value.cust_email
-            dataRow['is_verified'] =  field_verif
-            dataRow['cust_phone'] = value.cust_phone
-            dataRow['is_deleted'] = deletedfix
-
-            singleRow['action'] = dataRow
-            return singleRow
-        })
-        setListCust(tableData)
-    }).catch((err) => {
-        console.log(JSON.stringify(err), 'error');
-    }).finally(() => {
-        setLoading(false);
+        singleRow["action"] = dataRow;
+        return singleRow;
+      });
+      setListCust(tableData);
     })
+    .catch((err) => {
+      console.log(JSON.stringify(err), "error");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 }
 
 export default function Customers() {
@@ -281,3 +291,4 @@ export default function Customers() {
         </div>
     )
 }
+       
