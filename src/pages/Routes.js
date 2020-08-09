@@ -11,6 +11,9 @@ export default function Routes() {
   return (
     <Router>
       <Switch>
+      <Route exact path="/admin/login">
+          <Login />
+        </Route>
         <Route exact path="/admin/dashboard">
           <Dashboard />
         </Route>

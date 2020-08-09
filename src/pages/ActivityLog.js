@@ -19,7 +19,7 @@ function getActivityLog(setList,pageNumber){
       method : "GET",
       url : "http://localhost:8000/v2/log/"+pageNumber+"",
       headers:{
-        authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA5VDA5OjAzOjMwLjY1MzExNyswNzowMCJ9.AS2kG_0ZVePsvX_yX94P-_WfNYo30C8Eg43G4Hhbl_0'
+        authorization: window.localStorage.getItem("token")
       }
     }).then((res) => {
       //success
