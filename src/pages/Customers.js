@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import NavigationBar from "../components/NavigationBar";
-import SearchBar from "../components/SearchBar";
-import DataTable from "../components/DataTable";
-import FilterBar from "../components/FilterBar";
-
+import React, { useState } from 'react';
+import NavigationBar from '../components/NavigationBar';
+import SearchBar from '../components/SearchBar';
+import DataTable from '../components/DataTable';
+import FilterBar from '../components/FilterBar';
+import { Popconfirm, message, Button } from 'antd';
 import axios from "axios";
 
 import {
@@ -130,7 +130,7 @@ function clickMailCustomer(rowData) {
   console.log(rowData, "sendmail here");
 }
 
-function insertLog(){
+function insertLog(account_num, action){
     axios({
       method : "POST",
       url : "localhost:8000/admin/log/insert",
@@ -148,7 +148,6 @@ function insertLog(){
       //failed
       
     }).finally(() => {
-      
     })
 }
 
