@@ -7,12 +7,19 @@ export const PRIMARY = "primary";
 export const BUTTON_BACK = "back";
 export const BUTTON_SUBMIT = "submit";
 
+// Colors
+export const RED = "red";
+
+// Customer Status
+export const VERIFIED = "Verified";
+
 // Messages
 export const PHONE_NUMBER_REQUIRED = "Phone Number is required!";
 export const INVALID_EMAIL = "Please enter a valid E-mail!";
 export const EMAIL_IS_REQUIRED = "E-mail is required!";
 export const QUIT_MODAL_CONFIRM =
   "Are you sure you want to quit? Your changes will not be saved.";
+export const NO_CHANGES_SUBMITTED = "No changes made to user data.";
 
 // Form Fields
 export const FORM_FIELDS = {

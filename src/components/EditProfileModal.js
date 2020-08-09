@@ -20,13 +20,13 @@ const EditProfileModal = (props) => {
       closable={false}
       maskClosable={false}
       visible={props.visible}
-      confirmLoading={true}
+      confirmLoading={props.loading}
       onOk={props.onOk}
       onCancel={props.onCancel}
       footer={[
         <Popconfirm
           title={Constants.QUIT_MODAL_CONFIRM}
-          icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+          icon={<QuestionCircleOutlined style={{ color: Constants.RED }} />}
           onConfirm={() => {
             props.onCancel();
           }}
