@@ -1,38 +1,39 @@
 .customer-profile-constraint {
-    width: 100%;
-    height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
 }
 
 .customer-profile-content {
-    width: 80%;
-    height: 100%;
-    margin-left: 20%;
+  width: 100vw;
+  height: 100%;
+  overflow: auto;
 }
 
-.title-row .ant-row{
-    padding-top: 20px; 
-    padding-left: 20px;
+.title-row .ant-row {
+  padding-top: 20px;
+  padding-left: 20px;
 }
 
 .blue-bg {
-    background: lightslategray;
+  background: lightslategray;
 }
 
 .bg-height {
-    height: 120px;
+  height: 120px;
 }
 
 .picture-container {
-    position: absolute; 
-    text-align: center;
+  position: absolute;
+  text-align: center;
 }
 
 .picture {
-    border-radius: '50%';
-    width: 150px;
-    height: 150px;
+  border-radius: "50%";
+  width: 150px;
+  height: 150px;
 }
 
 .top-space {
-    margin-top: 20px;
+  margin-top: 20px;
 }

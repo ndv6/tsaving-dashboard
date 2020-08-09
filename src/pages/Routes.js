@@ -22,9 +22,9 @@ export default function Routes() {
           </Route>
           <Route exact path="/admin/customer-list">
             <Customers />
-            <Route exact path="/admin/customer/:id">
-              <CustomerProfile />
-            </Route>
+          </Route>
+          <Route exact path="/admin/customer/:id">
+            <CustomerProfile />
           </Route>
           <Route exact path="/admin/transaction-list">
             <TransactionLog />
