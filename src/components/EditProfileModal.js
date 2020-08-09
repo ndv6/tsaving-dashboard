@@ -55,7 +55,6 @@ const EditProfileModal = (props) => {
         <Form.Item
           name="cust_phone"
           label="Phone Number"
-          initialValue={props.initialValues.phone}
           rules={[
             {
               required: true,
@@ -68,7 +67,6 @@ const EditProfileModal = (props) => {
         <Form.Item
           name="cust_email"
           label="Email"
-          initialValue={props.initialValues.email}
           rules={[
             {
               type: "email",
@@ -83,7 +81,7 @@ const EditProfileModal = (props) => {
           <Input />
         </Form.Item>
         <Form.Item name="is_verified" label="Verified">
-          <Switch />
+          <Switch defaultChecked={props.initialValues.is_verified} />
         </Form.Item>
       </Form>
     </Modal>

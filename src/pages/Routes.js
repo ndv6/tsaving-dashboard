@@ -6,7 +6,6 @@ import Customers from "./Customers";
 import TransactionLog from "./TransactionLog";
 import ActivityLog from "./ActivityLog";
 import PageNotFound from "./PageNotFound";
-import EditProfileModalContainer from "../components/EditProfileModalContainer";
 
 export default function Routes() {
   return (
@@ -26,9 +25,6 @@ export default function Routes() {
         </Route>
         <Route exact path="/admin/activity-log">
           <ActivityLog />
-        </Route>
-        <Route exact path="/test">
-          <EditProfileModalContainer />
         </Route>
         <Route path="*">
           <PageNotFound />

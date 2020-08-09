@@ -18,6 +18,7 @@ import {
   MailTwoTone,
 } from "@ant-design/icons";
 import { message } from "antd";
+import { object } from "prop-types";
 
 export default function Customers() {
   const [listCust, setListCust] = useState([]);
@@ -139,10 +140,12 @@ export default function Customers() {
   }
 
   function clickEditCustomer(rowData) {
-    setModalVisibility(true);
-    setDataToEdit(...rowData, {
-      is_verified: rowData._is_verified === "Verified",
+    rowData = Object.assign(rowData, {
+      is_verified: rowData.is_verified === "Verified",
     });
+    console.log(rowData);
+    setDataToEdit(rowData);
+    setModalVisibility(true);
   }
 
   function closeModal() {
