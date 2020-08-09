@@ -7,6 +7,15 @@ export const PRIMARY = "primary";
 export const BUTTON_BACK = "back";
 export const BUTTON_SUBMIT = "submit";
 
+// Form Fields
+export const FORM_FIELDS = {
+  EMAIL: "cust_email",
+  NAME: "cust_name",
+  ACCOUNT_NUM: "account_num",
+  IS_VERIFIED: "is_verified",
+  PHONE_NUMBER: "cust_phone",
+};
+
 // Component Titles
 export const EDIT_PROFILE_MODAL = "Edit Customer Profile";
 
@@ -25,19 +34,3 @@ export const HEADER_CONTENTS = {
 export const METHODS = {
   PUT: "PUT",
 };
-
-// Phone Number Prefix
-export const PHONE_NUMBER_PREFIX = [
-  {
-    value: "62",
-    label: "+62",
-  },
-  {
-    value: "65",
-    label: "+65",
-  },
-  {
-    value: "60",
-    label: "+60",
-  },
-];

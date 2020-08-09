@@ -44,16 +44,19 @@ const EditProfileModal = (props) => {
         onFinish={props.onOk}
         initialValues={props.initialValues}
       >
-        <Form.Item label="Account Number" name="account_num">
+        <Form.Item
+          label="Account Number"
+          name={Constants.FORM_FIELDS.ACCOUNT_NUM}
+        >
           <span className="ant-form-text">
             {props.initialValues.account_num}
           </span>
         </Form.Item>
-        <Form.Item label="Customer Name" name="cust_name">
+        <Form.Item label="Customer Name" name={Constants.FORM_FIELDS.NAME}>
           <span className="ant-form-text">{props.initialValues.cust_name}</span>
         </Form.Item>
         <Form.Item
-          name="cust_phone"
+          name={Constants.FORM_FIELDS.PHONE_NUMBER}
           label="Phone Number"
           rules={[
             {
@@ -65,7 +68,7 @@ const EditProfileModal = (props) => {
           <Input />
         </Form.Item>
         <Form.Item
-          name="cust_email"
+          name={Constants.FORM_FIELDS.EMAIL}
           label="Email"
           rules={[
             {
@@ -80,7 +83,7 @@ const EditProfileModal = (props) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="is_verified" label="Verified">
+        <Form.Item name={Constants.FORM_FIELDS.IS_VERIFIED} label="Verified">
           <Switch defaultChecked={props.initialValues.is_verified} />
         </Form.Item>
       </Form>
