@@ -11,6 +11,7 @@ export default function DataTable(props) {
         loading={props.loading}
         onChange={props.onChange}
         pagination={{
+          current: props.current,
           showSizeChanger: false,
           position: props.pagePosition,
           pageSize: props.pageSize,

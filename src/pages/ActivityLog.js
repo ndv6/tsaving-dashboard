@@ -11,7 +11,7 @@ function filter(value){
   console.log(value)
 }
 
-function getActivityLog(setList,pageNumber){
+function getActivityLog(setList,pageNumber,setTotaldata){
     //catch untuk nge throw error. kalau success bakal ke then.
     
     console.log("tes")
@@ -23,10 +23,8 @@ function getActivityLog(setList,pageNumber){
       }
     }).then((res) => {
       //success
-      console.log(res.data)
-      console.log(res.data.status,"data table")
-      setList(res.data.data)
-      console.log(res.data.data, 'success')
+      setList(res.data.data.list)
+      setTotaldata(res.data.data.count)
     }).catch((err) => {
       //failed
       console.log(err,'error')
@@ -41,7 +39,7 @@ function getActivityLog(setList,pageNumber){
 export default function ActivityLog(){
   const [list,setList] = useState([]);
   const [page,setPage] = useState(1);
-  const [date,setDate] = useState("");
+  const [totalData,setTotaldata] = useState(0);
 
   const columns = [
     {
@@ -76,7 +74,7 @@ export default function ActivityLog(){
 
     function onChange(pageNumber) {
       console.log('Page: ', pageNumber);
-      getActivityLog(setList,pageNumber)
+      getActivityLog(setList,pageNumber,setTotaldata)
       var index = (pageNumber - 1) * 20 + 1;
       setPage(index)
     }
@@ -100,7 +98,7 @@ export default function ActivityLog(){
                     data={list} 
                     pagePosition="bottomRight" 
                     pageSize={20} 
-                    totalData={100} 
+                    totalData={totalData} 
                     onPageChange={(page) => onChange(page)}
                     />
 
