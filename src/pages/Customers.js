@@ -69,7 +69,7 @@ const columns = [
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        render: (text) => {
+        render: (text, record) => {
             if(text.is_deleted){
                 return (
                     <div className="field-action">
@@ -107,7 +107,7 @@ const columns = [
                     <DeleteTwoTone 
                     twoToneColor = "red" 
                     className = "cus-icon-action" 
-                    onClick={() => clickDeleteCustomer(text)} />
+                    onClick={() => clickDeleteCustomer(record.account_num)} />
                     </div>
                 )
             }
@@ -122,8 +122,23 @@ function clickDetailCustomer(rowData){
 function clickEditCustomer(rowData){
     console.log(rowData, "edit here");
 }
-function clickDeleteCustomer(rowData){
-    console.log(rowData, "delete here");
+function clickDeleteCustomer(account_num){
+    axios({
+        method : "POST",
+        url : "http://localhost:8000/v2/customers/delete",
+        data : {
+            account_num : account_num,
+        },
+        headers:{
+          authorization: window.localStorage.getItem("token")
+        }
+      }).then((res) => {
+            alert("Customer Deleted Successfully!")
+      }).catch((err) => {
+        
+      }).finally(() => {
+        
+      })
 }
 function clickMailCustomer(rowData){
     console.log(rowData, "sendmail here");
