@@ -6,6 +6,9 @@ import SearchBar from '../components/SearchBar'
 import axios from 'axios'
 import { Redirect } from "react-router-dom";
 import { FormatLogDescription } from '../utils/Helper'
+import { message } from 'antd';
+import { Loader, Reloader} from './CustomerProfile'
+
 
 const columns = [
   {
@@ -35,7 +38,7 @@ const columns = [
   },
 ];
 
-function GetTransaction(token, accNum, page, day, month, year, search, setList, setCountData, setLoading) {
+function GetTransaction(token, accNum, page, day, month, year, search, setList, setCountData, setLoading, setStatus) {
   accNum = 2007236310
   let url = ""
   if ((day == null) && (month == null) && (year == null) && (search === "")) {
@@ -79,7 +82,15 @@ function GetTransaction(token, accNum, page, day, month, year, search, setList, 
       setList(tableList);
     })
     .catch((err) => {
-      console.log(JSON.stringify(err), 'error');
+      if (!err.status) {
+        setStatus(0)
+      } else if (err.response.status === 401) {
+        setStatus(401)
+      } else if (err.response.status === 400) {
+        setStatus(400)
+      } else if (err.response.status === 404) {
+        setStatus(404)
+      }
     })
     .finally(() => {
       setLoading(false);
@@ -93,18 +104,20 @@ export default function CustomerTransactionLog(props) {
   const [date, setDate] = React.useState(null)
   const [search, setSearch] = React.useState("")
   const [loading, setLoading] = React.useState(false)
+  const [status, setStatus] = React.useState(null)
+  const [reload, setReload] = React.useState(false)
   const token = window.localStorage.getItem("token")
 
   React.useEffect(() => {
-    GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
-  }, [setList, setLoading])
+    GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading, setStatus)
+  }, [setList, setLoading, setStatus])
 
   function pageChange(page) {
     setPage(page)
     if (date === null) {
-      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading, setStatus)
     } else {
-      GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), search, setList, setCountData, setLoading, setStatus)
     }
   }
 
@@ -119,10 +132,10 @@ export default function CustomerTransactionLog(props) {
       let month = (date.month() + 1).toString()
       let year = date.year().toString()
       setDate(date)
-      GetTransaction(token, props.accNum, page, day, month, year, search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, day, month, year, search, setList, setCountData, setLoading, setStatus)
     } else {
       setDate(null)
-      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
+      GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading, setStatus)
     }
   }
 
@@ -131,18 +144,44 @@ export default function CustomerTransactionLog(props) {
     if (keyword !== "") {
       setSearch(keyword)
       if (date === null) {
-        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading, setStatus)
       } else {
-        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading, setStatus)
       }
     } else {
       setSearch("")
       if (date === null) {
-        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading, setStatus)
       } else {
-        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
+        GetTransaction(token, props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading, setStatus)
       }
     }
+  }
+
+  if (status === 401) {
+    message.error("Your session is over, please login again", 1.5)
+    window.localStorage.removeItem('token')
+    return <Redirect to="/admin/login" />
+  }
+
+  if (status === 400) {
+    message.error("Failed to fetch data, please reload", 1.5, setReload(true))
+  }
+
+  if (status === 404) {
+    return <Redirect to="/notfound" />
+  }
+
+  if (status === 0) {
+    return <Reloader reload={() => GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading, setStatus)} />
+  }
+
+  if (reload) {
+    return <Reloader reload={() => GetTransaction(token, props.accNum, page, null, null, null, search, setList, setCountData, setLoading, setStatus)} />
+  }
+
+  if (loading) {
+    return <Loader />
   }
 
   return (

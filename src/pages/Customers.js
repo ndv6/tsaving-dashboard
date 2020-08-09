@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import DataTable from '../components/DataTable';
-import FilterBar from '../components/FilterBar'
+import FilterBar from '../components/FilterBar';
+import { notification } from 'antd';
+import { InfoCircleTwoTone } from '@ant-design/icons';
 
-import axios from 'axios'
+import axios from 'axios';
 
 import {
     CheckCircleOutlined,
@@ -18,104 +20,6 @@ import {
   
 import '../styles/Customers.css'; 
 
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'cust_name',
-        key: 'cust_name'
-    },
-    {
-        title: 'Acc Num',
-        dataIndex: 'account_num',
-        key: 'account_num'
-    },
-    {
-        title: 'Email',
-        dataIndex: 'cust_email',
-        key: 'cust_email'
-    },
-    {
-        title: 'Verified',
-        dataIndex: 'is_verified',
-        key: 'is_verified',
-        render: (text) => {
-            if (text === 'Verified'){
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-            else{
-                return <CloseCircleOutlined className = "cus-icon warn "/>
-            }
-        }
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date'
-    },
-    {
-        title: 'Status',
-        dataIndex: 'is_deleted',
-        key: 'is_deleted',
-        render: (text) => {
-            if (text){
-                return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
-            }
-            else{
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-        }
-    },
-    {
-        title: 'Action',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text) => {
-            if(text.is_deleted){
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-                    
-                    </div>
-
-                    
-                )
-            }else{
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-                    
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-
-                    <DeleteTwoTone 
-                    twoToneColor = "red" 
-                    className = "cus-icon-action" 
-                    onClick={() => clickDeleteCustomer(text)} />
-                    </div>
-                )
-            }
-        },
-    }
-
-];
-
 function clickDetailCustomer(rowData){
     console.log(rowData, "detail here");
 }
@@ -126,7 +30,8 @@ function clickDeleteCustomer(rowData){
     console.log(rowData, "delete here");
 }
 
-async function clickMailCustomer(rowData){
+async function clickMailCustomer(rowData, setLoading){
+    setLoading(true)
     let customerToken = await getTokenCustomer(rowData.cust_email)
     axios({
         headers: {
@@ -139,9 +44,36 @@ async function clickMailCustomer(rowData){
               token: customerToken
           }
     }).then((res) => {
-        console.log(res.data)
+        let args = {
+            message: 'Resend Email',
+            description:
+              'Email has been sent to the customer.',
+            duration: 2,
+            icon: <InfoCircleTwoTone style={{ color: '#108ee9' }} />
+          };
+        notification.open(args)
     }).catch((err) =>{
-        console.log(JSON.stringify(err), 'error')
+        if (!err.status) {
+            let args = {
+                message: 'Resend Email',
+                description:
+                  'Network Error.',
+                duration: 2,
+                icon: <InfoCircleTwoTone twoToneColor="red" />
+              };
+            notification.error(args)
+        } else if (err.response.status === 429){
+            let args = {
+                message: 'Resend Email',
+                description:
+                  'Too many request. Please wait for 10 seconds before sending another email.',
+                duration: 2,
+                icon: <InfoCircleTwoTone twoToneColor = "red" />
+              };
+            notification.error(args)
+        }
+    }).finally(() => {
+        setLoading(false)
     })
 }
 
@@ -229,6 +161,104 @@ export default function Customers() {
     const [paramDate, setDate] = useState(null)
     const [paramSearch, setSearch] = useState("")
     const [paramPage, setPage] = useState(1)
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'cust_name',
+            key: 'cust_name'
+        },
+        {
+            title: 'Acc Num',
+            dataIndex: 'account_num',
+            key: 'account_num'
+        },
+        {
+            title: 'Email',
+            dataIndex: 'cust_email',
+            key: 'cust_email'
+        },
+        {
+            title: 'Verified',
+            dataIndex: 'is_verified',
+            key: 'is_verified',
+            render: (text) => {
+                if (text === 'Verified'){
+                    return <CheckCircleOutlined className = "cus-icon verified" />
+                }
+                else{
+                    return <CloseCircleOutlined className = "cus-icon warn "/>
+                }
+            }
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'is_deleted',
+            key: 'is_deleted',
+            render: (text) => {
+                if (text){
+                    return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
+                }
+                else{
+                    return <CheckCircleOutlined className = "cus-icon verified" />
+                }
+            }
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text) => {
+                if(text.is_deleted){
+                    return (
+                        <div className="field-action">
+                        <EyeTwoTone 
+                        className = "cus-icon" 
+                        onClick={() => clickDetailCustomer(text)} />
+                        
+                        <EditOutlined 
+                        className = "cus-icon-action edit" 
+                        onClick={() => clickEditCustomer(text)} />
+    
+                        <MailTwoTone 
+                        className = "cus-icon-action" 
+                        onClick={() => clickMailCustomer(text)} />
+                        
+                        </div>
+    
+                        
+                    )
+                }else{
+                    return (
+                        <div className="field-action">
+                        <EyeTwoTone 
+                        className = "cus-icon" 
+                        onClick={() => clickDetailCustomer(text)} />
+                        
+                        <EditOutlined 
+                        className = "cus-icon-action edit" 
+                        onClick={() => clickEditCustomer(text)} />
+                        
+                        <MailTwoTone 
+                        className = "cus-icon-action" 
+                        onClick={() => clickMailCustomer(text, setLoading)} />
+    
+                        <DeleteTwoTone 
+                        twoToneColor = "red" 
+                        className = "cus-icon-action" 
+                        onClick={() => clickDeleteCustomer(text)} />
+                        </div>
+                    )
+                }
+            },
+        }
+    
+    ];
     
     function pageChange(page){
         setPage(page)
