@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import axios from "axios";
 import { Row, Col, Typography, Spin, Button } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
@@ -23,8 +23,12 @@ const DEFAULT_PROFILE = {
   phone: "",
 };
 
+function getToken() {
+  return window.localStorage.getItem("token");
+}
+
 export function reqBuilder(method, url) {
-  const token = window.localStorage.getItem("token");
+  const token = getToken()
   return {
     method,
     url,
@@ -35,6 +39,12 @@ export function reqBuilder(method, url) {
 export default function CustomerProfile() {
   const { id } = useParams();
   const [profileData, setProfileData] = useState(DEFAULT_PROFILE);
+
+  useEffect(() => {
+    if (!getToken()) {
+        return <Redirect to="/admin/login" />;
+      }
+  });
 
   useEffect(() => {
     axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
@@ -96,7 +106,9 @@ export default function CustomerProfile() {
                   },
                   {
                     tabname: "Transaction History",
-                    components: <CustomerTransactionLog accNum={profileData.accNum} />,
+                    components: (
+                      <CustomerTransactionLog accNum={profileData.accNum} />
+                    ),
                   },
                 ]}
                 size={3}
