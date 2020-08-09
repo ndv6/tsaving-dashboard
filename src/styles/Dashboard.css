@@ -44,3 +44,13 @@
     font-size: large;
     text-align: center;
 }
+
+.dashboard-content-chart-card {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.dashboard-card-footer {
+    width: 100%;
+}
