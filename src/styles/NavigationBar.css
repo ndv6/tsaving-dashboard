@@ -18,34 +18,34 @@
     font-style: italic;
 }
 
-ul {
+.navbar ul {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
     text-align: left;
 }
 
-ul li a{
+.navbar ul li a{
     display: block;
     padding: 15px 20px;
     color: white;
 }
 
-ul li a:hover {
+.navbar ul li a:hover {
     width: 99%;
     background-color: white;
     color: #d5152b;
     font-weight: bold;
 }
 
-.navbar-list-active {
+.navbar .navbar-list-active {
     width: 99%;
     background-color: white;
     color: #d5152b;
     font-weight: bold;
 }
 
-.navbar-item {
+.navbar .navbar-item {
     padding: 0px 20px;
 }
 
