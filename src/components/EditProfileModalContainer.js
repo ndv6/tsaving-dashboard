@@ -5,7 +5,6 @@ import Axios from "axios";
 import config from "../config/config.json";
 import { EDIT_CUSTOMER_DATA, LOGIN } from "../constants/ApiEndpoints";
 import EditProfileModal from "./EditProfileModal";
-import jwt_decode from "jwt-decode";
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();
