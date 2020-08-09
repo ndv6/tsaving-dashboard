@@ -7,7 +7,6 @@ export default function ComponentCard(props) {
         title={props.title} 
         size={props.isSmall ? "small" : "default"} 
         loading={props.isLoading}
-        bordered={props.isBordered}
         bodyStyle={props.bodyStyle}
         hoverable={props.hoverable}
         headStyle={props.headStyle}>
@@ -18,7 +17,6 @@ export default function ComponentCard(props) {
             title={props.title} 
             size={props.isSmall ? "small" : "default"} 
             loading={props.isLoading}
-            bordered={props.isBordered}
             cover={props.cover}
             bodyStyle={props.bodyStyle}
             headStyle={props.headStyle}
