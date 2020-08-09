@@ -45,7 +45,7 @@ const columns = [
 ];
 
 
-function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL, setCountData, setLoading, history){
+function getTransactionLog(token, paramPage=1,  paramDate='', paramSearch='', setListTL, setCountData, setLoading, history){
     setLoading(true);
     let fixDate = "";
     if(paramDate != null){
@@ -69,7 +69,7 @@ function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL
     axios({
         headers: {
             'Content-Type': "application/json",
-            "Authorization" : window.localStorage.getItem("token"),
+            "Authorization" : token,
         },
         method : "GET",
         url : url
@@ -116,11 +116,17 @@ export default function TransactionLog() {
     const [paramSearch, setSearch] = useState("");
     const [paramPage, setPage] = useState(1);
     const history = useHistory();
+    const token = window.localStorage.getItem("token");
+
+    if (!window.localStorage.getItem("token")) {
+        history.push("/admin/login");
+    }
 
     function pageChange(page){
         setPage(page);
     }
     function filterDate(date) {
+        setPage(1);
         if (date !== null) {
           let day = date.date().toString();
           let month = (date.month() + 1).toString();
@@ -129,16 +135,17 @@ export default function TransactionLog() {
           setDate(fixdate);
         }
         else{
-            setDate("");
+            setDate(null);
         }
     }
     function searchTL(value){
+        setPage(1);
         setSearch(value);
     }
 
     useEffect(() => {
-        getTransactionLog(paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history )
-    },[setListTL, paramPage, paramDate, paramSearch, history]);
+        getTransactionLog(token, paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history )
+    },[token, setListTL, paramPage, paramDate, paramSearch, history]);
     
     return ( 
         <div className="transaction-log-constraint">
@@ -150,9 +157,8 @@ export default function TransactionLog() {
                     <SearchBar 
                     className="search-content"
                     onSearch={(value) => searchTL(value)} />
-
                 </div>
-
+                <p>Total Data : {countData}</p>
 
                 <div className="table-tl-list">
                     <DataTable 
