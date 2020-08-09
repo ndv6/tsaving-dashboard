@@ -61,13 +61,16 @@ function getTransactionLog(paramPage=1, paramDate='', paramSearch='', setListTL,
                 currency: 'IDR',
                 minimumFractionDigits: 2
             });
+            let fixdesc = "Deposit Balance";
+            if(value.description === "MAIN_TO_VA")
+
 
             singleRow['key'] = index;
             singleRow['account_num'] = value.account_num;
             singleRow['from_account'] = value.from_account;
             singleRow['dest_account'] = value.dest_account;
             singleRow['tran_amount'] =  formatter.format(value.tran_amount);
-            singleRow['description'] = value.description;
+            singleRow['description'] = fixdesc;
             singleRow['created_at'] = new Date(value.created_at).toUTCString();
             return singleRow;
         })
