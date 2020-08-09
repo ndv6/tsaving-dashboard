@@ -1,85 +1,135 @@
-import React from 'react'
-import DataTable from '../components/DataTable'
-import '../styles/CustomerTransactionLog.css'
-import FilterBar from '../components/FilterBar'
-import SearchBar from '../components/SearchBar'
-import { Row, Col } from 'antd';
-import axios from 'axios'
-import { useHistory } from 'react-router-dom'
+import React from "react";
+import DataTable from "../components/DataTable";
+import "../styles/CustomerTransactionLog.css";
+import FilterBar from "../components/FilterBar";
+import SearchBar from "../components/SearchBar";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
+import { FormatLogDescription } from "../utils/Helper";
+import { message } from "antd";
+import { Loader, Reloader } from "./CustomerProfile";
 
 const columns = [
   {
-    title: 'From',
-    dataIndex: 'from_account',
-    key: 'from_account',
+    title: "From",
+    dataIndex: "from_account",
+    key: "from_account",
   },
   {
-    title: 'To',
-    dataIndex: 'dest_account',
-    key: 'dest_account',
+    title: "To",
+    dataIndex: "dest_account",
+    key: "dest_account",
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
   },
   {
-    title: 'Amount',
-    dataIndex: 'tran_amount',
-    key: 'tran_amount',
+    title: "Amount",
+    dataIndex: "tran_amount",
+    key: "tran_amount",
   },
   {
-    title: 'Date',
-    dataIndex: 'created_at',
-    key: 'created_at',
+    title: "Date",
+    dataIndex: "created_at",
+    key: "created_at",
   },
 ];
 
-function GetTransaction(accNum, page, day, month, year, search, setList, setCountData, setLoading) {
-  accNum = 2007236310
-  let url = ""
-  if ((day == null) && (month == null) && (year == null) && (search === "")) {
-    url = 'http://localhost:8000/v2/transactions/' + accNum + "/" + page
-  } else if ((search !== "") && (day == null) && (month == null) && (year == null)) {
-    url  = 'http://localhost:8000/v2/transactions/' + accNum + "/" + search + "/" + page
-  } else if ((search !== "") && (day !== null) && (month !== null) && (year !== null)) {
-    url  = 'http://localhost:8000/v2/transactions/' + accNum + "/" + day + "-" + month + "-" + year + "/" + search + "/" + page
-  } else if ((search === "") && (day !== null) && (month !== null) && (year !== null)) {
-    url  = 'http://localhost:8000/v2/transactions/' + accNum + "/" + day + "-" + month + "-" + year + "/" + page
+function GetTransaction(
+  token,
+  accNum,
+  page,
+  day,
+  month,
+  year,
+  search,
+  setList,
+  setCountData,
+  setLoading,
+  setStatus
+) {
+  accNum = 2007236310;
+  let url = "";
+  if (day == null && month == null && year == null && search === "") {
+    url = "http://localhost:8000/v2/transactions/" + accNum + "/" + page;
+  } else if (search !== "" && day == null && month == null && year == null) {
+    url =
+      "http://localhost:8000/v2/transactions/" +
+      accNum +
+      "/" +
+      search +
+      "/" +
+      page;
+  } else if (search !== "" && day !== null && month !== null && year !== null) {
+    url =
+      "http://localhost:8000/v2/transactions/" +
+      accNum +
+      "/" +
+      day +
+      "-" +
+      month +
+      "-" +
+      year +
+      "/" +
+      search +
+      "/" +
+      page;
+  } else if (search === "" && day !== null && month !== null && year !== null) {
+    url =
+      "http://localhost:8000/v2/transactions/" +
+      accNum +
+      "/" +
+      day +
+      "-" +
+      month +
+      "-" +
+      year +
+      "/" +
+      page;
   }
 
-  setLoading(true)
+  setLoading(true);
   axios({
     headers: {
-      'Content-Type': "application/json",
-      "Authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA3VDE5OjU4OjEwLjgxMzgwMyswNzowMCJ9.aHdQS5-sXPzCpqPoprE2UvyBY19cNS_H1X8D3djazFY",
+      "Content-Type": "application/json",
+      Authorization: token,
     },
-    method: 'GET',
+    method: "GET",
     url: url,
   })
     .then((res) => {
       const tableList = (res.data.data.list || []).map((value, index) => {
-        let singleData = {}
-        const formatter = new Intl.NumberFormat('id', {
-          style: 'currency',
-          currency: 'IDR',
-          minimumFractionDigits: 2
-        })
+        let singleData = {};
+        const formatter = new Intl.NumberFormat("id", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 2,
+        });
 
-        singleData['key'] = index
-        singleData['from_account'] = value.from_account
-        singleData['dest_account'] = value.dest_account
-        singleData['description'] = value.description
-        singleData['tran_amount'] = formatter.format(value.tran_amount)
-        singleData['created_at'] = new Date(value.created_at).toUTCString()
-        return singleData
-      })
+        singleData["key"] = index;
+        singleData["from_account"] = value.from_account;
+        singleData["dest_account"] = value.dest_account;
+        singleData["description"] = FormatLogDescription(value.description);
+        singleData["tran_amount"] = formatter.format(value.tran_amount);
+        singleData["created_at"] = new Date(value.created_at).toUTCString();
+        return singleData;
+      });
 
-      setCountData(res.data.data.count)
+      setCountData(res.data.data.count);
       setList(tableList);
     })
     .catch((err) => {
-      console.log(JSON.stringify(err), 'error');
+      if (!err.status) {
+        setStatus(0);
+      } else if (err.response.status === 401) {
+        setStatus(401);
+      } else if (err.response.status === 400) {
+        setStatus(400);
+      } else if (err.response.status === 404) {
+        setStatus(404);
+      }
     })
     .finally(() => {
       setLoading(false);
@@ -87,75 +137,265 @@ function GetTransaction(accNum, page, day, month, year, search, setList, setCoun
 }
 
 export default function CustomerTransactionLog(props) {
-  const [list, setList] = React.useState(null)
-  const [countData, setCountData] = React.useState(0)
-  const [page, setPage] = React.useState(1)
-  const [date, setDate] = React.useState(null)
-  const [search, setSearch] = React.useState("")
-  const [loading, setLoading] = React.useState(false)
+  const [list, setList] = React.useState(null);
+  const [countData, setCountData] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const [date, setDate] = React.useState(null);
+  const [search, setSearch] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [status, setStatus] = React.useState(null);
+  const [reload, setReload] = React.useState(false);
+  const token = window.localStorage.getItem("token");
 
   React.useEffect(() => {
-    GetTransaction(props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
-  }, [setList, setLoading])
+    GetTransaction(
+      token,
+      props.accNum,
+      page,
+      null,
+      null,
+      null,
+      search,
+      setList,
+      setCountData,
+      setLoading,
+      setStatus
+    );
+  }, [setList, setLoading, setStatus]);
 
   function pageChange(page) {
-    setPage(page)
+    setPage(page);
     if (date === null) {
-      GetTransaction(props.accNum, page, null, null, null, search, setList, setCountData, setLoading)
+      GetTransaction(
+        token,
+        props.accNum,
+        page,
+        null,
+        null,
+        null,
+        search,
+        setList,
+        setCountData,
+        setLoading,
+        setStatus
+      );
     } else {
-      GetTransaction(props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), search, setList, setCountData, setLoading)
+      GetTransaction(
+        token,
+        props.accNum,
+        page,
+        date.date().toString(),
+        (date.month() + 1).toString(),
+        date.year().toString(),
+        search,
+        setList,
+        setCountData,
+        setLoading,
+        setStatus
+      );
     }
   }
 
+  if (!window.localStorage.getItem("token")) {
+    return <Redirect to="/admin/login" />;
+  }
+
   function filterDate(date) {
+    setPage(1);
     if (date !== null) {
-      let day = date.date().toString()
-      let month = (date.month() + 1).toString()
-      let year = date.year().toString()
-      setDate(date)
-      GetTransaction(props.accNum, page, day, month, year, search, setList, setCountData, setLoading)
+      let day = date.date().toString();
+      let month = (date.month() + 1).toString();
+      let year = date.year().toString();
+      setDate(date);
+      GetTransaction(
+        token,
+        props.accNum,
+        page,
+        day,
+        month,
+        year,
+        search,
+        setList,
+        setCountData,
+        setLoading,
+        setStatus
+      );
+    } else {
+      setDate(null);
+      GetTransaction(
+        token,
+        props.accNum,
+        page,
+        null,
+        null,
+        null,
+        search,
+        setList,
+        setCountData,
+        setLoading,
+        setStatus
+      );
     }
   }
 
   function filterSearch(keyword) {
+    setPage(1);
     if (keyword !== "") {
-      setSearch(keyword)
+      setSearch(keyword);
       if (date === null) {
-        GetTransaction(props.accNum, page, null, null, null, keyword, setList, setCountData, setLoading)
+        GetTransaction(
+          token,
+          props.accNum,
+          page,
+          null,
+          null,
+          null,
+          keyword,
+          setList,
+          setCountData,
+          setLoading,
+          setStatus
+        );
       } else {
-        GetTransaction(props.accNum, page, date.date().toString(), (date.month() + 1).toString(), date.year().toString(), keyword, setList, setCountData, setLoading)
+        GetTransaction(
+          token,
+          props.accNum,
+          page,
+          date.date().toString(),
+          (date.month() + 1).toString(),
+          date.year().toString(),
+          keyword,
+          setList,
+          setCountData,
+          setLoading,
+          setStatus
+        );
+      }
+    } else {
+      setSearch("");
+      if (date === null) {
+        GetTransaction(
+          token,
+          props.accNum,
+          page,
+          null,
+          null,
+          null,
+          keyword,
+          setList,
+          setCountData,
+          setLoading,
+          setStatus
+        );
+      } else {
+        GetTransaction(
+          token,
+          props.accNum,
+          page,
+          date.date().toString(),
+          (date.month() + 1).toString(),
+          date.year().toString(),
+          keyword,
+          setList,
+          setCountData,
+          setLoading,
+          setStatus
+        );
       }
     }
   }
 
+  if (status === 401) {
+    message.error("Your session is over, please login again", 1.5);
+    window.localStorage.removeItem("token");
+    return <Redirect to="/admin/login" />;
+  }
+
+  if (status === 400) {
+    message.error("Failed to fetch data, please reload", 1.5, setReload(true));
+  }
+
+  if (status === 404) {
+    return <Redirect to="/notfound" />;
+  }
+
+  if (status === 0) {
+    return (
+      <Reloader
+        reload={() =>
+          GetTransaction(
+            token,
+            props.accNum,
+            page,
+            null,
+            null,
+            null,
+            search,
+            setList,
+            setCountData,
+            setLoading,
+            setStatus
+          )
+        }
+      />
+    );
+  }
+
+  if (reload) {
+    return (
+      <Reloader
+        reload={() =>
+          GetTransaction(
+            token,
+            props.accNum,
+            page,
+            null,
+            null,
+            null,
+            search,
+            setList,
+            setCountData,
+            setLoading,
+            setStatus
+          )
+        }
+      />
+    );
+  }
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="customerTransaction">
-      <div style={{ marginBottom : '6vh'}}>
+      <div style={{ marginBottom: "6vh" }}>
         <h1>Transaction History</h1>
       </div>
-      <div style={{ marginBottom : '5vh'}}>
-        <Row>
-          <Col span={6}>
-            <FilterBar onChange={(date) => filterDate(date)}/>
-          </Col>
-          <Col span={18}>
-            <SearchBar onSearch={(value) => filterSearch(value)}/>
-          </Col>
-        </Row>
+      <div style={{ marginBottom: "5vh" }}>
+        <div className="filter-search">
+          <FilterBar onChange={(date) => filterDate(date)} />
+          <SearchBar
+            onSearch={(value) => filterSearch(value)}
+            className="search-content"
+          />
+        </div>
       </div>
       <div>
         <p>Total Data : {countData}</p>
       </div>
       <div className="dataTable">
-        <DataTable 
-          columns={columns} 
-          data={list} 
-          pagePosition="bottomRight" 
-          pageSize={20} 
-          totalData={countData} 
+        <DataTable
+          current={page}
+          columns={columns}
+          data={list}
+          pagePosition="bottomRight"
+          pageSize={20}
+          totalData={countData}
           onPageChange={(page) => pageChange(page)}
-          loading={loading}/>
+          loading={loading}
+        />
       </div>
     </div>
-  )
+  );
 }
