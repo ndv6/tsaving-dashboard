@@ -77,7 +77,7 @@ export default function CustomerProfile() {
                 alt="Profile Placeholder"
                 src={ProfilePlaceholder}
               ></img>
-              <Title level={3}>{profileData.custName}</Title>
+              <Title level={3}>{profileData.name}</Title>
             </div>
           </Row>
           <Row>
@@ -96,7 +96,7 @@ export default function CustomerProfile() {
                   },
                   {
                     tabname: "Transaction History",
-                    components: <CustomerTransactionLog />,
+                    components: <CustomerTransactionLog accNum={profileData.accNum} />,
                   },
                 ]}
                 size={3}
