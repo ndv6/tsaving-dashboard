@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useHistory } from "react-router-dom";
 
 import NavigationBar from '../components/NavigationBar';
@@ -6,6 +6,7 @@ import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
 import SearchBar from '../components/SearchBar';
 
+import { FormatLogDescription } from '../utils/Helper';
 import '../styles/TransactionLog.css';
 
 import axios from 'axios';
@@ -44,15 +45,34 @@ const columns = [
 ];
 
 
-function getTransactionLog(paramPage=1, paramDate='', paramSearch='', setListTL, setCountData, setLoading, history){
+function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL, setCountData, setLoading, setStatus){
     setLoading(true);
+    let fixDate = "";
+    if(paramDate != null){
+        let dateFormat = paramDate.split("-");
+        fixDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
+    }
+    let url = "";
+    if(paramDate == null && paramSearch === ""){
+        url = "http://localhost:8000/v2/transactions/list/" + paramPage
+    }
+    else if(paramDate != null && paramSearch === ""){
+        url = "http://localhost:8000/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
+    }
+    else if(paramDate == null && paramSearch !== ""){
+        url = "http://localhost:8000/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
+    }
+    else if(paramDate != null && paramSearch !== ""){
+        url = "http://localhost:8000/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
+    }
+    console.log(url);
     axios({
         headers: {
             'Content-Type': "application/json",
             "Authorization" : window.localStorage.getItem("token"),
         },
         method : "GET",
-        url : "http://localhost:8000/v2/transactions/list/" + paramPage
+        url : url
     }).then((res) => {
         const tableData = (res.data.data.list || []).map((value, index) => {
             let singleRow = {};
@@ -61,28 +81,27 @@ function getTransactionLog(paramPage=1, paramDate='', paramSearch='', setListTL,
                 currency: 'IDR',
                 minimumFractionDigits: 2
             });
-            let fixdesc = "Deposit Balance";
-            if(value.description === "MAIN_TO_VA"){
-                
-            }
-
-
             singleRow['key'] = index;
             singleRow['account_num'] = value.account_num;
             singleRow['from_account'] = value.from_account;
             singleRow['dest_account'] = value.dest_account;
             singleRow['tran_amount'] =  formatter.format(value.tran_amount);
-            singleRow['description'] = fixdesc;
+            singleRow['description'] = FormatLogDescription(value.description);
             singleRow['created_at'] = new Date(value.created_at).toUTCString();
             return singleRow;
         })
         setCountData(res.data.data.count);
         setListTL(tableData);
     }).catch((err) => {
-        if (err.response.status === 401) {
-            localStorage.removeItem("token");
-            history.push("/admin/login")
-        }
+        if (!err.status) {
+            setStatus(0)
+          } else if (err.response.status === 401) {
+            setStatus(401)
+          } else if (err.response.status === 400) {
+            setStatus(400)
+          } else if (err.response.status === 404) {
+            setStatus(404)
+          }
     }).finally(() => {
         setLoading(false);
     })
@@ -95,6 +114,7 @@ export default function TransactionLog() {
     const [paramDate, setDate] = useState(null);
     const [paramSearch, setSearch] = useState("");
     const [paramPage, setPage] = useState(1);
+    const [status, setStatus] = React.useState(null)
     const history = useHistory();
 
     function pageChange(page){
@@ -116,10 +136,10 @@ export default function TransactionLog() {
         setSearch(value);
     }
 
-    React.useEffect(() => {
-        getTransactionLog(paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history )
-      },[setListTL, paramPage, paramDate, paramSearch, history]);
-
+    useEffect(() => {
+        getTransactionLog(paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history, setStatus )
+    },[setListTL, paramPage, paramDate, paramSearch, history]);
+    
     return ( 
         <div className="transaction-log-constraint">
             <NavigationBar></NavigationBar>
@@ -136,6 +156,7 @@ export default function TransactionLog() {
 
                 <div className="table-tl-list">
                     <DataTable 
+                    current={paramPage}
                     columns={columns} 
                     data={listTL} 
                     pagePosition="bottomRight" 

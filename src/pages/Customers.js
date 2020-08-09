@@ -307,6 +307,7 @@ export default function Customers() {
         setPage(page)
     }
     function filterDate(date) {
+        setPage(1)
         if (date !== null) {
           let day = date.date().toString();
           let month = (date.month() + 1).toString();
@@ -319,13 +320,14 @@ export default function Customers() {
         }
     }
     function searchCust(value){
+        setPage(1)
         setSearch(value)
     }
     
 
     React.useEffect(() => {
         getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading,history)
-    },[setListCust,paramPage,paramDate,paramSearch])
+    },[setListCust,paramPage,paramDate,paramSearch,history])
     
     return(
         <div className="customers-constraint">
@@ -343,6 +345,7 @@ export default function Customers() {
                 <p>Total Data : {countData}</p>
                 <div className="cl-table">
                     <DataTable 
+                    current={paramPage}
                     columns={columns} 
                     data={listCust} 
                     pagePosition="bottomRight" 
