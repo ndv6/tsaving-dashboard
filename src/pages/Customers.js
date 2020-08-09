@@ -145,7 +145,10 @@ function clickDeleteCustomer(account_num){
                 }, 1500);
             
         }).catch((err) => {
-        
+            if (err.response.status === 401) {
+                localStorage.removeItem("token");
+                history.push("/admin/login")
+            }
         }).finally(() => {
         
         })
