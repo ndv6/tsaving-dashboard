@@ -1,248 +1,412 @@
-import React, { useState } from 'react';
-import NavigationBar from '../components/NavigationBar';
-import SearchBar from '../components/SearchBar';
-import DataTable from '../components/DataTable';
-import FilterBar from '../components/FilterBar'
+import React, { useState } from "react";
+import NavigationBar from "../components/NavigationBar";
+import SearchBar from "../components/SearchBar";
+import DataTable from "../components/DataTable";
+import FilterBar from "../components/FilterBar";
+import "../styles/Customers.css";
+import EditProfileModalContainer from "../components/EditProfileModalContainer";
+import { notification } from "antd";
+import { InfoCircleTwoTone } from "@ant-design/icons";
+import { Popconfirm, message, Button } from "antd";
+import * as Constants from "../constants/Constants";
 
-import axios from 'axios'
+import axios from "axios";
 
 import {
-    CheckCircleOutlined,
-    CloseCircleOutlined,
-    EyeTwoTone,
-    EditOutlined,
-    DeleteTwoTone,
-    LockTwoTone,
-    MailTwoTone
-  } from '@ant-design/icons';
-  
-import '../styles/Customers.css'; 
-
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'cust_name',
-        key: 'cust_name'
-    },
-    {
-        title: 'Acc Num',
-        dataIndex: 'account_num',
-        key: 'account_num'
-    },
-    {
-        title: 'Email',
-        dataIndex: 'cust_email',
-        key: 'cust_email'
-    },
-    {
-        title: 'Verified',
-        dataIndex: 'is_verified',
-        key: 'is_verified',
-        render: (text) => {
-            if (text === 'Verified'){
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-            else{
-                return <CloseCircleOutlined className = "cus-icon warn "/>
-            }
-        }
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date'
-    },
-    {
-        title: 'Status',
-        dataIndex: 'is_deleted',
-        key: 'is_deleted',
-        render: (text) => {
-            if (text){
-                return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
-            }
-            else{
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-        }
-    },
-    {
-        title: 'Action',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text) => {
-            if(text.is_deleted){
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-                    
-                    </div>
-
-                    
-                )
-            }else{
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-                    
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-
-                    <DeleteTwoTone 
-                    twoToneColor = "red" 
-                    className = "cus-icon-action" 
-                    onClick={() => clickDeleteCustomer(text)} />
-                    </div>
-                )
-            }
-        },
-    }
-
-];
-
-function clickDetailCustomer(rowData){
-    console.log(rowData, "detail here");
-}
-function clickEditCustomer(rowData){
-    console.log(rowData, "edit here");
-}
-function clickDeleteCustomer(rowData){
-    console.log(rowData, "delete here");
-}
-function clickMailCustomer(rowData){
-    console.log(rowData, "sendmail here");
-}
-
-function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
-    setLoading(true)
-    axios({
-        headers: {
-        'Content-Type': "application/json",
-        "Authorization" : window.localStorage.getItem("token"),
-        },
-        method : "POST",
-        url : "http://localhost:8000/v2/customers/list/" + paramPage,
-        data:   {
-                    filter_date: paramDate,
-                    filter_search: paramSearch
-                }
-    }).then((res) => {
-        setCountData(res.data.data.total)
-        const tableData = (res.data.data.list || []).map((value, index) => {
-            let singleRow = {}
-            let field_verif = "";
-            if(value.is_verified === true){
-                field_verif = "Verified";
-            }
-            else{field_verif = "Unverified"}
-            let created = value.created_at.split('T');
-
-            //checkdeleted
-            let deletedraw = value.is_deleted.split('T');
-            let deletedfix =true;
-            if(deletedraw[0] === '1970-01-01'){
-                deletedfix = false;
-            }
-            singleRow['key'] = index
-            singleRow['cust_name'] = value.cust_name
-            singleRow['account_num'] = value.account_num
-            singleRow['cust_email'] = value.cust_email
-            singleRow['is_verified'] =  field_verif //value.is_verified
-            singleRow['date'] = created[0]
-            singleRow['is_deleted'] = deletedfix
-            //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
-            let dataRow = {}
-            dataRow['cust_name'] = value.cust_name
-            dataRow['account_num'] = value.account_num
-            dataRow['cust_email'] = value.cust_email
-            dataRow['is_verified'] =  field_verif
-            dataRow['cust_phone'] = value.cust_phone
-            dataRow['is_deleted'] = deletedfix
-
-            singleRow['action'] = dataRow
-            return singleRow
-        })
-        setListCust(tableData)
-    }).catch((err) => {
-        console.log(JSON.stringify(err), 'error');
-    }).finally(() => {
-        setLoading(false);
-    })
-}
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EyeTwoTone,
+  EditOutlined,
+  DeleteTwoTone,
+  LockTwoTone,
+  MailTwoTone,
+} from "@ant-design/icons";
+import { useHistory } from "react-router";
 
 export default function Customers() {
-    const [listCust,setListCust] = useState([]);
-    const [countData, setCountData] = useState(0)
-    const [loading, setLoading] = useState(false)
-    const [paramDate, setDate] = useState(null)
-    const [paramSearch, setSearch] = useState("")
-    const [paramPage, setPage] = useState(1)
-    
-    function pageChange(page){
-        setPage(page)
-    }
-    function filterDate(date) {
-        if (date !== null) {
-          let day = date.date().toString();
-          let month = (date.month() + 1).toString();
-          let year = date.year().toString();
-          let fixdate = year + "-" + month + "-" + day;
-          setDate(fixdate);
-        }
-        else{
-            setDate("")
-        }
-    }
-    function searchCust(value){
-        setSearch(value)
-    }
+  const history = useHistory();
+  const [listCust, setListCust] = useState([]);
+  const [countData, setCountData] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [paramDate, setDate] = useState(null);
+  const [paramSearch, setSearch] = useState("");
+  const [paramPage, setPage] = useState(1);
+  const [isModalVisible, setModalVisibility] = useState(false);
+  const [customerDataToBeEdited, setDataToEdit] = useState({
+    account_num: "",
+    cust_name: "",
+    cust_email: "",
+    cust_phone: "",
+    is_verified: false,
+  });
 
-    React.useEffect(() => {
-        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading)
-    },[setListCust,paramPage,paramDate,paramSearch])
-    
-    return(
-        <div className="customers-constraint">
-            <NavigationBar></NavigationBar>
-            <div className="customers-content">
-                <div className="cl-title"> List All Customers </div>
-                <div className = "filter-search">
-                    <FilterBar  onChange={(date) => filterDate(date)} />
-                    <SearchBar 
-                    className="search-content"
-                    onSearch={(value) => searchCust(value)} />
+  function clickDetailCustomer(rowData) {
+    console.log(rowData, "detail here");
+  }
 
-                </div>
-                
-                <p>Total Data : {countData}</p>
-                <div className="cl-table">
-                    <DataTable 
-                    columns={columns} 
-                    data={listCust} 
-                    pagePosition="bottomRight" 
-                    pageSize={20} 
-                    totalData={countData} 
-                    onPageChange={(page) => pageChange(page)}
-                    loading={loading}
-                    />
-                </div>         
+  async function clickMailCustomer(rowData, setLoading) {
+    setLoading(true);
+    let customerToken = await getTokenCustomer(rowData.cust_email);
+    axios({
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      url: "http://localhost:8082/sendMail",
+      data: {
+        email: rowData.cust_email,
+        token: customerToken,
+      },
+    })
+      .then((res) => {
+        let args = {
+          message: "Resend Email",
+          description: "Email has been sent to the customer.",
+          duration: 2,
+          icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
+        };
+        notification.open(args);
+      })
+      .catch((err) => {
+        if (!err.status) {
+          let args = {
+            message: "Resend Email",
+            description: "Network Error.",
+            duration: 2,
+            icon: <InfoCircleTwoTone twoToneColor="red" />,
+          };
+          notification.error(args);
+        } else if (err.response.status === 429) {
+          let args = {
+            message: "Resend Email",
+            description:
+              "Too many request. Please wait for 10 seconds before sending another email.",
+            duration: 2,
+            icon: <InfoCircleTwoTone twoToneColor="red" />,
+          };
+          notification.error(args);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function getTokenCustomer(customerEmail) {
+    return new Promise(function (resolve, reject) {
+      axios({
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: window.localStorage.getItem("token"),
+        },
+        method: "POST",
+        url: "http://localhost:8000/v2/get-token",
+        data: {
+          email: customerEmail,
+        },
+      })
+        .then((res) => {
+          resolve(res.data.data.token);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  function clickDeleteCustomer(account_num, setLoading, history) {
+    setLoading(true);
+    axios({
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      method: "POST",
+      url: "http://localhost:8000/v2/customers/delete",
+      data: {
+        account_num: account_num,
+      },
+    })
+      .then((res) => {
+        message.info(res.data.message);
+        setTimeout(function () {
+          window.location.reload();
+        }, 1500);
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          localStorage.removeItem("token");
+          history.push("/admin/login");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function getCustomerList(
+    paramPage = 1,
+    paramDate = "",
+    paramSearch = "",
+    setListCust,
+    setCountData,
+    setLoading
+  ) {
+    setLoading(true);
+    axios({
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      method: "POST",
+      url: "http://localhost:8000/v2/customers/list/" + paramPage,
+      data: {
+        filter_date: paramDate,
+        filter_search: paramSearch,
+      },
+    })
+      .then((res) => {
+        setCountData(res.data.data.total);
+        const tableData = (res.data.data.list || []).map((value, index) => {
+          let singleRow = {};
+          let field_verif = "";
+          if (value.is_verified === true) {
+            field_verif = "Verified";
+          } else {
+            field_verif = "Unverified";
+          }
+          let created = value.created_at.split("T");
+
+          //checkdeleted
+          let deletedraw = value.is_deleted.split("T");
+          let deletedfix = true;
+          if (deletedraw[0] === "1970-01-01") {
+            deletedfix = false;
+          }
+          singleRow["key"] = index;
+          singleRow["cust_name"] = value.cust_name;
+          singleRow["account_num"] = value.account_num;
+          singleRow["cust_email"] = value.cust_email;
+          singleRow["is_verified"] = field_verif; //value.is_verified
+          singleRow["date"] = created[0];
+          singleRow["is_deleted"] = deletedfix;
+          //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
+          let dataRow = {};
+          dataRow["cust_name"] = value.cust_name;
+          dataRow["account_num"] = value.account_num;
+          dataRow["cust_email"] = value.cust_email;
+          dataRow["is_verified"] = field_verif;
+          dataRow["cust_phone"] = value.cust_phone;
+          dataRow["is_deleted"] = deletedfix;
+
+          singleRow["action"] = dataRow;
+          return singleRow;
+        });
+        setListCust(tableData);
+      })
+      .catch((err) => {
+        console.log(JSON.stringify(err), "error");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function clickEditCustomer(rowData) {
+    /* rowData keeps user verification status as string, e.g "Verified", "Unverified"
+        while EditCustomerData API processes user's verification status as boolean
+          and the form displays the data using <Switch/> component that only allows boolean value.
+       So here, if verification status is saved as a string, 
+        we 'convert' it to boolean by checking if the string indicated user's status is "Verified".
+       If the user clicked edit icon on that row, which means this function already ran in that row
+        and the data is already 'converted' to boolean, we will not change it.
+    */
+    rowData = Object.assign(rowData, {
+      is_verified:
+        rowData.is_verified instanceof String ||
+        typeof rowData.is_verified == "string"
+          ? rowData.is_verified === Constants.VERIFIED
+          : rowData.is_verified,
+    });
+    setDataToEdit(rowData);
+    setModalVisibility(true);
+  }
+
+  function closeModal() {
+    setModalVisibility(false);
+  }
+
+  function pageChange(page) {
+    setPage(page);
+  }
+
+  function filterDate(date) {
+    if (date !== null) {
+      let day = date.date().toString();
+      let month = (date.month() + 1).toString();
+      let year = date.year().toString();
+      let fixdate = year + "-" + month + "-" + day;
+      setDate(fixdate);
+    } else {
+      setDate("");
+    }
+  }
+
+  function searchCust(value) {
+    setSearch(value);
+  }
+
+  React.useEffect(() => {
+    getCustomerList(
+      paramPage,
+      paramDate,
+      paramSearch,
+      setListCust,
+      setCountData,
+      setLoading
+    );
+  }, [setListCust, paramPage, paramDate, paramSearch]);
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "cust_name",
+      key: "cust_name",
+    },
+    {
+      title: "Acc Num",
+      dataIndex: "account_num",
+      key: "account_num",
+    },
+    {
+      title: "Email",
+      dataIndex: "cust_email",
+      key: "cust_email",
+    },
+    {
+      title: "Verified",
+      dataIndex: "is_verified",
+      key: "is_verified",
+      render: (text) => {
+        if (text === "Verified") {
+          return <CheckCircleOutlined className="cus-icon verified" />;
+        } else {
+          return <CloseCircleOutlined className="cus-icon warn " />;
+        }
+      },
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+    },
+    {
+      title: "Status",
+      dataIndex: "is_deleted",
+      key: "is_deleted",
+      render: (text) => {
+        if (text) {
+          return <LockTwoTone twoToneColor="red" className="cus-icon warn" />;
+        } else {
+          return <CheckCircleOutlined className="cus-icon verified" />;
+        }
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text, record) => {
+        if (text.is_deleted) {
+          return (
+            <div className="field-action">
+              <EyeTwoTone
+                className="cus-icon"
+                onClick={() => clickDetailCustomer(text)}
+              />
+
+              <EditOutlined
+                className="cus-icon-action edit"
+                onClick={() => clickEditCustomer(text)}
+              />
+
+              <MailTwoTone
+                className="cus-icon-action"
+                onClick={() => clickMailCustomer(text)}
+              />
             </div>
+          );
+        } else {
+          return (
+            <div className="field-action">
+              <EyeTwoTone
+                className="cus-icon"
+                onClick={() => clickDetailCustomer(text)}
+              />
+
+              <EditOutlined
+                className="cus-icon-action edit"
+                onClick={() => clickEditCustomer(text)}
+              />
+
+              <MailTwoTone
+                className="cus-icon-action"
+                onClick={() => clickMailCustomer(text, setLoading)}
+              />
+
+              <Popconfirm
+                placement="top"
+                title="Are you sure?"
+                onConfirm={() =>
+                  clickDeleteCustomer(record.account_num, setLoading, history)
+                }
+                okText="Yes"
+                cancelText="No"
+              >
+                <DeleteTwoTone twoToneColor="red" className="cus-icon-action" />
+              </Popconfirm>
+            </div>
+          );
+        }
+      },
+    },
+  ];
+
+  return (
+    <div className="customers-constraint">
+      <NavigationBar></NavigationBar>
+      <div className="customers-content">
+        <div className="cl-title"> List All Customers </div>
+        <div className="filter-search">
+          <FilterBar onChange={(date) => filterDate(date)} />
+          <SearchBar
+            className="search-content"
+            onSearch={(value) => searchCust(value)}
+          />
         </div>
-    )
+
+        <p>Total Data : {countData}</p>
+        <div className="cl-table">
+          <DataTable
+            columns={columns}
+            data={listCust}
+            pagePosition="bottomRight"
+            pageSize={20}
+            totalData={countData}
+            onPageChange={(page) => pageChange(page)}
+            loading={loading}
+          />
+          <EditProfileModalContainer
+            data={customerDataToBeEdited}
+            onOk={closeModal}
+            onCancel={closeModal}
+            loading={loading}
+            visible={isModalVisible}
+            setLoading={setLoading}
+            history={history}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
