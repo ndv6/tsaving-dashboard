@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import { useHistory, Redirect } from "react-router-dom";
 import { Form, Input, Button, Checkbox, message } from "antd";
 import logo from "../static/ic_tsaving.png";
 import "../styles/Login.css";
 import config from "../config/config.json";
+import { AppContext } from "../context/AppContext";
 
 const layout = {
   labelCol: {
@@ -23,7 +24,7 @@ const tailLayout = {
 
 export default function Login() {
   const history = useHistory();
-
+  const appConfig = useContext(AppContext);
   const fetchLogin = (values) => {
     setLoading(true);
     axios
@@ -34,6 +35,7 @@ export default function Login() {
       .then(function (res) {
         window.localStorage.setItem("token", res.data.data.token);
         history.push("/admin/dashboard");
+        appConfig.action.changeUser({ username: res.data.data.username });
       })
       .catch((err) => {
         message.error("Username and password doesn't match");

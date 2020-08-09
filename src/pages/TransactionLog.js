@@ -62,7 +62,9 @@ function getTransactionLog(paramPage=1, paramDate='', paramSearch='', setListTL,
                 minimumFractionDigits: 2
             });
             let fixdesc = "Deposit Balance";
-            if(value.description === "MAIN_TO_VA")
+            if(value.description === "MAIN_TO_VA"){
+                
+            }
 
 
             singleRow['key'] = index;
