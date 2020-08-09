@@ -1,24 +1,37 @@
-import React from 'react';
-import { Table } from 'antd';
+import React from "react";
+import { Table } from "antd";
 
 export default function DataTable(props) {
+  const {
+    columns,
+    data,
+    loading,
+    onChange,
+    current,
+    pagePosition,
+    pageSize,
+    totalData,
+    onPageChange,
+    x,
+    y,
+  } = props;
   return (
     <div>
       <Table
-        columns={props.columns}
-        dataSource={props.data}
+        columns={columns}
+        dataSource={data}
         size="middle"
-        loading={props.loading}
-        onChange={props.onChange}
+        loading={loading}
+        onChange={onChange}
         pagination={{
-          current: props.current,
+          current,
           showSizeChanger: false,
-          position: props.pagePosition,
-          pageSize: props.pageSize,
-          total: props.totalData,
-          onChange: props.onPageChange,
+          position: pagePosition,
+          pageSize,
+          total: totalData,
+          onChange: onPageChange,
         }}
-        scroll={{ x: props.x, y: props.y }}
+        scroll={{ x, y }}
       />
     </div>
   );

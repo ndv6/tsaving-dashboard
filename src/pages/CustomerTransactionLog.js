@@ -1,12 +1,12 @@
 import React from "react";
+import axios from "axios";
+import { message } from "antd";
+import { Redirect } from "react-router-dom";
 import DataTable from "../components/DataTable";
 import "../styles/CustomerTransactionLog.css";
 import FilterBar from "../components/FilterBar";
 import SearchBar from "../components/SearchBar";
-import axios from "axios";
-import { Redirect } from "react-router-dom";
 import { FormatLogDescription } from "../utils/Helper";
-import { message } from "antd";
 import { Loader, Reloader } from "./CustomerProfile";
 
 const columns = [
@@ -53,41 +53,13 @@ function GetTransaction(
   accNum = 2007236310;
   let url = "";
   if (day == null && month == null && year == null && search === "") {
-    url = "http://localhost:8000/v2/transactions/" + accNum + "/" + page;
+    url = `http://localhost:8000/v2/transactions/${accNum}/${page}`;
   } else if (search !== "" && day == null && month == null && year == null) {
-    url =
-      "http://localhost:8000/v2/transactions/" +
-      accNum +
-      "/" +
-      search +
-      "/" +
-      page;
+    url = `http://localhost:8000/v2/transactions/${accNum}/${search}/${page}`;
   } else if (search !== "" && day !== null && month !== null && year !== null) {
-    url =
-      "http://localhost:8000/v2/transactions/" +
-      accNum +
-      "/" +
-      day +
-      "-" +
-      month +
-      "-" +
-      year +
-      "/" +
-      search +
-      "/" +
-      page;
+    url = `http://localhost:8000/v2/transactions/${accNum}/${day}-${month}-${year}/${search}/${page}`;
   } else if (search === "" && day !== null && month !== null && year !== null) {
-    url =
-      "http://localhost:8000/v2/transactions/" +
-      accNum +
-      "/" +
-      day +
-      "-" +
-      month +
-      "-" +
-      year +
-      "/" +
-      page;
+    url = `http://localhost:8000/v2/transactions/${accNum}/${day}-${month}-${year}/${page}`;
   }
 
   setLoading(true);
@@ -97,23 +69,23 @@ function GetTransaction(
       Authorization: token,
     },
     method: "GET",
-    url: url,
+    url,
   })
     .then((res) => {
       const tableList = (res.data.data.list || []).map((value, index) => {
-        let singleData = {};
+        const singleData = {};
         const formatter = new Intl.NumberFormat("id", {
           style: "currency",
           currency: "IDR",
           minimumFractionDigits: 2,
         });
 
-        singleData["key"] = index;
-        singleData["from_account"] = value.from_account;
-        singleData["dest_account"] = value.dest_account;
-        singleData["description"] = FormatLogDescription(value.description);
-        singleData["tran_amount"] = formatter.format(value.tran_amount);
-        singleData["created_at"] = new Date(value.created_at).toUTCString();
+        singleData.key = index;
+        singleData.from_account = value.from_account;
+        singleData.dest_account = value.dest_account;
+        singleData.description = FormatLogDescription(value.description);
+        singleData.tran_amount = formatter.format(value.tran_amount);
+        singleData.created_at = new Date(value.created_at).toUTCString();
         return singleData;
       });
 
@@ -203,9 +175,9 @@ export default function CustomerTransactionLog(props) {
   function filterDate(date) {
     setPage(1);
     if (date !== null) {
-      let day = date.date().toString();
-      let month = (date.month() + 1).toString();
-      let year = date.year().toString();
+      const day = date.date().toString();
+      const month = (date.month() + 1).toString();
+      const year = date.year().toString();
       setDate(date);
       GetTransaction(
         token,

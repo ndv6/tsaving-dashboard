@@ -71,22 +71,24 @@ export default function Customers() {
       })
       .catch((err) => {
         if (!err.status) {
-          let args = {
-            message: "Resend Email",
-            description: "Network Error.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
-        } else if (err.response.status === 429) {
-          let args = {
-            message: "Resend Email",
-            description:
-              "Too many request. Please wait for 10 seconds before sending another email.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
+          if (err.response.status == 429) {
+            let args = {
+              message: "Resend Email",
+              description:
+                "Too many request. Please wait for 10 seconds before sending another email.",
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          } else {
+            let args = {
+              message: "Resend Email",
+              description: "Network Error.",
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          }
         }
       })
       .finally(() => {

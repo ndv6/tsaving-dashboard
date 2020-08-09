@@ -1,9 +1,5 @@
 import React, { useContext } from "react";
 import { NavLink, useHistory, Redirect } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-
-import logo from "../static/ic_tsaving.png";
-import "../styles/NavigationBar.css";
 import {
   BarChartOutlined,
   TeamOutlined,
@@ -11,6 +7,9 @@ import {
   FileTextOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
+import { AppContext } from "../context/AppContext";
+import logo from "../static/ic_tsaving.png";
+import "../styles/NavigationBar.css";
 
 export default function NavigationBar() {
   const context = useContext(AppContext);

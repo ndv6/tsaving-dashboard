@@ -1,13 +1,14 @@
 import React from "react";
 import { Form, message } from "antd";
+import axios from "axios";
 import * as Constants from "../constants/Constants";
-import Axios from "axios";
 import config from "../config/config.json";
 import { EDIT_CUSTOMER_DATA, LOGIN } from "../constants/ApiEndpoints";
 import EditProfileModal from "./EditProfileModal";
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();
+  const { visible, data, loading, onOk, onCancel } = props;
 
   function onSubmit(formData) {
     const userToken = window.localStorage.getItem(
@@ -24,7 +25,7 @@ export default function EditProfileModalContainer(props) {
         props.data[Constants.FORM_FIELDS.IS_VERIFIED]
     ) {
       props.setLoading(true);
-      Axios({
+      axios({
         headers: {
           [Constants.HEADER_TYPE.CONTENT_TYPE]: Constants.HEADER_CONTENTS.JSON,
           Authorization: userToken,
@@ -56,13 +57,13 @@ export default function EditProfileModalContainer(props) {
 
   return (
     <EditProfileModal
-      visible={props.visible}
-      initialValues={props.data}
+      visible={visible}
+      initialValues={data}
       form={form}
-      loading={props.loading}
+      loading={loading}
       onSubmit={onSubmit}
-      onOk={props.onOk}
-      onCancel={props.onCancel}
+      onOk={onOk}
+      onCancel={onCancel}
     />
   );
 }

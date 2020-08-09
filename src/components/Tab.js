@@ -1,19 +1,20 @@
-import React from 'react';
-import { Tabs } from 'antd';
+import React from "react";
+import { Tabs } from "antd";
 
 const { TabPane } = Tabs;
 
 export default function Tab(props) {
+  const { size, position, type, tabs } = props;
   return (
     <div>
       <Tabs
         defaultActiveKey="0"
         centered
-        size={props.size}
-        tabPosition={props.position}
-        type={props.type}
+        size={size}
+        tabPosition={position}
+        type={type}
       >
-        {props.tabs.map((value, index) => {
+        {tabs.map((value, index) => {
           return (
             <TabPane tab={value.tabname} key={index}>
               {value.components}

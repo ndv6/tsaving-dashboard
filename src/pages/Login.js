@@ -23,29 +23,28 @@ const tailLayout = {
 };
 
 export default function Login() {
+  const [loading, setLoading] = React.useState(false);
   const history = useHistory();
   const appConfig = useContext(AppContext);
   const fetchLogin = (values) => {
     setLoading(true);
     axios
-      .post(config.apiHost + "/v2/login", {
+      .post(`${config.apiHost}/v2/login`, {
         username: values.username,
         password: values.password,
       })
-      .then(function (res) {
+      .then((res) => {
         window.localStorage.setItem("token", res.data.data.token);
         history.push("/admin/dashboard");
         appConfig.action.changeUser({ username: res.data.data.username });
       })
-      .catch((err) => {
+      .catch(() => {
         message.error("Username and password doesn't match");
       })
       .finally(() => {
         setLoading(false);
       });
   };
-
-  const [loading, setLoading] = React.useState(false);
 
   if (window.localStorage.getItem("token")) {
     return <Redirect to="/admin/dashboard" />;
@@ -57,7 +56,7 @@ export default function Login() {
         <img src={logo} alt="tsaving-logo" />
       </div>
       <Form
-        {...layout}
+        {...{ layout }}
         name="basic"
         initialValues={{
           remember: true,
@@ -90,11 +89,11 @@ export default function Login() {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+        <Form.Item {...{ tailLayout }} name="remember" valuePropName="checked">
           <Checkbox>Remember me</Checkbox>
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item {...{ tailLayout }}>
           <Button
             type="primary"
             htmlType="submit"
