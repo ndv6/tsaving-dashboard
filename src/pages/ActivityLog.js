@@ -4,16 +4,22 @@ import "../styles/ActivityLog.css"
 import axios from 'axios';
 import NavigationBar from "../components/NavigationBar"
 import FilterBar from "../components/FilterBar"
+import { Pagination,Space } from 'antd';
 
 
-function getActivityLog(setList){
+function filter(value){
+  console.log(value)
+}
+
+function getActivityLog(setList,pageNumber){
     //catch untuk nge throw error. kalau success bakal ke then.
+    
     console.log("tes")
     axios({
       method : "GET",
-      url : "http://localhost:8000/v2/log/1",
+      url : "http://localhost:8000/v2/log/"+pageNumber+"",
       headers:{
-        authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA3VDE1OjM2OjAzLjQ4NTAxNiswNzowMCJ9.UvM_vkPr9tib--hC1BP3zAWiamqArl_wTHw0_b-fL1Q'
+        authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImV4cGlyZWQiOiIyMDIwLTA4LTA5VDA5OjAzOjMwLjY1MzExNyswNzowMCJ9.AS2kG_0ZVePsvX_yX94P-_WfNYo30C8Eg43G4Hhbl_0'
       }
     }).then((res) => {
       //success
@@ -21,7 +27,6 @@ function getActivityLog(setList){
       console.log(res.data.status,"data table")
       setList(res.data.data)
       console.log(res.data.data, 'success')
-  
     }).catch((err) => {
       //failed
       console.log(err,'error')
@@ -34,11 +39,15 @@ function getActivityLog(setList){
 
 
 export default function ActivityLog(){
+  const [list,setList] = useState([]);
+  const [page,setPage] = useState(1);
+  const [date,setDate] = useState("");
+
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id_logadmin',
+      title: 'No',
       key: 'name',
+      render : (text, record, index) => index+page,
     },
     {
       title: 'Username',
@@ -53,48 +62,27 @@ export default function ActivityLog(){
     {
       title: 'Time',
       dataIndex: 'action_time',
-      key: 'address',
+      key: 'action_time',
+      render :(text) => text
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'address',
     },
-    // {
-    //   title: '',
-    //   key: 'aksi',
-    //   render: (text, record) => (
-    //     <Space size="middle">
-    //       <a><i className = "fa fa-eye"></i></a>
-    //       <a><i className = "fa fa-pencil-square-o"></i></a>
-    //       <a><i className = "fa fa-trash"></i></a>
-    //       <a><i className = "fa fa-envelope-o"></i></a>
-    //     </Space>
-    //   ),
-    // },
+
   ];
 
-  const dataTable = [
-    {
-      key: '1',
-      name: 'test',
-      age: '2',
-      address: 'tesssss'
-    },
-    {
-      key: '2',
-      name: 'test',
-      age: '2',
-      address: 'tesssss'
-    },
 
-  ]
-
-
-    const [list,setList] = useState([]);
+    function onChange(pageNumber) {
+      console.log('Page: ', pageNumber);
+      getActivityLog(setList,pageNumber)
+      var index = (pageNumber - 1) * 20 + 1;
+      setPage(index)
+    }
 
     React.useEffect(() => {
-      getActivityLog(setList)
+      getActivityLog(setList,1)
     },[])
 
     return(
@@ -102,16 +90,23 @@ export default function ActivityLog(){
            <NavigationBar></NavigationBar>
            <div className = "activity-log-content">
               <h1>Activity Log</h1>
-              <FilterBar></FilterBar>
-              <div className = "table">
-              <DataTable 
-                  columns={columns}
-                  data={list}
-                  size="middle"
-                  pagePosition = {"bottomRight"}
-                  x = "10px"
-                />
+              <div className = "activity-log-filterbar">
+                <span className = "filter-text">Filter by date : &ensp;</span> <FilterBar></FilterBar>
               </div>
+              <div className = "table">
+
+                  <DataTable 
+                    columns={columns} 
+                    data={list} 
+                    pagePosition="bottomRight" 
+                    pageSize={20} 
+                    totalData={100} 
+                    onPageChange={(page) => onChange(page)}
+                    />
+
+                  
+                </div>
+                
                 
            </div>
         </div>

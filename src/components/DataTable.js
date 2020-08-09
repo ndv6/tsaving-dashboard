@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pagination, Table } from 'antd';
+import { Table } from 'antd';
 
 export default function DataTable(props) {
   return (
@@ -10,7 +10,13 @@ export default function DataTable(props) {
         size="middle"
         loading={props.loading}
         onChange={props.onChange}
-        pagination={{ position: [props.pagePosition] }}
+        pagination={{
+          showSizeChanger: false,
+          position: props.pagePosition,
+          pageSize: props.pageSize,
+          total: props.totalData,
+          onChange: props.onPageChange,
+        }}
         scroll={{ x: props.x, y: props.y }}
       />
     </div>
