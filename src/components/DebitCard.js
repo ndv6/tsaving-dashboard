@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography } from 'antd';
+import { Row, Col, Typography} from 'antd';
 import '../styles/DebitCard.css';
 import chip from '../static/chip.png';
 import master from '../static/master.svg';
