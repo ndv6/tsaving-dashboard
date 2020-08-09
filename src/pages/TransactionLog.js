@@ -5,7 +5,7 @@ import NavigationBar from '../components/NavigationBar';
 import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
 import SearchBar from '../components/SearchBar';
-
+import { message } from "antd";
 import { FormatLogDescription } from '../utils/Helper';
 import '../styles/TransactionLog.css';
 
@@ -45,7 +45,7 @@ const columns = [
 ];
 
 
-function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL, setCountData, setLoading, setStatus){
+function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL, setCountData, setLoading, history){
     setLoading(true);
     let fixDate = "";
     if(paramDate != null){
@@ -93,15 +93,16 @@ function getTransactionLog(paramPage=1,  paramDate='', paramSearch='', setListTL
         setCountData(res.data.data.count);
         setListTL(tableData);
     }).catch((err) => {
-        if (!err.status) {
-            setStatus(0)
-          } else if (err.response.status === 401) {
-            setStatus(401)
-          } else if (err.response.status === 400) {
-            setStatus(400)
-          } else if (err.response.status === 404) {
-            setStatus(404)
-          }
+        if(err.response === undefined){
+          message.error("Network Error please try again later", 2);
+        }
+        else if (err.response.status === 401) {
+          localStorage.removeItem("token");
+          history.push("/admin/login");
+        }
+        else{
+            message.error("Failed to Get Data, please try again later", 2);
+        }
     }).finally(() => {
         setLoading(false);
     })
@@ -114,7 +115,6 @@ export default function TransactionLog() {
     const [paramDate, setDate] = useState(null);
     const [paramSearch, setSearch] = useState("");
     const [paramPage, setPage] = useState(1);
-    const [status, setStatus] = React.useState(null)
     const history = useHistory();
 
     function pageChange(page){
@@ -137,7 +137,7 @@ export default function TransactionLog() {
     }
 
     useEffect(() => {
-        getTransactionLog(paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history, setStatus )
+        getTransactionLog(paramPage, paramDate, paramSearch,setListTL, setCountData, setLoading, history )
     },[setListTL, paramPage, paramDate, paramSearch, history]);
     
     return ( 
