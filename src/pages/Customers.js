@@ -3,6 +3,8 @@ import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
+import { notification } from 'antd';
+import { InfoCircleTwoTone } from '@ant-design/icons';
 import { Popconfirm, message, Button } from 'antd';
 
 import axios from "axios";
@@ -27,8 +29,72 @@ function clickDetailCustomer(rowData) {
 function clickEditCustomer(rowData) {
   console.log(rowData, "edit here");
 }
-function clickMailCustomer(rowData){
-    console.log(rowData, "sendmail here");
+
+async function clickMailCustomer(rowData, setLoading){
+    setLoading(true)
+    let customerToken = await getTokenCustomer(rowData.cust_email)
+    axios({
+        headers: {
+            'Content-Type': "application/json",
+          },
+          method: 'POST',
+          url: "http://localhost:8082/sendMail",
+          data: {
+              email: rowData.cust_email,
+              token: customerToken
+          }
+    }).then((res) => {
+        let args = {
+            message: 'Resend Email',
+            description:
+              'Email has been sent to the customer.',
+            duration: 2,
+            icon: <InfoCircleTwoTone style={{ color: '#108ee9' }} />
+          };
+        notification.open(args)
+    }).catch((err) =>{
+        if (!err.status) {
+            let args = {
+                message: 'Resend Email',
+                description:
+                  'Network Error.',
+                duration: 2,
+                icon: <InfoCircleTwoTone twoToneColor="red" />
+              };
+            notification.error(args)
+        } else if (err.response.status === 429){
+            let args = {
+                message: 'Resend Email',
+                description:
+                  'Too many request. Please wait for 10 seconds before sending another email.',
+                duration: 2,
+                icon: <InfoCircleTwoTone twoToneColor = "red" />
+              };
+            notification.error(args)
+        }
+    }).finally(() => {
+        setLoading(false)
+    })
+}
+
+function getTokenCustomer(customerEmail) {
+    return new Promise(function (resolve, reject) {
+        axios({
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization' : window.localStorage.getItem("token"),
+            },
+            method: 'POST',
+            url: 'http://localhost:8000/v2/get-token',
+            data: {
+                email: customerEmail
+            }
+        }).then((res) => {
+            resolve(res.data.data.token)
+        }).catch((err) => {
+            reject(err)
+        })
+    })
 }
 function clickDeleteCustomer(account_num,setLoading,history){
     setLoading(true)
@@ -220,7 +286,7 @@ export default function Customers() {
                         
                         <MailTwoTone 
                         className = "cus-icon-action" 
-                        onClick={() => clickMailCustomer(text)} />
+                        onClick={() => clickMailCustomer(text, setLoading)} />
     
                         <Popconfirm placement="top" title="Are you sure?" onConfirm={() => clickDeleteCustomer(record.account_num,setLoading,history)} okText="Yes" cancelText="No">
                             <DeleteTwoTone 
@@ -237,7 +303,6 @@ export default function Customers() {
     
     ];
    
-    
     function pageChange(page){
         setPage(page)
     }
