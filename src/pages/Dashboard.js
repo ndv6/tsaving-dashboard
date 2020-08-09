@@ -224,7 +224,7 @@ export default function Dashboard() {
                                 isSmall={true}
                                 isLoading={state.loading}
                                 hoverable={true}
-                                content={state.loading ? [] : transactionChart(data.data.dashboard_transaction)}/>
+                                content={state.loading ? [] : transactionChart(state.err ? null : data.data.dashboard_transaction)}/>
                         </Fade>
                     </div>,
                     <div className="dashboard-content-section">
@@ -237,7 +237,7 @@ export default function Dashboard() {
                                 content={state.loading ? [] : [
                                     <div className="dashboard-content-chart">
                                         <div className="dashboard-content-left">
-                                            {state.loading ? [] : transactionComponentUI(data.data.dashboard_amount.transaction_month)}
+                                            {transactionComponentUI(data.data.dashboard_amount.transaction_month)}
                                         </div>
                                         <div className="dashboard-content-right">
                                             {[
