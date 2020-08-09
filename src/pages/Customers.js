@@ -9,7 +9,6 @@ import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Popconfirm, message, Button } from "antd";
 import * as Constants from "../constants/Constants";
-import { Redirect } from "react-router-dom";
 
 import axios from "axios";
 
@@ -41,7 +40,6 @@ export default function Customers() {
     is_verified: false,
   });
   const token = window.localStorage.getItem("token");
-  const [status, setStatus] = React.useState(null);
 
 
   function clickDetailCustomer(rowData) {
@@ -254,15 +252,14 @@ export default function Customers() {
   }
 
   function filterDate(date) {
+    setPage(1)
     if (date !== null) {
       let day = date.date().toString();
       let month = (date.month() + 1).toString();
       let year = date.year().toString();
       let fixdate = year + "-" + month + "-" + day;
-      setPage(1)
       setDate(fixdate);
     } else {
-      setPage(1)
       setDate("");
     }
   }
