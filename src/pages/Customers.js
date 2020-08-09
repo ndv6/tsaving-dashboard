@@ -18,108 +18,8 @@ import {
   } from '@ant-design/icons';
   
 import '../styles/Customers.css'; 
-import { render } from '@testing-library/react';
+import { useHistory } from 'react-router-dom';
 
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'cust_name',
-        key: 'cust_name'
-    },
-    {
-        title: 'Acc Num',
-        dataIndex: 'account_num',
-        key: 'account_num'
-    },
-    {
-        title: 'Email',
-        dataIndex: 'cust_email',
-        key: 'cust_email'
-    },
-    {
-        title: 'Verified',
-        dataIndex: 'is_verified',
-        key: 'is_verified',
-        render: (text) => {
-            if (text === 'Verified'){
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-            else{
-                return <CloseCircleOutlined className = "cus-icon warn "/>
-            }
-        }
-    },
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date'
-    },
-    {
-        title: 'Status',
-        dataIndex: 'is_deleted',
-        key: 'is_deleted',
-        render: (text) => {
-            if (text){
-                return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
-            }
-            else{
-                return <CheckCircleOutlined className = "cus-icon verified" />
-            }
-        }
-    },
-    {
-        title: 'Action',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text, record) => {
-            if(text.is_deleted){
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-                    
-                    </div>
-
-                    
-                )
-            }else{
-                return (
-                    <div className="field-action">
-                    <EyeTwoTone 
-                    className = "cus-icon" 
-                    onClick={() => clickDetailCustomer(text)} />
-                    
-                    <EditOutlined 
-                    className = "cus-icon-action edit" 
-                    onClick={() => clickEditCustomer(text)} />
-                    
-                    <MailTwoTone 
-                    className = "cus-icon-action" 
-                    onClick={() => clickMailCustomer(text)} />
-
-                    <Popconfirm placement="top" title="Are you sure?" onConfirm={() => clickDeleteCustomer(record.account_num)} okText="Yes" cancelText="No">
-                        <DeleteTwoTone 
-                        twoToneColor = "red" 
-                        className = "cus-icon-action" 
-                         />
-                    </Popconfirm>
-                    </div>
-                    
-                )
-            }
-        },
-    }
-
-];
 
 function clickDetailCustomer(rowData){
     console.log(rowData, "detail here");
@@ -127,17 +27,21 @@ function clickDetailCustomer(rowData){
 function clickEditCustomer(rowData){
     console.log(rowData, "edit here");
 }
-function clickDeleteCustomer(account_num){
- 
+function clickMailCustomer(rowData){
+    console.log(rowData, "sendmail here");
+}
+function clickDeleteCustomer(account_num,setLoading,history){
+    setLoading(true)
     axios({
+        headers:{
+            'Content-Type': "application/json",
+            'Authorization': window.localStorage.getItem("token")
+        },
         method : "POST",
         url : "http://localhost:8000/v2/customers/delete",
         data : {
             account_num : account_num,
         },
-        headers:{
-            authorization: window.localStorage.getItem("token")
-        }
         }).then((res) => {
             message.info(res.data.message);
             setTimeout(function() {
@@ -150,17 +54,13 @@ function clickDeleteCustomer(account_num){
                 history.push("/admin/login")
             }
         }).finally(() => {
-        
+            setLoading(false)
         })
-          
    
 }
-function clickMailCustomer(rowData){
-    console.log(rowData, "sendmail here");
-}
 
 
-function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
+function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading,history){
     setLoading(true)
     axios({
         headers: {
@@ -224,6 +124,109 @@ export default function Customers() {
     const [paramDate, setDate] = useState(null)
     const [paramSearch, setSearch] = useState("")
     const [paramPage, setPage] = useState(1)
+    const history = useHistory();
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'cust_name',
+            key: 'cust_name'
+        },
+        {
+            title: 'Acc Num',
+            dataIndex: 'account_num',
+            key: 'account_num'
+        },
+        {
+            title: 'Email',
+            dataIndex: 'cust_email',
+            key: 'cust_email'
+        },
+        {
+            title: 'Verified',
+            dataIndex: 'is_verified',
+            key: 'is_verified',
+            render: (text) => {
+                if (text === 'Verified'){
+                    return <CheckCircleOutlined className = "cus-icon verified" />
+                }
+                else{
+                    return <CloseCircleOutlined className = "cus-icon warn "/>
+                }
+            }
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'is_deleted',
+            key: 'is_deleted',
+            render: (text) => {
+                if (text){
+                    return <LockTwoTone twoToneColor = "red" className = "cus-icon warn" />
+                }
+                else{
+                    return <CheckCircleOutlined className = "cus-icon verified" />
+                }
+            }
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text, record) => {
+                if(text.is_deleted){
+                    return (
+                        <div className="field-action">
+                        <EyeTwoTone 
+                        className = "cus-icon" 
+                        onClick={() => clickDetailCustomer(text)} />
+                        
+                        <EditOutlined 
+                        className = "cus-icon-action edit" 
+                        onClick={() => clickEditCustomer(text)} />
+    
+                        <MailTwoTone 
+                        className = "cus-icon-action" 
+                        onClick={() => clickMailCustomer(text)} />
+                        
+                        </div>
+    
+                        
+                    )
+                }else{
+                    return (
+                        <div className="field-action">
+                        <EyeTwoTone 
+                        className = "cus-icon" 
+                        onClick={() => clickDetailCustomer(text)} />
+                        
+                        <EditOutlined 
+                        className = "cus-icon-action edit" 
+                        onClick={() => clickEditCustomer(text)} />
+                        
+                        <MailTwoTone 
+                        className = "cus-icon-action" 
+                        onClick={() => clickMailCustomer(text)} />
+    
+                        <Popconfirm placement="top" title="Are you sure?" onConfirm={() => clickDeleteCustomer(record.account_num,setLoading,history)} okText="Yes" cancelText="No">
+                            <DeleteTwoTone 
+                            twoToneColor = "red" 
+                            className = "cus-icon-action" 
+                             />
+                        </Popconfirm>
+                        </div>
+                        
+                    )
+                }
+            },
+        }
+    
+    ];
+   
     
     function pageChange(page){
         setPage(page)
@@ -243,9 +246,10 @@ export default function Customers() {
     function searchCust(value){
         setSearch(value)
     }
+    
 
     React.useEffect(() => {
-        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading)
+        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading,history)
     },[setListCust,paramPage,paramDate,paramSearch])
     
     return(
