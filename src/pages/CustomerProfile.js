@@ -24,9 +24,9 @@ export function reqBuilder(method, url) {
 
 export default function CustomerProfile() {
     return (
-        <div className="customers-constraint">
+        <div className="customer-profile-constraint">
             <NavigationBar></NavigationBar>
-            <div className="customers-content">
+            <div className="customer-profile-content">
                 <div>
                     <Row justify="center" align="middle">
                         <Col flex={1}>
