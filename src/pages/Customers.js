@@ -39,6 +39,8 @@ export default function Customers() {
     cust_phone: "",
     is_verified: false,
   });
+  const token = window.localStorage.getItem("token");
+
 
   function clickDetailCustomer(rowData) {
     console.log(rowData, "detail here");
@@ -145,6 +147,7 @@ export default function Customers() {
   }
 
   function getCustomerList(
+    token,
     paramPage = 1,
     paramDate = "",
     paramSearch = "",
@@ -156,7 +159,7 @@ export default function Customers() {
     axios({
       headers: {
         "Content-Type": "application/json",
-        Authorization: window.localStorage.getItem("token"),
+        Authorization: token,
       },
       method: "POST",
       url: "http://localhost:8000/v2/customers/list/" + paramPage,
@@ -192,6 +195,7 @@ export default function Customers() {
           singleRow["is_deleted"] = deletedfix;
           //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
           let dataRow = {};
+          dataRow["cust_id"] = value.cust_id;
           dataRow["cust_name"] = value.cust_name;
           dataRow["account_num"] = value.account_num;
           dataRow["cust_email"] = value.cust_email;
@@ -205,7 +209,14 @@ export default function Customers() {
         setListCust(tableData);
       })
       .catch((err) => {
-        console.log(JSON.stringify(err), "error");
+        if(!err.status){
+          message.error("Network Error please try again later", 2);
+        }
+        else if (err.response.status === 401) {
+          localStorage.removeItem("token");
+          history.push("/admin/login");
+        } 
+        
       })
       .finally(() => {
         setLoading(false);
@@ -241,6 +252,7 @@ export default function Customers() {
   }
 
   function filterDate(date) {
+    setPage(1)
     if (date !== null) {
       let day = date.date().toString();
       let month = (date.month() + 1).toString();
@@ -253,11 +265,16 @@ export default function Customers() {
   }
 
   function searchCust(value) {
+    setPage(1)
     setSearch(value);
   }
 
+  //checking status for error handling 
+  
+
   React.useEffect(() => {
     getCustomerList(
+      token,
       paramPage,
       paramDate,
       paramSearch,
@@ -265,7 +282,7 @@ export default function Customers() {
       setCountData,
       setLoading
     );
-  }, [setListCust, paramPage, paramDate, paramSearch]);
+  }, [token, setListCust, paramPage, paramDate, paramSearch]);
 
   const columns = [
     {
@@ -388,6 +405,7 @@ export default function Customers() {
         <p>Total Data : {countData}</p>
         <div className="cl-table">
           <DataTable
+            current={paramPage}
             columns={columns}
             data={listCust}
             pagePosition="bottomRight"
