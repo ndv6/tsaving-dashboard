@@ -49,7 +49,6 @@ export default function CustomerProfile() {
   useEffect(() => {
     axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
       .then(function (response) {
-        console.log(response);
         if (response.data.status === "SUCCESS") {
           setProfileData({
             isError: false,

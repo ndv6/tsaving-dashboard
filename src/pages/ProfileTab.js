@@ -34,7 +34,6 @@ export default function ProfileTab({ profileData }) {
         )
       )
         .then(function (response) {
-          console.log(response);
           if (response.data.status === "SUCCESS") {
             let validYear = response.data.data.expired.substring(2, 4);
             let validMonth = response.data.data.expired.substring(5, 7);
