@@ -8,6 +8,7 @@ import EditProfileModalContainer from "../components/EditProfileModalContainer";
 import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Popconfirm, message, Button } from "antd";
+import * as Constants from "../constants/Constants";
 
 import axios from "axios";
 
@@ -212,8 +213,20 @@ export default function Customers() {
   }
 
   function clickEditCustomer(rowData) {
+    /* rowData keeps user verification status as string, e.g "Verified", "Unverified"
+        while EditCustomerData API processes user's verification status as boolean
+          and the form displays the data using <Switch/> component that only allows boolean value.
+       So here, if verification status is saved as a string, 
+        we 'convert' it to boolean by checking if the string indicated user's status is "Verified".
+       If the user clicked edit icon on that row, which means this function already ran in that row
+        and the data is already 'converted' to boolean, we will not change it.
+    */
     rowData = Object.assign(rowData, {
-      is_verified: rowData.is_verified === "Verified",
+      is_verified:
+        rowData.is_verified instanceof String ||
+        typeof rowData.is_verified == "string"
+          ? rowData.is_verified === Constants.VERIFIED
+          : rowData.is_verified,
     });
     setDataToEdit(rowData);
     setModalVisibility(true);
@@ -389,6 +402,8 @@ export default function Customers() {
             onCancel={closeModal}
             loading={loading}
             visible={isModalVisible}
+            setLoading={setLoading}
+            history={history}
           />
         </div>
       </div>
