@@ -78,7 +78,6 @@ export default function CustomerProfile() {
         <div>
           <Row justify="center" align="middle">
             <Col flex={1}>
-              <div className="blue-bg bg-height" />
               <div className="bg-height" />
             </Col>
             <div className="picture-container">
