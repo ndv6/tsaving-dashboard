@@ -5,8 +5,9 @@ import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
 import { notification } from 'antd';
 import { InfoCircleTwoTone } from '@ant-design/icons';
+import { Popconfirm, message, Button } from 'antd';
 
-import axios from 'axios';
+import axios from "axios";
 
 import {
     CheckCircleOutlined,
@@ -19,15 +20,14 @@ import {
   } from '@ant-design/icons';
   
 import '../styles/Customers.css'; 
+import { useHistory } from 'react-router-dom';
 
-function clickDetailCustomer(rowData){
-    console.log(rowData, "detail here");
+
+function clickDetailCustomer(rowData) {
+  console.log(rowData, "detail here");
 }
-function clickEditCustomer(rowData){
-    console.log(rowData, "edit here");
-}
-function clickDeleteCustomer(rowData){
-    console.log(rowData, "delete here");
+function clickEditCustomer(rowData) {
+  console.log(rowData, "edit here");
 }
 
 async function clickMailCustomer(rowData, setLoading){
@@ -96,62 +96,101 @@ function getTokenCustomer(customerEmail) {
         })
     })
 }
-
-function getCustomerList(paramPage=1,paramDate='',paramSearch='', setListCust, setCountData, setLoading){
+function clickDeleteCustomer(account_num,setLoading,history){
     setLoading(true)
     axios({
-        headers: {
-        'Content-Type': "application/json",
-        "Authorization" : window.localStorage.getItem("token"),
+        headers:{
+            'Content-Type': "application/json",
+            'Authorization': window.localStorage.getItem("token")
         },
         method : "POST",
-        url : "http://localhost:8000/v2/customers/list/" + paramPage,
-        data:   {
-                    filter_date: paramDate,
-                    filter_search: paramSearch
-                }
-    }).then((res) => {
-        setCountData(res.data.data.total)
-        const tableData = (res.data.data.list || []).map((value, index) => {
-            let singleRow = {}
-            let field_verif = "";
-            if(value.is_verified === true){
-                field_verif = "Verified";
+        url : "http://localhost:8000/v2/customers/delete",
+        data : {
+            account_num : account_num,
+        },
+        }).then((res) => {
+            message.info(res.data.message);
+            setTimeout(function() {
+                window.location.reload()
+                }, 1500);
+            
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                localStorage.removeItem("token");
+                history.push("/admin/login")
             }
-            else{field_verif = "Unverified"}
-            let created = value.created_at.split('T');
-
-            //checkdeleted
-            let deletedraw = value.is_deleted.split('T');
-            let deletedfix =true;
-            if(deletedraw[0] === '1970-01-01'){
-                deletedfix = false;
-            }
-            singleRow['key'] = index
-            singleRow['cust_name'] = value.cust_name
-            singleRow['account_num'] = value.account_num
-            singleRow['cust_email'] = value.cust_email
-            singleRow['is_verified'] =  field_verif //value.is_verified
-            singleRow['date'] = created[0]
-            singleRow['is_deleted'] = deletedfix
-            //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
-            let dataRow = {}
-            dataRow['cust_name'] = value.cust_name
-            dataRow['account_num'] = value.account_num
-            dataRow['cust_email'] = value.cust_email
-            dataRow['is_verified'] =  field_verif
-            dataRow['cust_phone'] = value.cust_phone
-            dataRow['is_deleted'] = deletedfix
-
-            singleRow['action'] = dataRow
-            return singleRow
+        }).finally(() => {
+            setLoading(false)
         })
-        setListCust(tableData)
-    }).catch((err) => {
-        console.log(JSON.stringify(err), 'error');
-    }).finally(() => {
-        setLoading(false);
+   
+}
+
+function getCustomerList(
+  paramPage = 1,
+  paramDate = "",
+  paramSearch = "",
+  setListCust,
+  setCountData,
+  setLoading
+) {
+  setLoading(true);
+  axios({
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: window.localStorage.getItem("token"),
+    },
+    method: "POST",
+    url: "http://localhost:8000/v2/customers/list/" + paramPage,
+    data: {
+      filter_date: paramDate,
+      filter_search: paramSearch,
+    },
+  })
+    .then((res) => {
+      setCountData(res.data.data.total);
+      const tableData = (res.data.data.list || []).map((value, index) => {
+        let singleRow = {};
+        let field_verif = "";
+        if (value.is_verified === true) {
+          field_verif = "Verified";
+        } else {
+          field_verif = "Unverified";
+        }
+        let created = value.created_at.split("T");
+
+        //checkdeleted
+        let deletedraw = value.is_deleted.split("T");
+        let deletedfix = true;
+        if (deletedraw[0] === "1970-01-01") {
+          deletedfix = false;
+        }
+        singleRow["key"] = index;
+        singleRow["cust_name"] = value.cust_name;
+        singleRow["account_num"] = value.account_num;
+        singleRow["cust_email"] = value.cust_email;
+        singleRow["is_verified"] = field_verif; //value.is_verified
+        singleRow["date"] = created[0];
+        singleRow["is_deleted"] = deletedfix;
+        //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
+        let dataRow = {};
+        dataRow["cust_name"] = value.cust_name;
+        dataRow["account_num"] = value.account_num;
+        dataRow["cust_email"] = value.cust_email;
+        dataRow["is_verified"] = field_verif;
+        dataRow["cust_phone"] = value.cust_phone;
+        dataRow["is_deleted"] = deletedfix;
+
+        singleRow["action"] = dataRow;
+        return singleRow;
+      });
+      setListCust(tableData);
     })
+    .catch((err) => {
+      console.log(JSON.stringify(err), "error");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 }
 
 export default function Customers() {
@@ -161,6 +200,7 @@ export default function Customers() {
     const [paramDate, setDate] = useState(null)
     const [paramSearch, setSearch] = useState("")
     const [paramPage, setPage] = useState(1)
+    const history = useHistory();
 
     const columns = [
         {
@@ -213,7 +253,7 @@ export default function Customers() {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            render: (text) => {
+            render: (text, record) => {
                 if(text.is_deleted){
                     return (
                         <div className="field-action">
@@ -248,18 +288,21 @@ export default function Customers() {
                         className = "cus-icon-action" 
                         onClick={() => clickMailCustomer(text, setLoading)} />
     
-                        <DeleteTwoTone 
-                        twoToneColor = "red" 
-                        className = "cus-icon-action" 
-                        onClick={() => clickDeleteCustomer(text)} />
+                        <Popconfirm placement="top" title="Are you sure?" onConfirm={() => clickDeleteCustomer(record.account_num,setLoading,history)} okText="Yes" cancelText="No">
+                            <DeleteTwoTone 
+                            twoToneColor = "red" 
+                            className = "cus-icon-action" 
+                             />
+                        </Popconfirm>
                         </div>
+                        
                     )
                 }
             },
         }
     
     ];
-    
+   
     function pageChange(page){
         setPage(page)
     }
@@ -278,9 +321,10 @@ export default function Customers() {
     function searchCust(value){
         setSearch(value)
     }
+    
 
     React.useEffect(() => {
-        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading)
+        getCustomerList(paramPage, paramDate, paramSearch, setListCust, setCountData, setLoading,history)
     },[setListCust,paramPage,paramDate,paramSearch])
     
     return(
@@ -312,3 +356,4 @@ export default function Customers() {
         </div>
     )
 }
+       

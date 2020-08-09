@@ -6,31 +6,33 @@ import Customers from "./Customers";
 import TransactionLog from "./TransactionLog";
 import ActivityLog from "./ActivityLog";
 import PageNotFound from "./PageNotFound";
-import CustomerTransactionLog from "./CustomerTransactionLog";
+import { AppContextProvider } from "../context/AppContext";
 
 export default function Routes() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/admin/login">
-          <Login />
-        </Route>
-        <Route exact path="/admin/dashboard">
-          <Dashboard />
-        </Route>
-        <Route exact path="/admin/customer-list">
-          <Customers />
-        </Route>
-        <Route exact path="/admin/transaction-list">
-          <TransactionLog />
-        </Route>
-        <Route exact path="/admin/activity-log">
-          <ActivityLog />
-        </Route>
-        <Route path="*">
-          <PageNotFound />
-        </Route>
-      </Switch>
-    </Router>
+    <AppContextProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/admin/login">
+            <Login />
+          </Route>
+          <Route exact path="/admin/dashboard">
+            <Dashboard />
+          </Route>
+          <Route exact path="/admin/customer-list">
+            <Customers />
+          </Route>
+          <Route exact path="/admin/transaction-list">
+            <TransactionLog />
+          </Route>
+          <Route exact path="/admin/activity-log">
+            <ActivityLog />
+          </Route>
+          <Route path="*">
+            <PageNotFound />
+          </Route>
+        </Switch>
+      </Router>
+    </AppContextProvider>
   );
 }
