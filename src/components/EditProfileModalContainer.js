@@ -36,7 +36,7 @@ export default function EditProfileModalContainer(props) {
           is_email_changed:
             props.data.cust_email !==
             form.getFieldValue(Constants.FORM_FIELDS.EMAIL),
-          username: jwt_decode(userToken).username,
+          username: JSON.parse(window.localStorage.getItem("STORES")).username,
         }),
       })
         .then((response) => {
