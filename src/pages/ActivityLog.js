@@ -6,10 +6,11 @@ import NavigationBar from "../components/NavigationBar"
 import FilterBar from "../components/FilterBar"
 import config from '../config/config.json'
 import { Input, message } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 const { Search } = Input;
 
-function getActivityLog(token, setList,pageNumber,setTotaldata,date,search){
+function getActivityLog(token, setList,pageNumber,setTotaldata,date,search,history){
     //catch untuk nge throw error. kalau success bakal ke then.
     let url ="";
     let modifDate = "";
@@ -53,7 +54,16 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,search){
       setTotaldata(res.data.data.count)
     }).catch((err) => {
       //failed
-      message.error("Network Error");
+      if(err.response === undefined){
+        message.error("Network Error please try again later", 2);
+      }
+      else if (err.response.status === 401) {
+        localStorage.removeItem("token");
+        history.push("/admin/login");
+      }
+      else{
+          message.error("Failed to Get Data, please try again later", 2);
+      }
     }).finally(() => {
       console.log("finally")
       // setLoading(false);
@@ -67,6 +77,7 @@ export default function ActivityLog(){
   const [date,setDate] = useState(null);
   const [search,setSearch] = useState(null);
   const token = window.localStorage.getItem("token")
+  const history = useHistory();
 
     const columns = [
     {
@@ -128,7 +139,7 @@ export default function ActivityLog(){
   }
 
   React.useEffect(() => {
-    getActivityLog(token, setList,page,setTotaldata,date,search)
+    getActivityLog(token, setList,page,setTotaldata,date,search,history)
   },[setList,date,page,search])
 
     return(

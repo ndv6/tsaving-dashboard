@@ -169,10 +169,16 @@ function insertLog(account_num, action){
         }, 1500);
       })
       .catch((err) => {
-        if (err.response.status === 401) {
-          localStorage.removeItem("token");
-          history.push("/admin/login");
-        }
+        if(err.response === undefined){
+            message.error("Network Error please try again later", 2);
+          }
+          else if (err.response.status === 401) {
+            localStorage.removeItem("token");
+            history.push("/admin/login");
+          }
+          else{
+              message.error("Failed to Get Data, please try again later", 2);
+          }
       })
       .finally(() => {
         setLoading(false);
