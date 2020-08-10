@@ -49,22 +49,20 @@ function GetTransaction(
   setLoading,
   setStatus,
 ) {
-
   let day = null;
   let month = null;
   let year = null;
-  if (date!== null) {
+  if (date !== null) {
     day = date.date().toString();
     month = (date.month() + 1).toString();
     year = date.year().toString();
-  } 
+  }
 
   let url = '';
   if (day == null && month == null && year == null && search === '') {
     url = config.apiHost + `/v2/transactions/${accNum}/${page}`;
   } else if (search !== '' && day == null && month == null && year == null) {
-    url =
-      config.apiHost + `/v2/transactions/${accNum}/${search}/${page}`;
+    url = config.apiHost + `/v2/transactions/${accNum}/${search}/${page}`;
   } else if (search !== '' && day !== null && month !== null && year !== null) {
     url =
       config.apiHost +
@@ -156,7 +154,7 @@ export default function CustomerTransactionLog(props) {
 
   function filterDate(date) {
     setPage(1);
-    setDate(date)
+    setDate(date);
   }
 
   function filterSearch(keyword) {
@@ -179,7 +177,7 @@ export default function CustomerTransactionLog(props) {
   }
 
   if (status === 0) {
-    setReload(true)
+    setReload(true);
   }
 
   if (reload) {

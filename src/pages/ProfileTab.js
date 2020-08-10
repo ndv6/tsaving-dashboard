@@ -130,7 +130,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {generalInfo.map((item, index) => {
-          return <ItemRow {...item} key={index}/>;
+          return <ItemRow {...item} key={index} />;
         })}
         <Divider />
         <div className="top-space">
@@ -141,7 +141,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {contactInfo.map((item, index) => {
-          return <ItemRow {...item} key={index}/>;
+          return <ItemRow {...item} key={index} />;
         })}
       </Col>
     </Row>
