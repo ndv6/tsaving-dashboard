@@ -47,7 +47,7 @@ export default function Customers() {
     console.log(rowData, "detail here");
   }
 
-  async function clickMailCustomer(rowData, setLoading,acc_num) {
+  async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
     let customerToken = await getTokenCustomer(rowData.cust_email);
     axios({
@@ -61,7 +61,7 @@ export default function Customers() {
         token: customerToken,
       },
     }).then((res) => {
-        insertLog(acc_num,"RESEND");
+        insertLog(rowData.account_num,"RESEND");
         let args = {
           message: "Resend Email",
           description: "Email has been sent to the customer.",
@@ -248,7 +248,7 @@ function insertLog(account_num, action){
       });
   }
 
-  function clickEditCustomer(rowData,acc_num) {
+  function clickEditCustomer(rowData) {
     /* rowData keeps user verification status as string, e.g "Verified", "Unverified"
         while EditCustomerData API processes user's verification status as boolean
           and the form displays the data using <Switch/> component that only allows boolean value.
@@ -266,7 +266,7 @@ function insertLog(account_num, action){
     });
     setDataToEdit(rowData);
     setModalVisibility(true);
-    setAccNum(acc_num)
+    setAccNum(rowData.account_num)
   }
 
   function closeModal() {
@@ -364,7 +364,7 @@ function insertLog(account_num, action){
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (text, record) => {
+      render: (text,record) => {
         if (text.is_deleted) {
           return (
             <div className="field-action">
@@ -375,12 +375,12 @@ function insertLog(account_num, action){
 
               <EditOutlined
                 className="cus-icon-action edit"
-                onClick={() => clickEditCustomer(text,record.account_num)}
+                onClick={() => clickEditCustomer(text)}
               />
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text,setLoading, record.account_num)}
+                onClick={() => clickMailCustomer(text,setLoading)}
               />
             </div>
           );
@@ -394,12 +394,12 @@ function insertLog(account_num, action){
 
               <EditOutlined
                 className="cus-icon-action edit"
-                onClick={() => clickEditCustomer(text,record.account_num)}
+                onClick={() => clickEditCustomer(text)}
               />
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text, setLoading,record.account_num)}
+                onClick={() => clickMailCustomer(text, setLoading)}
               />
 
               <Popconfirm
