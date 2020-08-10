@@ -10,27 +10,24 @@ import { useHistory } from 'react-router-dom';
 
 const { Search } = Input;
 
-function getActivityLog(
-  token,
-  setList,
-  pageNumber,
-  setTotaldata,
-  date,
-  search,
-  history,
-) {
-  //catch untuk nge throw error. kalau success bakal ke then.
-  let url = '';
-  let modifDate = '';
-  if (date != null) {
-    let dateFormat = date.split('-');
-    modifDate =
-      dateFormat[0] +
-      '-' +
-      ('0' + dateFormat[1]).slice(-2) +
-      '-' +
-      ('0' + dateFormat[2]).slice(-2);
-  }
+function getActivityLog(token, setList,pageNumber,setTotaldata,date,search,history){
+    //catch untuk nge throw error. kalau success bakal ke then.
+    let url ="";
+    let modifDate = "";
+    if(date != null){
+       let dateFormat = date.split("-");
+       modifDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
+    }
+    
+    if(date == null && search == ""){
+      url = config.apiHost+"/v2/log/"+pageNumber
+    }else if(date != null && search == ""){
+      url = config.apiHost+"/v2/log/d/"+modifDate+"/"+pageNumber;
+    }else if(date == null && search != ""){
+      url = config.apiHost+"/v2/log/u/"+search+"/"+pageNumber;
+    }else if(date != null && search != ""){
+      url = config.apiHost+"/v2/log/"+search+"/"+modifDate +"/" + pageNumber;
+    }
 
   if (date == null && search == null) {
     url = config.apiHost + '/v2/log/' + pageNumber;
@@ -79,18 +76,17 @@ function getActivityLog(
       }
     })
     .finally(() => {
-      console.log('finally');
       // setLoading(false);
     });
 }
 
-export default function ActivityLog() {
-  const [list, setList] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalData, setTotaldata] = useState(0);
-  const [date, setDate] = useState(null);
-  const [search, setSearch] = useState(null);
-  const token = window.localStorage.getItem('token');
+export default function ActivityLog(){
+  const [list,setList] = useState([]);
+  const [page,setPage] = useState(1);
+  const [totalData,setTotaldata] = useState(0);
+  const [date,setDate] = useState(null);
+  const [search,setSearch] = useState("");
+  const token = window.localStorage.getItem("token")
   const history = useHistory();
 
   const columns = [
