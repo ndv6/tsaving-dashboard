@@ -7,6 +7,8 @@ import ComponentCard from '../components/Card';
 import Axios from 'axios';
 import { DASHBOARD_ENDPOINT } from '../constants/ApiEndpoints';
 import {
+    FETCH_DATA_FAILED, 
+    NETWORK_ERROR,
     DASHBOARD_CASH_FLOW_AMOUNT,
     DASHBOARD_CASH_FLOW_TODAY,
     DASHBOARD_CASH_FLOW_YESTERDAY,
@@ -37,7 +39,7 @@ import Fade from 'react-reveal/Fade';
 import Zoom from 'react-reveal/Zoom';
 import ComponentChartCard from '../components/ChartCard';
 import { useHistory } from "react-router-dom";
-import PopAlert from '../utils/popup-alert';
+import { message } from 'antd';
 
 function getDashboardData(history, setData, setState) {
     var error = false
@@ -52,12 +54,16 @@ function getDashboardData(history, setData, setState) {
         setData(res.data)
     })
         .catch(function (err) {
-            if (err.response.status === 401) {
-                PopAlert(LOGGED_OUT_MESSAGE)
+            error = true
+            if (err.response === undefined) {
+                message.error(NETWORK_ERROR, 2);
+            } else if (err.response.status === 401) {
+                message.error(LOGGED_OUT_MESSAGE, 2)
                 window.localStorage.removeItem("token");
                 history.push("/admin/login");
+            } else {
+                message.error(FETCH_DATA_FAILED, 2)
             }
-            error = true
         })
         .finally(function () {
             setState({ loading: false, err: error });
@@ -159,7 +165,6 @@ export default function Dashboard() {
     const [data, setData] = React.useState({})
 
     React.useEffect(function () {
-
         getDashboardData(history, setData, setState)
     }, [])
 
@@ -178,7 +183,7 @@ export default function Dashboard() {
                                 content={
                                     <div className="dashboard-content-chart">
                                         <div className="dashboard-content-left">
-                                            {userChart(state.loading ? null : data.data.dashboard_user)}
+                                            {userChart(state.loading ? null : state.err ? null : data.data.dashboard_user)}
                                         </div>
                                         <div className="dashboard-content-right">
                                             {state.loading ? [] : [

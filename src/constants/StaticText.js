@@ -30,4 +30,7 @@ export const DASHBOARD_TOTAL_TRANSACTION = "Total Transaction(s)"
 export const DASHBOARD_LOG_TRANSACTION = "Transactions Log"
 export const FAILED_TO_FETCH_DATA = "Failed To Fetch Data. Please Reload The Page"
 export const LOGGED_OUT_MESSAGE = "Your session has expires or invalid, please login to continue"
+export const NETWORK_ERROR = "Network Error please try again later"
+export const FETCH_DATA_FAILED = "Failed To Fetch Data please try again later"
+
 
