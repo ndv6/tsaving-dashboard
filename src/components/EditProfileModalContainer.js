@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Form, message } from "antd";
-import * as Constants from "../constants/Constants";
-import Axios from "axios";
-import config from "../config/config.json";
-import { EDIT_CUSTOMER_DATA, LOGIN } from "../constants/ApiEndpoints";
-import EditProfileModal from "./EditProfileModal";
+import React, { useEffect } from 'react';
+import { Form, message } from 'antd';
+import * as Constants from '../constants/Constants';
+import Axios from 'axios';
+import config from '../config/config.json';
+import { EDIT_CUSTOMER_DATA, LOGIN } from '../constants/ApiEndpoints';
+import EditProfileModal from './EditProfileModal';
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();

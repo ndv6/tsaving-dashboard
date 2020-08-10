@@ -1,14 +1,14 @@
-import React from "react";
-import DataTable from "../components/DataTable";
-import "../styles/CustomerTransactionLog.css";
-import FilterBar from "../components/FilterBar";
-import SearchBar from "../components/SearchBar";
-import axios from "axios";
-import { Redirect } from "react-router-dom";
-import FormatLogDescription from "../utils/Helper";
-import { message } from "antd";
-import config from "../config/config.json";
-import { Loader, Reloader } from "./CustomerProfile";
+import React from 'react';
+import DataTable from '../components/DataTable';
+import '../styles/CustomerTransactionLog.css';
+import FilterBar from '../components/FilterBar';
+import SearchBar from '../components/SearchBar';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
+import FormatLogDescription from '../utils/Helper';
+import { message } from 'antd';
+import config from '../config/config.json';
+import { Loader, Reloader } from './CustomerProfile';
 
 const columns = [
   {
@@ -51,39 +51,39 @@ function GetTransaction(
   setLoading,
   setStatus,
 ) {
-  let url = "";
-  if (day == null && month == null && year == null && search === "") {
-    url = config.apiHost + "/v2/transactions/" + accNum + "/" + page;
-  } else if (search !== "" && day == null && month == null && year == null) {
+  let url = '';
+  if (day == null && month == null && year == null && search === '') {
+    url = config.apiHost + '/v2/transactions/' + accNum + '/' + page;
+  } else if (search !== '' && day == null && month == null && year == null) {
     url =
-      config.apiHost + "/v2/transactions/" + accNum + "/" + search + "/" + page;
-  } else if (search !== "" && day !== null && month !== null && year !== null) {
+      config.apiHost + '/v2/transactions/' + accNum + '/' + search + '/' + page;
+  } else if (search !== '' && day !== null && month !== null && year !== null) {
     url =
       config.apiHost +
-      "/v2/transactions/" +
+      '/v2/transactions/' +
       accNum +
-      "/" +
+      '/' +
       day +
-      "-" +
+      '-' +
       month +
-      "-" +
+      '-' +
       year +
-      "/" +
+      '/' +
       search +
-      "/" +
+      '/' +
       page;
-  } else if (search === "" && day !== null && month !== null && year !== null) {
+  } else if (search === '' && day !== null && month !== null && year !== null) {
     url =
       config.apiHost +
-      "/v2/transactions/" +
+      '/v2/transactions/' +
       accNum +
-      "/" +
+      '/' +
       day +
-      "-" +
+      '-' +
       month +
-      "-" +
+      '-' +
       year +
-      "/" +
+      '/' +
       page;
   }
 

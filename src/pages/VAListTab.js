@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Select } from "antd";
-import axios from "axios";
-import DataTable from "../components/DataTable";
-import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
-import config from "../config/config.json";
-import "../styles/CustomerProfile.css";
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Select } from 'antd';
+import axios from 'axios';
+import DataTable from '../components/DataTable';
+import { Loader, Reloader, reqBuilder, logOut } from './CustomerProfile';
+import config from '../config/config.json';
+import '../styles/CustomerProfile.css';
 
 const columns = [
   {
@@ -37,7 +37,7 @@ export default function VAList({ custId }) {
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(true);
   const [reload, setReload] = useState(false);
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState('');
 
   function onChange(page) {
     setFetching(true);
@@ -69,15 +69,15 @@ export default function VAList({ custId }) {
 
   useEffect(() => {
     if (fetching) {
-      let url = "";
-      if (color === "") {
+      let url = '';
+      if (color === '') {
         url = `${config.apiHost}/v2/va/${custId}/${page}`;
       } else {
         url = `${config.apiHost}/v2/va/${custId}/${color}/${page}`;
       }
-      axios(reqBuilder("get", url))
+      axios(reqBuilder('get', url))
         .then(function (response) {
-          if (response.data.status === "SUCCESS") {
+          if (response.data.status === 'SUCCESS') {
             formatData(response.data.data.data);
             setTotal(response.data.data.total);
           }
@@ -96,9 +96,9 @@ export default function VAList({ custId }) {
   }, [fetching, custId, page, color]);
 
   function formatData(source) {
-    const formatter = new Intl.NumberFormat("id", {
-      style: "currency",
-      currency: "IDR",
+    const formatter = new Intl.NumberFormat('id', {
+      style: 'currency',
+      currency: 'IDR',
       minimumFractionDigits: 2,
     });
     const dataTable =

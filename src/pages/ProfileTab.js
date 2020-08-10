@@ -7,11 +7,11 @@ import {
   HomeOutlined,
   PhoneOutlined,
   BankOutlined,
-} from "@ant-design/icons";
-import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
-import DebitCard from "../components/DebitCard";
-import config from "../config/config.json";
-import "../styles/CustomerProfile.css";
+} from '@ant-design/icons';
+import { Loader, Reloader, reqBuilder, logOut } from './CustomerProfile';
+import DebitCard from '../components/DebitCard';
+import config from '../config/config.json';
+import '../styles/CustomerProfile.css';
 
 const { Title, Text } = Typography;
 
@@ -29,9 +29,9 @@ export default function ProfileTab({ profileData }) {
     if (!profileData.isLoading) {
       axios(
         reqBuilder(
-          "get",
-          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`
-        )
+          'get',
+          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`,
+        ),
       )
         .then((response) => {
           if (response.data.status === 'SUCCESS') {
@@ -88,8 +88,16 @@ export default function ProfileTab({ profileData }) {
 function ProfileDetail(props) {
   const generalInfo = [
     { label: 'Name', value: props.profileData.name, icon: <UserOutlined /> },
-    { label: 'Account Number', value: props.profileData.accNum, icon: <BankOutlined /> },
-    { label: 'Address', value: props.profileData.address, icon: <HomeOutlined /> },
+    {
+      label: 'Account Number',
+      value: props.profileData.accNum,
+      icon: <BankOutlined />,
+    },
+    {
+      label: 'Address',
+      value: props.profileData.address,
+      icon: <HomeOutlined />,
+    },
   ];
   const contactInfo = [
     { label: 'Email', value: props.profileData.email, icon: <MailOutlined /> },
@@ -122,7 +130,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {generalInfo.map((item) => {
-          console.log(item)
+          console.log(item);
           return <ItemRow {...item} />;
         })}
         <Divider />
@@ -134,7 +142,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {contactInfo.map((item) => {
-          console.log(item)
+          console.log(item);
           return <ItemRow {...item} />;
         })}
       </Col>

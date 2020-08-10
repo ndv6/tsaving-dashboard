@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   Redirect,
-} from "react-router-dom";
-import Login from "./Login";
-import Dashboard from "./Dashboard";
-import Customers from "./Customers";
-import TransactionLog from "./TransactionLog";
-import ActivityLog from "./ActivityLog";
-import CustomerProfile from "./CustomerProfile";
-import PageNotFound from "./PageNotFound";
-import { AppContextProvider } from "../context/AppContext";
+} from 'react-router-dom';
+import Login from './Login';
+import Dashboard from './Dashboard';
+import Customers from './Customers';
+import TransactionLog from './TransactionLog';
+import ActivityLog from './ActivityLog';
+import CustomerProfile from './CustomerProfile';
+import PageNotFound from './PageNotFound';
+import { AppContextProvider } from '../context/AppContext';
 
 export default function Routes() {
   return (
