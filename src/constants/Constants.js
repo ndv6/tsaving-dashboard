@@ -12,6 +12,7 @@ export const RED = "red";
 
 // Customer Status
 export const VERIFIED = "Verified";
+export const UNVERIFIED = "Unverified";
 
 // Messages
 export const PHONE_NUMBER_REQUIRED = "Phone Number is required!";
