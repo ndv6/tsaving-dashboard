@@ -6,54 +6,49 @@ import { DownloadOutlined } from '@ant-design/icons';
 import FormatLogDescription from '../utils/Helper';
 import { Loader } from '../pages/CustomerProfile';
 
-function getDownloadButton(token, paramPage='', paramDate='', paramSearch, setList, setStatus) {
-    setStatus(true)
-    let url = "";
-    let fixDate = "";
-    if(paramDate != null){
-        let dateFormat = paramDate.split("-");
-        fixDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
-    }
-    if(paramDate == null && paramSearch === ""){
-        url = `http://localhost:8000/v2/transactions/list/${paramPage}`
-    }
-    else if(paramDate != null && paramSearch === ""){
-        url = "http://localhost:8000/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
-    }
-    else if(paramDate == null && paramSearch !== ""){
-        url = "http://localhost:8000/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
-    }
-    else if(paramDate != null && paramSearch !== ""){
-        url = "http://localhost:8000/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
-    }
-    
-    axios({
-        headers: {
-            'Content-Type': "application/json",
-            "Authorization" : token,
-        },
-        method: "GET",
-        url: url
-    }).then((res) => {
-        const tableData = (res.data.data.list || []).map((value, index) => {
-            const formatter = new Intl.NumberFormat('id', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 2
-            });
-
-            let singleRow = {};
-            singleRow["No"] = index+1;
-            singleRow["account_num"] = value.account_num;
-            singleRow["from_account"] = value.from_account;
-            singleRow["dest_account"] = value.dest_account;
-            singleRow["tran_amount"] = formatter.format(value.tran_amount);
-            singleRow["description"] = FormatLogDescription(value.description);
-            singleRow["date"] = new Date(value.created_at).toUTCString();
-            return singleRow
-        })
-        setList(tableData)
-        // setList(res.data.data.list)
+function getDownloadButton(
+  token,
+  paramPage = '',
+  paramDate = '',
+  paramSearch,
+  setList,
+  setStatus,
+) {
+  setStatus(true);
+  let url = '';
+  let fixDate = '';
+  if (paramDate != null) {
+    let dateFormat = paramDate.split('-');
+    fixDate =
+      dateFormat[0] +
+      '-' +
+      ('0' + dateFormat[1]).slice(-2) +
+      '-' +
+      ('0' + dateFormat[2]).slice(-2);
+  }
+  if (paramDate == null && paramSearch === '') {
+    url = `http://localhost:8000/v2/transactions/list/${paramPage}`;
+  } else if (paramDate != null && paramSearch === '') {
+    url =
+      'http://localhost:8000/v2/transactions/list/d/' +
+      fixDate +
+      '/' +
+      paramPage;
+  } else if (paramDate == null && paramSearch !== '') {
+    url =
+      'http://localhost:8000/v2/transactions/list/a/' +
+      paramSearch +
+      '/' +
+      paramPage;
+  } else if (paramDate != null && paramSearch !== '') {
+    url =
+      'http://localhost:8000/v2/transactions/list/' +
+      paramSearch +
+      '/' +
+      fixDate +
+      '/' +
+      paramPage;
+  }
 
   axios({
     headers: {
@@ -62,28 +57,56 @@ function getDownloadButton(token, paramPage='', paramDate='', paramSearch, setLi
     },
     method: 'GET',
     url: url,
-  })
-    .then((res) => {
-      const tableData = (res.data.data.list || []).map((value, index) => {
-        let singleRow = {};
-        singleRow['No'] = index + 1;
-        singleRow['account_num'] = value.account_num;
-        singleRow['from_account'] = value.from_account;
-        singleRow['dest_account'] = value.dest_account;
-        singleRow['tran_amount'] = FormatLogDescription(value.description);
-        singleRow['date'] = new Date(value.created_at).toUTCString();
-        return singleRow;
+  }).then((res) => {
+    const tableData = (res.data.data.list || []).map((value, index) => {
+      const formatter = new Intl.NumberFormat('id', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 2,
       });
-      setList(tableData);
-      // setList(res.data.data.list)
+
+      let singleRow = {};
+      singleRow['No'] = index + 1;
+      singleRow['account_num'] = value.account_num;
+      singleRow['from_account'] = value.from_account;
+      singleRow['dest_account'] = value.dest_account;
+      singleRow['tran_amount'] = formatter.format(value.tran_amount);
+      singleRow['description'] = FormatLogDescription(value.description);
+      singleRow['date'] = new Date(value.created_at).toUTCString();
+      return singleRow;
+    });
+    setList(tableData);
+    // setList(res.data.data.list)
+
+    axios({
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      method: 'GET',
+      url: url,
     })
-    .catch((err) => {})
-    .finally(() => {
-      setStatus(false);
-    })
-    .catch(() => {})
-    .finally(() => {});
-  })
+      .then((res) => {
+        const tableData = (res.data.data.list || []).map((value, index) => {
+          let singleRow = {};
+          singleRow['No'] = index + 1;
+          singleRow['account_num'] = value.account_num;
+          singleRow['from_account'] = value.from_account;
+          singleRow['dest_account'] = value.dest_account;
+          singleRow['tran_amount'] = FormatLogDescription(value.description);
+          singleRow['date'] = new Date(value.created_at).toUTCString();
+          return singleRow;
+        });
+        setList(tableData);
+        // setList(res.data.data.list)
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setStatus(false);
+      })
+      .catch(() => {})
+      .finally(() => {});
+  });
 }
 
 export default function DownloadButton(props) {
