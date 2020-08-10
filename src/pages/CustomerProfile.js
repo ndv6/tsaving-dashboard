@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import axios from "axios";
-import { Row, Col, Typography, Spin, Button } from "antd";
+import { Row, Col, Typography, Spin, Button, message } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import Tab from "../components/Tab";
 import NavigationBar from "../components/NavigationBar";
@@ -10,6 +10,7 @@ import VAListTab from "./VAListTab";
 import ProfileTab from "./ProfileTab";
 import CustomerTransactionLog from "./CustomerTransactionLog";
 import "../styles/CustomerProfile.css";
+import config from "../config/config.json"
 
 const { Title, Text } = Typography;
 
@@ -36,6 +37,12 @@ export function reqBuilder(method, url) {
   };
 }
 
+export function logOut() {
+  message.error("Your session is over, please login again", 1.5);
+  window.localStorage.removeItem("token");
+  return <Redirect to="/admin/login" />;
+}
+
 export default function CustomerProfile() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -52,33 +59,36 @@ export default function CustomerProfile() {
       const result = await reqProfile(id);
       setProfileData(result);
     };
-    fetchData()
-    setLoading(false)
+    fetchData();
+    setLoading(false);
   }, [id]);
 
   function reqProfile(id) {
     return new Promise(function (resolve, reject) {
-      axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
-      .then(function (response) {
-        if (response.data.status === "SUCCESS") {
-          resolve({
-            isError: false,
+      axios(reqBuilder("get", `${config.apiHost}/v2/customers/${id}`))
+        .then(function (response) {
+          if (response.data.status === "SUCCESS") {
+            resolve({
+              isError: false,
+              isLoading: false,
+              name: response.data.data.cust_name,
+              email: response.data.data.cust_email,
+              accNum: response.data.data.account_num,
+              address: response.data.data.cust_address,
+              phone: response.data.data.cust_phone,
+            });
+          }
+        })
+        .catch(function (error) {
+          if (error.response.status === 401) {
+            logOut();
+          }
+          reject({
+            ...DEFAULT_PROFILE,
             isLoading: false,
-            name: response.data.data.cust_name,
-            email: response.data.data.cust_email,
-            accNum: response.data.data.account_num,
-            address: response.data.data.cust_address,
-            phone: response.data.data.cust_phone,
+            isError: true,
           });
-        }
-      })
-      .catch(function (error) {
-        reject({
-          ...DEFAULT_PROFILE,
-          isLoading: false,
-          isError: true,
         });
-      });
     });
   }
 
@@ -90,7 +100,7 @@ export default function CustomerProfile() {
           <Loader />
         ) : (
           <div>
-            <Row justify="center" align="middle">
+            <Row justify="center" align="middle" style={{ position: "sticky" }}>
               <Col flex={1}>
                 <div className="bg-height" />
               </Col>
