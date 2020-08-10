@@ -8,7 +8,7 @@ import {
   PhoneOutlined,
   BankOutlined,
 } from "@ant-design/icons";
-import { Loader, Reloader, reqBuilder } from "./CustomerProfile";
+import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
 import DebitCard from "../components/DebitCard";
 import "../styles/CustomerProfile.css";
 
@@ -46,7 +46,11 @@ export default function ProfileTab({ profileData }) {
           }
         })
         .catch(function (error) {
-          setReload(true);
+          if (error.response.status === 401) {
+            logOut();
+          } else {
+            setReload(true);
+          }
         })
         .finally(function () {
           setFetching(false);

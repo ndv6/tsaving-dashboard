@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import axios from "axios";
-import { Row, Col, Typography, Spin, Button } from "antd";
+import { Row, Col, Typography, Spin, Button, message } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import Tab from "../components/Tab";
 import NavigationBar from "../components/NavigationBar";
@@ -34,6 +34,12 @@ export function reqBuilder(method, url) {
     url,
     headers: { Authorization: token },
   };
+}
+
+export function logOut() {
+  message.error("Your session is over, please login again", 1.5);
+  window.localStorage.removeItem("token");
+  return <Redirect to="/admin/login" />;
 }
 
 export default function CustomerProfile() {
@@ -73,6 +79,9 @@ export default function CustomerProfile() {
           }
         })
         .catch(function (error) {
+          if (error.response.status === 401) {
+            logOut();
+          }
           reject({
             ...DEFAULT_PROFILE,
             isLoading: false,

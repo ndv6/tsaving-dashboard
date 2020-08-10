@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Select } from "antd";
 import axios from "axios";
 import DataTable from "../components/DataTable";
-import { Loader, Reloader, reqBuilder } from "./CustomerProfile";
+import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
 import "../styles/CustomerProfile.css";
 
 const columns = [
@@ -81,8 +81,12 @@ export default function VAList({ custId }) {
             setTotal(response.data.data.total);
           }
         })
-        .catch(function (error) {
-          setReload(true);
+        .catch(function (err) {
+          if (err.response.status === 401) {
+            logOut();
+          } else {
+            setReload(true);
+          }
         })
         .finally(function () {
           setFetching(false);
