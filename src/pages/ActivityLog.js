@@ -27,9 +27,6 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,username){
       url = "http://localhost:8000/v2/log/"+username+"/"+modifDate +"/" + pageNumber;
     }
 
-    console.log(url);
-    
-    console.log("tes")
     axios({
       headers:{
         'Content-Type': "application/json",
