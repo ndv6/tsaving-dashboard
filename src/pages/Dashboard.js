@@ -7,7 +7,7 @@ import ComponentCard from '../components/Card';
 import Axios from 'axios';
 import { DASHBOARD_ENDPOINT } from '../constants/ApiEndpoints';
 import {
-    FETCH_DATA_FAILED, 
+    FETCH_DATA_FAILED,
     NETWORK_ERROR,
     DASHBOARD_CASH_FLOW_AMOUNT,
     DASHBOARD_CASH_FLOW_TODAY,
@@ -157,6 +157,11 @@ function transactionComponentUI(dashboardTrxData) {
 }
 
 export default function Dashboard() {
+    const formatter = new Intl.NumberFormat("id", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 2,
+    });
     const history = useHistory();
     const [state, setState] = React.useState({
         loading: true,
@@ -201,8 +206,8 @@ export default function Dashboard() {
                                                         content={data.data.dashboard_user.new_user_yesterday <= 0 ? "" : <p>
                                                             {data.data.dashboard_user.new_user_today > data.data.dashboard_user.new_user_yesterday ?
                                                                 <span style={{ color: "green" }}>+</span> : <span style={{ color: "red" }}>-</span>}
-                                                            {Math.abs(data.data.dashboard_user.new_user_today - data.data.dashboard_user.new_user_yesterday) / data.data.dashboard_user.new_user_yesterday * 100  + "% compared to yesterday"}
-                                                    </p>}
+                                                            {Math.abs(data.data.dashboard_user.new_user_today - data.data.dashboard_user.new_user_yesterday) / data.data.dashboard_user.new_user_yesterday * 100 + "% compared to yesterday"}
+                                                        </p>}
                                                     />
                                                 </div>,
                                                 <div className="dashboard-content-chart-card">
@@ -229,7 +234,7 @@ export default function Dashboard() {
                                 isSmall={true}
                                 isLoading={state.loading}
                                 hoverable={true}
-                                content={state.loading ? [] : transactionChart(state.err ? null : data.data.dashboard_transaction)}/>
+                                content={state.loading ? [] : transactionChart(state.err ? null : data.data.dashboard_transaction)} />
                         </Fade>
                     </div>,
                     <div className="dashboard-content-section">
@@ -251,12 +256,12 @@ export default function Dashboard() {
                                                         className="dashboard-chart-card"
                                                         title={<h3>{DASHBOARD_CASH_FLOW_YESTERDAY}</h3>}
                                                         contentHeight={36}
-                                                        total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_yesterday + DASHBOARD_CASH_FLOW}</h4>} />
+                                                        total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_yesterday) + DASHBOARD_CASH_FLOW}</h4>} />
                                                     <ComponentChartCard
                                                         className="dashboard-chart-card"
                                                         title={<h3>{DASHBOARD_CASH_FLOW_TODAY}</h3>}
                                                         contentHeight={36}
-                                                        total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_today + DASHBOARD_CASH_FLOW}</h4>}
+                                                        total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_today) + DASHBOARD_CASH_FLOW}</h4>}
                                                         content={data.data.dashboard_amount.total_transaction_yesterday <= 0 ? "" : <p>
                                                             {data.data.dashboard_amount.total_transaction_today > data.data.dashboard_amount.total_transaction_yesterday ?
                                                                 <span style={{ color: "green" }}>+</span> : <span style={{ color: "red" }}>-</span>}
@@ -269,34 +274,34 @@ export default function Dashboard() {
                                                         className="dashboard-chart-card"
                                                         title={<h3>{DASHBOARD_CASH_FLOW_MONTH}</h3>}
                                                         contentHeight={36}
-                                                        total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_month + DASHBOARD_CASH_FLOW}</h4>} />
+                                                        total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_month) + DASHBOARD_CASH_FLOW}</h4>} />
                                                     <ComponentChartCard
                                                         className="dashboard-chart-card"
                                                         title={<h3>{DASHBOARD_CASH_FLOW_WEEK}</h3>}
                                                         contentHeight={36}
-                                                        total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_week + DASHBOARD_CASH_FLOW}</h4>} />
+                                                        total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_week) + DASHBOARD_CASH_FLOW}</h4>} />
                                                 </div>
                                             ]}
                                         </div>
                                     </div>,
                                     <div className="dashboard-card-footer">
-                                        <h1>{DASHBOARD_CASH_FLOW_AMOUNT + " Rp. " + data.data.dashboard_amount.total_transaction_amount}</h1>
+                                        <h1>{DASHBOARD_CASH_FLOW_AMOUNT + " " + formatter.format(data.data.dashboard_amount.total_transaction_amount)}</h1>
                                         <div style={{ display: "flex", width: "100%" }}>
                                             <ComponentChartCard
                                                 className="dashboard-chart-card"
                                                 title={<h3>{DASHBOARD_CASH_FLOW_MAIN}</h3>}
                                                 contentHeight={36}
-                                                total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_amount_main + DASHBOARD_CASH_FLOW}</h4>} />
+                                                total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_amount_main) + DASHBOARD_CASH_FLOW}</h4>} />
                                             <ComponentChartCard
                                                 className="dashboard-chart-card"
                                                 title={<h3>{DASHBOARD_CASH_FLOW_VA}</h3>}
                                                 contentHeight={36}
-                                                total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_amount_va + DASHBOARD_CASH_FLOW}</h4>} />
+                                                total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_amount_va) + DASHBOARD_CASH_FLOW}</h4>} />
                                             <ComponentChartCard
                                                 className="dashboard-chart-card"
                                                 title={<h3>{DASHBOARD_CASH_FLOW_DEPOSIT}</h3>}
                                                 contentHeight={36}
-                                                total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_amount_deposit + DASHBOARD_CASH_FLOW}</h4>} />
+                                                total={<h4>{formatter.format(data.data.dashboard_amount.total_transaction_amount_deposit) + DASHBOARD_CASH_FLOW}</h4>} />
                                         </div>
                                     </div>
                                 ]} />
