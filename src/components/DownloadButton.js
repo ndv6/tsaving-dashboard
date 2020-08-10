@@ -36,12 +36,19 @@ function getDownloadButton(token, paramPage='', paramDate='', paramSearch, setLi
         url: url
     }).then((res) => {
         const tableData = (res.data.data.list || []).map((value, index) => {
+            const formatter = new Intl.NumberFormat('id', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 2
+            });
+
             let singleRow = {};
             singleRow["No"] = index+1;
             singleRow["account_num"] = value.account_num;
             singleRow["from_account"] = value.from_account;
             singleRow["dest_account"] = value.dest_account;
-            singleRow["tran_amount"] = FormatLogDescription(value.description);
+            singleRow["tran_amount"] = formatter.format(value.tran_amount);
+            singleRow["description"] = FormatLogDescription(value.description);
             singleRow["date"] = new Date(value.created_at).toUTCString();
             return singleRow
         })
