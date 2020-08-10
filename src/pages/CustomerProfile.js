@@ -28,7 +28,7 @@ function getToken() {
 }
 
 export function reqBuilder(method, url) {
-  const token = getToken()
+  const token = getToken();
   return {
     method,
     url,
@@ -38,19 +38,30 @@ export function reqBuilder(method, url) {
 
 export default function CustomerProfile() {
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(DEFAULT_PROFILE);
 
   useEffect(() => {
     if (!getToken()) {
-        return <Redirect to="/admin/login" />;
-      }
+      return <Redirect to="/admin/login" />;
+    }
   });
 
   useEffect(() => {
-    axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
+    const fetchData = async () => {
+      const result = await reqProfile(id);
+      setProfileData(result);
+    };
+    fetchData()
+    setLoading(false)
+  }, [id]);
+
+  function reqProfile(id) {
+    return new Promise(function (resolve, reject) {
+      axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
       .then(function (response) {
         if (response.data.status === "SUCCESS") {
-          setProfileData({
+          resolve({
             isError: false,
             isLoading: false,
             name: response.data.data.cust_name,
@@ -62,58 +73,63 @@ export default function CustomerProfile() {
         }
       })
       .catch(function (error) {
-        setProfileData({
+        reject({
           ...DEFAULT_PROFILE,
           isLoading: false,
           isError: true,
         });
       });
-  }, [id]);
+    });
+  }
 
   return (
     <div className="customer-profile-constraint">
       <NavigationBar></NavigationBar>
       <div className="customer-profile-content">
-        <div>
-          <Row justify="center" align="middle">
-            <Col flex={1}>
-              <div className="bg-height" />
-            </Col>
-            <div className="picture-container">
-              <img
-                className="picture"
-                alt="Profile Placeholder"
-                src={ProfilePlaceholder}
-              ></img>
-              <Title level={3}>{profileData.name}</Title>
-            </div>
-          </Row>
-          <Row>
-            <Col flex={1}>
-              <Tab
-                tabs={[
-                  {
-                    tabname: "Profile",
-                    components: (
-                      <ProfileTab custId={id} profileData={profileData} />
-                    ),
-                  },
-                  {
-                    tabname: "Virtual Accounts",
-                    components: <VAListTab custId={1} />,
-                  },
-                  {
-                    tabname: "Transaction History",
-                    components: (
-                      <CustomerTransactionLog accNum={profileData.accNum} />
-                    ),
-                  },
-                ]}
-                size={3}
-              />
-            </Col>
-          </Row>
-        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div>
+            <Row justify="center" align="middle">
+              <Col flex={1}>
+                <div className="bg-height" />
+              </Col>
+              <div className="picture-container">
+                <img
+                  className="picture"
+                  alt="Profile Placeholder"
+                  src={ProfilePlaceholder}
+                ></img>
+                <Title level={3}>{profileData.name}</Title>
+              </div>
+            </Row>
+            <Row>
+              <Col flex={1}>
+                <Tab
+                  tabs={[
+                    {
+                      tabname: "Profile",
+                      components: (
+                        <ProfileTab custId={id} profileData={profileData} />
+                      ),
+                    },
+                    {
+                      tabname: "Virtual Accounts",
+                      components: <VAListTab custId={id} />,
+                    },
+                    {
+                      tabname: "Transaction History",
+                      components: (
+                        <CustomerTransactionLog accNum={profileData.accNum} />
+                      ),
+                    },
+                  ]}
+                  size={3}
+                />
+              </Col>
+            </Row>
+          </div>
+        )}
       </div>
     </div>
   );
