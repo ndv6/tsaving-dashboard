@@ -148,13 +148,13 @@ export default function ActivityLog(){
            <div className = "activity-log-content">
               <h1>Activity Log</h1>
               <div className = "activity-log-filterbar">
-                <span className = "filter-text"></span> 
                 <FilterBar onChange = {(date) => dateChange(date)}/> &ensp;
                 <Search
                   placeholder="search"
                   onSearch={value => setSearch(value)}
                   style={{ width: 200 }}/>
               </div>
+              <p>Total Data : {totalData}</p>
               <div className = "table">
                   <DataTable 
                     current={page}
