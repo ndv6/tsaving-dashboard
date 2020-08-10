@@ -52,33 +52,33 @@ export default function CustomerProfile() {
       const result = await reqProfile(id);
       setProfileData(result);
     };
-    fetchData()
-    setLoading(false)
+    fetchData();
+    setLoading(false);
   }, [id]);
 
   function reqProfile(id) {
     return new Promise(function (resolve, reject) {
       axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
-      .then(function (response) {
-        if (response.data.status === "SUCCESS") {
-          resolve({
-            isError: false,
+        .then(function (response) {
+          if (response.data.status === "SUCCESS") {
+            resolve({
+              isError: false,
+              isLoading: false,
+              name: response.data.data.cust_name,
+              email: response.data.data.cust_email,
+              accNum: response.data.data.account_num,
+              address: response.data.data.cust_address,
+              phone: response.data.data.cust_phone,
+            });
+          }
+        })
+        .catch(function (error) {
+          reject({
+            ...DEFAULT_PROFILE,
             isLoading: false,
-            name: response.data.data.cust_name,
-            email: response.data.data.cust_email,
-            accNum: response.data.data.account_num,
-            address: response.data.data.cust_address,
-            phone: response.data.data.cust_phone,
+            isError: true,
           });
-        }
-      })
-      .catch(function (error) {
-        reject({
-          ...DEFAULT_PROFILE,
-          isLoading: false,
-          isError: true,
         });
-      });
     });
   }
 
@@ -90,7 +90,7 @@ export default function CustomerProfile() {
           <Loader />
         ) : (
           <div>
-            <Row justify="center" align="middle">
+            <Row justify="center" align="middle" style={{ position: "sticky" }}>
               <Col flex={1}>
                 <div className="bg-height" />
               </Col>

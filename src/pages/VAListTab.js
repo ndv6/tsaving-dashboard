@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, DatePicker } from "antd";
+import { Row, Col, Select } from "antd";
 import axios from "axios";
-import moment from "moment";
 import DataTable from "../components/DataTable";
 import { Loader, Reloader, reqBuilder } from "./CustomerProfile";
 import "../styles/CustomerProfile.css";
@@ -29,32 +28,58 @@ const columns = [
   },
 ];
 
+const { Option } = Select;
+
 export default function VAList({ custId }) {
   const [data, setData] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [dataTable, setDataTable] = useState([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(true);
   const [reload, setReload] = useState(false);
-
-  function onDatePickerChange(date, dateString) {
-    const newData = data.filter((item) =>
-      moment(item.created_at.substring(0, 10)).isSame(date, "date")
-    );
-    setFiltered(newData);
-  }
+  const [color, setColor] = useState("");
 
   function onChange(page) {
+    setFetching(true);
     setPage(page);
+  }
+
+  function onColorChange(value) {
+    setFetching(true);
+    setColor(value);
+  }
+
+  function ColorFilter() {
+    return (
+      <Select
+        defaultValue={color}
+        style={{ width: 140 }}
+        onChange={(value) => onColorChange(value)}
+      >
+        <Option value="">Select Color</Option>
+        <Option value="Blue">Blue</Option>
+        <Option value="Red">Red</Option>
+        <Option value="Purple">Purple</Option>
+        <Option value="Yellow">Yellow</Option>
+        <Option value="Green">Green</Option>
+        <Option value="Orange">Orange</Option>
+      </Select>
+    );
   }
 
   useEffect(() => {
     if (fetching) {
-      axios(reqBuilder("get", `http://localhost:8000/v2/va/${custId}/${page}`))
+      let url = "";
+      if (color === "") {
+        url = `http://localhost:8000/v2/va/${custId}/${page}`;
+      } else {
+        url = `http://localhost:8000/v2/va/${custId}/${color}/${page}`;
+      }
+      axios(reqBuilder("get", url))
         .then(function (response) {
           if (response.data.status === "SUCCESS") {
-            setData(response.data.data.data);
-            setFiltered(response.data.data.data);
+            console.log(response, "res");
+            formatData(response.data.data.data);
+            setTotal(response.data.data.total);
           }
         })
         .catch(function (error) {
@@ -64,20 +89,22 @@ export default function VAList({ custId }) {
           setFetching(false);
         });
     }
-  }, [fetching, custId, page]);
+  }, [fetching, custId, page, color]);
 
-  useEffect(() => {
-    const source = filtered && filtered.map((item) => {
-      return {
-        key: item.va_num,
-        num: item.va_num,
-        label: item.va_label,
-        color: item.va_color,
-        balance: item.va_balance,
-      };
-    });
-    setDataTable(source);
-  }, [filtered]);
+  function formatData(source) {
+    const dataTable =
+      source &&
+      source.map((item) => {
+        return {
+          key: item.va_num,
+          num: item.va_num,
+          label: item.va_label,
+          color: item.va_color,
+          balance: item.va_balance,
+        };
+      });
+    setData(dataTable);
+  }
 
   if (fetching) {
     return <Loader />;
@@ -92,8 +119,8 @@ export default function VAList({ custId }) {
       <Row>
         <Col span={2}></Col>
         <Col span={20}>
-          <p>Filter by date</p>
-          <DatePicker onChange={onDatePickerChange} />
+          <p>Filter by color</p>
+          <ColorFilter />
           <br />
           <br />
           <br />
@@ -105,11 +132,12 @@ export default function VAList({ custId }) {
         <Col span={20}>
           <DataTable
             onPageChange={onChange}
-            pagePosition={page}
             pageSize={20}
             columns={columns}
-            data={dataTable}
+            data={data}
             pagePosition="bottomRight"
+            current={page}
+            totalData={total}
           />
         </Col>
         <Col span={2}></Col>
