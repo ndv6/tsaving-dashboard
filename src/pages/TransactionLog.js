@@ -5,8 +5,10 @@ import NavigationBar from '../components/NavigationBar';
 import DataTable from '../components/DataTable';
 import FilterBar from '../components/FilterBar';
 import SearchBar from '../components/SearchBar';
+import DownloadButton from '../components/DownloadButton';
 import { message } from "antd";
 import { FormatLogDescription } from '../utils/Helper';
+import config from '../config/config.json';
 import '../styles/TransactionLog.css';
 
 import axios from 'axios';
@@ -54,18 +56,17 @@ function getTransactionLog(token, paramPage=1,  paramDate='', paramSearch='', se
     }
     let url = "";
     if(paramDate == null && paramSearch === ""){
-        url = "http://localhost:8000/v2/transactions/list/" + paramPage
+        url = config.apiHost + "/v2/transactions/list/" + paramPage
     }
     else if(paramDate != null && paramSearch === ""){
-        url = "http://localhost:8000/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
+        url = config.apiHost + "http://localhost:8000/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
     }
     else if(paramDate == null && paramSearch !== ""){
-        url = "http://localhost:8000/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
+        url = config.apiHost + "http://localhost:8000/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
     }
     else if(paramDate != null && paramSearch !== ""){
-        url = "http://localhost:8000/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
+        url = config.apiHost + "http://localhost:8000/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
     }
-    console.log(url);
     axios({
         headers: {
             'Content-Type': "application/json",
@@ -159,6 +160,12 @@ export default function TransactionLog() {
                     onSearch={(value) => searchTL(value)} />
                 </div>
                 <p>Total Data : {countData}</p>
+                <DownloadButton 
+                token={token}
+                page={paramPage}
+                date={paramDate}
+                search={paramSearch}
+                />
 
                 <div className="table-tl-list">
                     <DataTable 

@@ -71,22 +71,24 @@ export default function Customers() {
       })
       .catch((err) => {
         if (!err.status) {
-          let args = {
-            message: "Resend Email",
-            description: "Network Error.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
-        } else if (err.response.status === 429) {
-          let args = {
-            message: "Resend Email",
-            description:
-              "Too many request. Please wait for 10 seconds before sending another email.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
+          if (err.response.status === 429) {
+            let args = {
+              message: "Resend Email",
+              description:
+                "Too many request. Please wait for 10 seconds before sending another email.",
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          } else {
+            let args = {
+              message: "Resend Email",
+              description: "Network Error.",
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          }
         }
       })
       .finally(() => {
@@ -209,14 +211,16 @@ export default function Customers() {
         setListCust(tableData);
       })
       .catch((err) => {
-        if(!err.status){
+        if(err.response === undefined){
           message.error("Network Error please try again later", 2);
         }
         else if (err.response.status === 401) {
           localStorage.removeItem("token");
           history.push("/admin/login");
-        } 
-        
+        }
+        else{
+            message.error("Failed to Get Data, please try again later", 2);
+        }
       })
       .finally(() => {
         setLoading(false);
