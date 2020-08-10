@@ -115,7 +115,7 @@ export default function CustomerProfile() {
                     },
                     {
                       tabname: "Virtual Accounts",
-                      components: <VAListTab custId={1} />,
+                      components: <VAListTab custId={id} />,
                     },
                     {
                       tabname: "Transaction History",
