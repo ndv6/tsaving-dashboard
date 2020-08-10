@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
 import Customers from "./Customers";
@@ -14,6 +19,9 @@ export default function Routes() {
     <AppContextProvider>
       <Router>
         <Switch>
+          <Route exact path="/">
+            <Redirect to="/admin/login" />
+          </Route>
           <Route exact path="/admin/login">
             <Login />
           </Route>
