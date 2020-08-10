@@ -18,7 +18,6 @@
 .activity-log-filterbar{
     margin-bottom:20px;
     display:flex;
-    justify-content: space-between;
 }
 h1{
   font-size: 30px;
