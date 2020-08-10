@@ -7,7 +7,7 @@ import "../styles/Customers.css";
 import EditProfileModalContainer from "../components/EditProfileModalContainer";
 import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Popconfirm, message, Button } from "antd";
+import { Popconfirm, message } from "antd";
 import * as Constants from "../constants/Constants";
 
 import axios from "axios";
@@ -40,7 +40,6 @@ export default function Customers() {
     is_verified: false,
   });
   const token = window.localStorage.getItem("token");
-
 
   function clickDetailCustomer(rowData) {
     history.push("/admin/customer/" + rowData.cust_id);
@@ -209,14 +208,12 @@ export default function Customers() {
         setListCust(tableData);
       })
       .catch((err) => {
-        if(!err.status){
+        if (!err.status) {
           message.error("Network Error please try again later", 2);
-        }
-        else if (err.response.status === 401) {
+        } else if (err.response.status === 401) {
           localStorage.removeItem("token");
           history.push("/admin/login");
-        } 
-        
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -252,7 +249,7 @@ export default function Customers() {
   }
 
   function filterDate(date) {
-    setPage(1)
+    setPage(1);
     if (date !== null) {
       let day = date.date().toString();
       let month = (date.month() + 1).toString();
@@ -265,12 +262,11 @@ export default function Customers() {
   }
 
   function searchCust(value) {
-    setPage(1)
+    setPage(1);
     setSearch(value);
   }
 
-  //checking status for error handling 
-  
+  //checking status for error handling
 
   React.useEffect(() => {
     getCustomerList(
@@ -282,7 +278,7 @@ export default function Customers() {
       setCountData,
       setLoading
     );
-  }, [token, setListCust, paramPage, paramDate, paramSearch]);
+  }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible]);
 
   const columns = [
     {
@@ -415,6 +411,7 @@ export default function Customers() {
             loading={loading}
           />
           <EditProfileModalContainer
+            setData={setDataToEdit}
             data={customerDataToBeEdited}
             onOk={closeModal}
             onCancel={closeModal}
