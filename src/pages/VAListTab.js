@@ -95,6 +95,11 @@ export default function VAList({ custId }) {
   }, [fetching, custId, page, color]);
 
   function formatData(source) {
+    const formatter = new Intl.NumberFormat("id", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 2,
+    });
     const dataTable =
       source &&
       source.map((item) => {
@@ -103,7 +108,7 @@ export default function VAList({ custId }) {
           num: item.va_num,
           label: item.va_label,
           color: item.va_color,
-          balance: item.va_balance,
+          balance: formatter.format(item.va_balance),
         };
       });
     setData(dataTable);
