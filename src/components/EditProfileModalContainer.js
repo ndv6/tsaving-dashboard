@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, message } from "antd";
 import * as Constants from "../constants/Constants";
 import Axios from "axios";
@@ -8,6 +8,12 @@ import EditProfileModal from "./EditProfileModal";
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (props.visible && form) {
+      form.resetFields();
+    }
+  }, [form, props.visible]);
 
   function onSubmit(formData) {
     const userToken = window.localStorage.getItem(
