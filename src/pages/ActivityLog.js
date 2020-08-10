@@ -8,7 +8,7 @@ import { Input } from 'antd';
 
 const { Search } = Input;
 
-function getActivityLog(token, setList,pageNumber,setTotaldata,date,username){
+function getActivityLog(token, setList,pageNumber,setTotaldata,date,search){
     //catch untuk nge throw error. kalau success bakal ke then.
     let url ="";
     let modifDate = "";
@@ -17,14 +17,14 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,username){
        modifDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
     }
     
-    if(date == null && username == null){
+    if(date == null && search == null){
       url = "http://localhost:8000/v2/log/"+pageNumber
-    }else if(date != null && username == null){
+    }else if(date != null && search == null){
       url = "http://localhost:8000/v2/log/d/"+modifDate+"/"+pageNumber;
-    }else if(date == null && username != null){
-      url = "http://localhost:8000/v2/log/u/"+username+"/"+pageNumber;
-    }else if(date != null && username != null){
-      url = "http://localhost:8000/v2/log/"+username+"/"+modifDate +"/" + pageNumber;
+    }else if(date == null && search != null){
+      url = "http://localhost:8000/v2/log/u/"+search+"/"+pageNumber;
+    }else if(date != null && search != null){
+      url = "http://localhost:8000/v2/log/"+search+"/"+modifDate +"/" + pageNumber;
     }
 
     axios({
@@ -123,7 +123,6 @@ export default function ActivityLog(){
   }
 
   function onChange(pageNumber) {
-    console.log(pageNumber)
     setPage(pageNumber)
   }
 
@@ -140,7 +139,7 @@ export default function ActivityLog(){
                 <span className = "filter-text"></span> 
                 <FilterBar onChange = {(date) => dateChange(date)}/> &ensp;
                 <Search
-                  placeholder="username"
+                  placeholder="search"
                   onSearch={value => setSearch(value)}
                   style={{ width: 200 }}/>
               </div>

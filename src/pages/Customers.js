@@ -42,7 +42,6 @@ export default function Customers() {
   });
   const token = window.localStorage.getItem("token");
 
-
   function clickDetailCustomer(rowData) {
     history.push("/admin/customer/" + rowData.cust_id);
   }
@@ -129,12 +128,9 @@ function insertLog(account_num, action){
       }
     }).then((res) => {
       //success
-      console.log(res,"success")
       
     }).catch((err) => {
-      //failed
-      console.log(err,"error")
-      
+      message.info("Error, Cannot Insert Log.")
     }).finally(() => {
 
     })
@@ -154,8 +150,8 @@ function insertLog(account_num, action){
       },
     })
       .then((res) => {
+        insertLog(account_num, "DELETE")
         message.info(res.data.message);
-        insertLog(account_num,"DELETE");
         setTimeout(function () {
           window.location.reload();
         }, 1500);
@@ -270,11 +266,6 @@ function insertLog(account_num, action){
   }
 
   function closeModal() {
-    setModalVisibility(false);
-    insertLog(accnum,"EDIT");
-  }
-
-  function cancelModal() {
     setModalVisibility(false);
   }
 
@@ -448,7 +439,7 @@ function insertLog(account_num, action){
           <EditProfileModalContainer
             data={customerDataToBeEdited}
             onOk={closeModal}
-            onCancel={cancelModal}
+            onCancel={closeModal}
             loading={loading}
             visible={isModalVisible}
             setLoading={setLoading}
