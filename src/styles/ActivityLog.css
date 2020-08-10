@@ -6,6 +6,53 @@
 
 .activity-log-content {
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   overflow: auto;
+  padding:50px 50px;
+}
+.activity-log-pagination{
+    display:inline-block;
+    float:right;
+    margin:20px 0px;
+}
+.activity-log-filterbar{
+    margin-bottom:20px;
+    display:flex;
+}
+h1{
+  font-size: 30px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    text-align:center;
+}
+.filter-text{
+  margin:auto 0px;
+}
+
+.edit-label{
+  border : 1px solid #4CAF50;
+  padding:0px 0px;
+  
+  color : #4CAF50;
+  background-color:white;
+  text-align:center;
+  border-radius:50px;
+  width: 80px;
+}
+
+.delete-label{
+  border : 1px solid #f44336;
+  color : #f44336;
+  background-color: white;
+  text-align:center;
+  border-radius:50px;
+  width: 80px;
+}
+
+.resend-label{
+  border : 1px solid #2196F3;
+  color : #2196F3;
+  background-color:white;
+  text-align:center;
+  border-radius:50px;
+  width: 80px;
 }
