@@ -77,7 +77,6 @@ export default function VAList({ custId }) {
       axios(reqBuilder("get", url))
         .then(function (response) {
           if (response.data.status === "SUCCESS") {
-            console.log(response, "res");
             formatData(response.data.data.data);
             setTotal(response.data.data.total);
           }
