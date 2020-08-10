@@ -48,5 +48,11 @@
     "eslint-plugin-react": "^7.20.5",
     "husky": "^4.2.5",
     "prettier": "^2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   }
 }
