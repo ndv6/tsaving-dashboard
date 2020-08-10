@@ -4,6 +4,7 @@ import "../styles/ActivityLog.css"
 import axios from 'axios';
 import NavigationBar from "../components/NavigationBar"
 import FilterBar from "../components/FilterBar"
+import config from '../config/config.json'
 import { Input } from 'antd';
 
 const { Search } = Input;
@@ -18,13 +19,13 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,search){
     }
     
     if(date == null && search == null){
-      url = "http://localhost:8000/v2/log/"+pageNumber
+      url = config.apiHost+"/v2/log/"+pageNumber
     }else if(date != null && search == null){
-      url = "http://localhost:8000/v2/log/d/"+modifDate+"/"+pageNumber;
+      url = config.apiHost+"/v2/log/d/"+modifDate+"/"+pageNumber;
     }else if(date == null && search != null){
-      url = "http://localhost:8000/v2/log/u/"+search+"/"+pageNumber;
+      url = config.apiHost+"/v2/log/u/"+search+"/"+pageNumber;
     }else if(date != null && search != null){
-      url = "http://localhost:8000/v2/log/"+search+"/"+modifDate +"/" + pageNumber;
+      url = config.apiHost+"/v2/log/"+search+"/"+modifDate +"/" + pageNumber;
     }
 
     axios({

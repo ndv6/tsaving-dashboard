@@ -49,48 +49,56 @@ export default function Customers() {
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
     let customerToken = await getTokenCustomer(rowData.cust_email);
-    axios({
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      url: "http://localhost:8082/sendMail",
-      data: {
-        email: rowData.cust_email,
-        token: customerToken,
-      },
-    }).then((res) => {
-        insertLog(rowData.account_num,"RESEND");
-        let args = {
-          message: "Resend Email",
-          description: "Email has been sent to the customer.",
-          duration: 2,
-          icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
-        };
-        notification.open(args);
-      }).catch((err) => {
-        if (!err.status) {
-          let args = {
-            message: "Resend Email",
-            description: "Network Error.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
-        } else if (err.response.status === 429) {
-          let args = {
-            message: "Resend Email",
-            description:
-              "Too many request. Please wait for 10 seconds before sending another email.",
-            duration: 2,
-            icon: <InfoCircleTwoTone twoToneColor="red" />,
-          };
-          notification.error(args);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    var hasil = await insertLog(rowData.account_num,"RESEND");
+
+    if (hasil){
+        axios({
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            url: "http://localhost:8082/sendMail",
+            data: {
+              email: rowData.cust_email,
+              token: customerToken,
+            },
+          }).then((res) => {
+              
+              let args = {
+                message: "Resend Email",
+                description: "Email has been sent to the customer.",
+                duration: 2,
+                icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
+              };
+              notification.open(args);
+            }).catch((err) => {
+              if (!err.status) {
+                let args = {
+                  message: "Resend Email",
+                  description: "Network Error.",
+                  duration: 2,
+                  icon: <InfoCircleTwoTone twoToneColor="red" />,
+                };
+                notification.error(args);
+              } else if (err.response.status === 429) {
+                let args = {
+                  message: "Resend Email",
+                  description:
+                    "Too many request. Please wait for 10 seconds before sending another email.",
+                  duration: 2,
+                  icon: <InfoCircleTwoTone twoToneColor="red" />,
+                };
+                notification.error(args);
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+    }else{
+        message.info("Resend Email failed");
+    }
+    
   }
 
   function getTokenCustomer(customerEmail) {
@@ -116,23 +124,26 @@ export default function Customers() {
   }
 
 function insertLog(account_num, action){
-    axios({
-      method : "POST",
-      url : "http://localhost:8000/v2/log/insert",
-      data :{
-          acc_num : account_num,
-          action : action,
-      },
-      headers:{
-        "Authorization": window.localStorage.getItem("token")
-      }
-    }).then((res) => {
-      //success
+    return new Promise(function (resolve, reject){
+        var bool = true;
+        axios({
+            method : "POST",
+            url : "http://localhost:8000/v2/log/insert",
+            data :{
+                acc_num : account_num,
+                action : action,
+            },
+            headers:{
+              "Authorization": window.localStorage.getItem("token")
+            }
+          }).then((res) => {
+            //success
+            resolve(bool);
+          }).catch((err) => {
+            reject(err)
+          }).finally(() => {
       
-    }).catch((err) => {
-      message.info("Error, Cannot Insert Log.")
-    }).finally(() => {
-
+          })
     })
 }
 
