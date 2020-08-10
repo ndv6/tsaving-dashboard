@@ -8,7 +8,7 @@ import { Redirect } from 'react-router-dom';
 import FormatLogDescription from '../utils/Helper';
 import { message } from 'antd';
 import config from '../config/config.json';
-import { Loader, Reloader } from './CustomerProfile';
+import { Reloader } from './CustomerProfile';
 
 const columns = [
   {
@@ -42,49 +42,37 @@ function GetTransaction(
   token,
   accNum,
   page,
-  day,
-  month,
-  year,
+  date,
   search,
   setList,
   setCountData,
   setLoading,
   setStatus,
 ) {
+
+  let day = null;
+  let month = null;
+  let year = null;
+  if (date!== null) {
+    day = date.date().toString();
+    month = (date.month() + 1).toString();
+    year = date.year().toString();
+  } 
+
   let url = '';
   if (day == null && month == null && year == null && search === '') {
-    url = config.apiHost + '/v2/transactions/' + accNum + '/' + page;
+    url = config.apiHost + `/v2/transactions/${accNum}/${page}`;
   } else if (search !== '' && day == null && month == null && year == null) {
     url =
-      config.apiHost + '/v2/transactions/' + accNum + '/' + search + '/' + page;
+      config.apiHost + `/v2/transactions/${accNum}/${search}/${page}`;
   } else if (search !== '' && day !== null && month !== null && year !== null) {
     url =
       config.apiHost +
-      '/v2/transactions/' +
-      accNum +
-      '/' +
-      day +
-      '-' +
-      month +
-      '-' +
-      year +
-      '/' +
-      search +
-      '/' +
-      page;
+      `/v2/transactions/${accNum}/${day}-${month}-${year}/${search}/${page}`;
   } else if (search === '' && day !== null && month !== null && year !== null) {
     url =
       config.apiHost +
-      '/v2/transactions/' +
-      accNum +
-      '/' +
-      day +
-      '-' +
-      month +
-      '-' +
-      year +
-      '/' +
-      page;
+      `/v2/transactions/${accNum}/${day}-${month}-${year}/${page}`;
   }
 
   setLoading(true);
@@ -97,7 +85,6 @@ function GetTransaction(
     url,
   })
     .then((res) => {
-      console.log(res)
       const tableList = (res.data.data.list || []).map((value, index) => {
         const singleData = {};
         const formatter = new Intl.NumberFormat('id', {
@@ -150,48 +137,17 @@ export default function CustomerTransactionLog(props) {
       token,
       props.accNum,
       page,
-      null,
-      null,
-      null,
+      date,
       search,
       setList,
       setCountData,
       setLoading,
       setStatus,
     );
-  }, [setList, setLoading, setStatus]);
+  }, [setList, setLoading, setStatus, page, date, search]);
 
   function pageChange(page) {
     setPage(page);
-    if (date === null) {
-      GetTransaction(
-        token,
-        props.accNum,
-        page,
-        null,
-        null,
-        null,
-        search,
-        setList,
-        setCountData,
-        setLoading,
-        setStatus,
-      );
-    } else {
-      GetTransaction(
-        token,
-        props.accNum,
-        page,
-        date.date().toString(),
-        (date.month() + 1).toString(),
-        date.year().toString(),
-        search,
-        setList,
-        setCountData,
-        setLoading,
-        setStatus,
-      );
-    }
   }
 
   if (!window.localStorage.getItem('token')) {
@@ -200,107 +156,12 @@ export default function CustomerTransactionLog(props) {
 
   function filterDate(date) {
     setPage(1);
-    if (date !== null) {
-      const day = date.date().toString();
-      const month = (date.month() + 1).toString();
-      const year = date.year().toString();
-      setDate(date);
-      GetTransaction(
-        token,
-        props.accNum,
-        page,
-        day,
-        month,
-        year,
-        search,
-        setList,
-        setCountData,
-        setLoading,
-        setStatus,
-      );
-    } else {
-      setDate(null);
-      GetTransaction(
-        token,
-        props.accNum,
-        page,
-        null,
-        null,
-        null,
-        search,
-        setList,
-        setCountData,
-        setLoading,
-        setStatus,
-      );
-    }
+    setDate(date)
   }
 
   function filterSearch(keyword) {
     setPage(1);
-    if (keyword !== '') {
-      setSearch(keyword);
-      if (date === null) {
-        GetTransaction(
-          token,
-          props.accNum,
-          page,
-          null,
-          null,
-          null,
-          keyword,
-          setList,
-          setCountData,
-          setLoading,
-          setStatus,
-        );
-      } else {
-        GetTransaction(
-          token,
-          props.accNum,
-          page,
-          date.date().toString(),
-          (date.month() + 1).toString(),
-          date.year().toString(),
-          keyword,
-          setList,
-          setCountData,
-          setLoading,
-          setStatus,
-        );
-      }
-    } else {
-      setSearch('');
-      if (date === null) {
-        GetTransaction(
-          token,
-          props.accNum,
-          page,
-          null,
-          null,
-          null,
-          keyword,
-          setList,
-          setCountData,
-          setLoading,
-          setStatus,
-        );
-      } else {
-        GetTransaction(
-          token,
-          props.accNum,
-          page,
-          date.date().toString(),
-          (date.month() + 1).toString(),
-          date.year().toString(),
-          keyword,
-          setList,
-          setCountData,
-          setLoading,
-          setStatus,
-        );
-      }
-    }
+    setSearch(keyword);
   }
 
   if (status === 401) {
@@ -318,25 +179,7 @@ export default function CustomerTransactionLog(props) {
   }
 
   if (status === 0) {
-    return (
-      <Reloader
-        reload={() =>
-          GetTransaction(
-            token,
-            props.accNum,
-            page,
-            null,
-            null,
-            null,
-            search,
-            setList,
-            setCountData,
-            setLoading,
-            setStatus,
-          )
-        }
-      />
-    );
+    setReload(true)
   }
 
   if (reload) {

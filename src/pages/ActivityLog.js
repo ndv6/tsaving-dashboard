@@ -44,7 +44,6 @@ function getActivityLog(
       config.apiHost + '/v2/log/' + search + '/' + modifDate + '/' + pageNumber;
   }
 
-
   axios({
     headers: {
       'Content-Type': 'application/json',
