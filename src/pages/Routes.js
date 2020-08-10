@@ -5,6 +5,7 @@ import Dashboard from "./Dashboard";
 import Customers from "./Customers";
 import TransactionLog from "./TransactionLog";
 import ActivityLog from "./ActivityLog";
+import CustomerProfile from "./CustomerProfile";
 import PageNotFound from "./PageNotFound";
 import { AppContextProvider } from "../context/AppContext";
 
@@ -21,6 +22,9 @@ export default function Routes() {
           </Route>
           <Route exact path="/admin/customer-list">
             <Customers />
+          </Route>
+          <Route exact path="/admin/customer/:id">
+            <CustomerProfile />
           </Route>
           <Route exact path="/admin/transaction-list">
             <TransactionLog />
