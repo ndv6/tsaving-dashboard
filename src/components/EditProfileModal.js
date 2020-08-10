@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Button, Modal, Form, Input, Switch, Popconfirm } from "antd";
-import * as Constants from "../constants/Constants";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import React, { useEffect } from 'react';
+import { Button, Modal, Form, Input, Switch, Popconfirm } from 'antd';
+import * as Constants from '../constants/Constants';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const layout = {
   labelCol: {
@@ -13,16 +13,17 @@ const layout = {
 };
 
 const EditProfileModal = (props) => {
+  const { visible, loading, onOk, onCancel, form, initialValues } = props;
   return (
     <Modal
       title={Constants.EDIT_PROFILE_MODAL}
       centered
       closable={false}
       maskClosable={false}
-      visible={props.visible}
-      confirmLoading={props.loading}
-      onOk={props.onOk}
-      onCancel={props.onCancel}
+      visible={visible}
+      confirmLoading={loading}
+      onOk={onOk}
+      onCancel={onCancel}
       footer={[
         <Popconfirm
           title={Constants.QUIT_MODAL_CONFIRM}
@@ -37,7 +38,7 @@ const EditProfileModal = (props) => {
         <Button
           key={Constants.BUTTON_SUBMIT}
           type={Constants.PRIMARY}
-          loading={props.loading}
+          loading={loading}
           onClick={() => {
             props.form.validateFields().then((values) => {
               props.onSubmit(values);
@@ -49,25 +50,23 @@ const EditProfileModal = (props) => {
       ]}
     >
       <Form
-        {...layout}
-        form={props.form}
+        {...{ layout }}
+        form={form}
         name="control-ref"
-        onFinish={props.onOk}
-        initialValues={props.initialValues}
+        onFinish={onOk}
+        initialValues={initialValues}
       >
         <Form.Item
           label={Constants.FORM_LABELS.ACCOUNT_NUM}
           name={Constants.FORM_FIELDS.ACCOUNT_NUM}
         >
-          <span className="ant-form-text">
-            {props.initialValues.account_num}
-          </span>
+          <span className="ant-form-text">{initialValues.account_num}</span>
         </Form.Item>
         <Form.Item
           label={Constants.FORM_LABELS.NAME}
           name={Constants.FORM_FIELDS.NAME}
         >
-          <span className="ant-form-text">{props.initialValues.cust_name}</span>
+          <span className="ant-form-text">{initialValues.cust_name}</span>
         </Form.Item>
         <Form.Item
           name={Constants.FORM_FIELDS.PHONE_NUMBER}
@@ -86,7 +85,7 @@ const EditProfileModal = (props) => {
           label={Constants.FORM_LABELS.EMAIL}
           rules={[
             {
-              type: "email",
+              type: 'email',
               message: Constants.INVALID_EMAIL,
             },
             {

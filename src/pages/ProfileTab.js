@@ -1,47 +1,46 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Row, Col, Typography, Divider } from "antd";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Row, Col, Typography, Divider } from 'antd';
 import {
   UserOutlined,
   MailOutlined,
   HomeOutlined,
   PhoneOutlined,
   BankOutlined,
-} from "@ant-design/icons";
-import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
-import DebitCard from "../components/DebitCard";
-import config from "../config/config.json";
-import "../styles/CustomerProfile.css";
+} from '@ant-design/icons';
+import { Loader, Reloader, reqBuilder, logOut } from './CustomerProfile';
+import DebitCard from '../components/DebitCard';
+import config from '../config/config.json';
+import '../styles/CustomerProfile.css';
 
 const { Title, Text } = Typography;
 
 const DEFAULT_CARD = {
-  cardNum: "",
-  validThru: "",
-  name: "",
+  cardNum: '',
+  validThru: '',
+  name: '',
 };
 
 export default function ProfileTab({ profileData }) {
   const [cardData, setCardData] = useState(DEFAULT_CARD);
   const [fetching, setFetching] = useState(true);
   const [reload, setReload] = useState(false);
-
   useEffect(() => {
     if (!profileData.isLoading) {
       axios(
         reqBuilder(
-          "get",
-          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`
-        )
+          'get',
+          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`,
+        ),
       )
-        .then(function (response) {
-          if (response.data.status === "SUCCESS") {
-            let validYear = response.data.data.expired.substring(2, 4);
-            let validMonth = response.data.data.expired.substring(5, 7);
+        .then((response) => {
+          if (response.data.status === 'SUCCESS') {
+            const validYear = response.data.data.expired.substring(2, 4);
+            const validMonth = response.data.data.expired.substring(5, 7);
             setCardData({
               cardNum: response.data.data.card_num,
               validThru: `${validMonth}/${validYear}`,
-              name: "",
+              name: '',
             });
             setReload(false);
           }
@@ -53,7 +52,7 @@ export default function ProfileTab({ profileData }) {
             setReload(true);
           }
         })
-        .finally(function () {
+        .finally(() => {
           setFetching(false);
         });
     }
@@ -73,14 +72,14 @@ export default function ProfileTab({ profileData }) {
   return (
     <div className="top-space">
       <Row>
-        <Col span={3}></Col>
+        <Col span={3} />
         <Col span={9}>
-          <ProfileDetail {...profileData} />
+          <ProfileDetail {...{ profileData }} />
         </Col>
         <Col span={9}>
           <DebitCard {...cardData} />
         </Col>
-        <Col span={4}></Col>
+        <Col span={4} />
       </Row>
     </div>
   );
@@ -88,13 +87,21 @@ export default function ProfileTab({ profileData }) {
 
 function ProfileDetail(props) {
   const generalInfo = [
-    { label: "Name", value: props.name, icon: <UserOutlined /> },
-    { label: "Account Number", value: props.accNum, icon: <BankOutlined /> },
-    { label: "Address", value: props.address, icon: <HomeOutlined /> },
+    { label: 'Name', value: props.profileData.name, icon: <UserOutlined /> },
+    {
+      label: 'Account Number',
+      value: props.profileData.accNum,
+      icon: <BankOutlined />,
+    },
+    {
+      label: 'Address',
+      value: props.profileData.address,
+      icon: <HomeOutlined />,
+    },
   ];
   const contactInfo = [
-    { label: "Email", value: props.email, icon: <MailOutlined /> },
-    { label: "Phone", value: props.phone, icon: <PhoneOutlined /> },
+    { label: 'Email', value: props.profileData.email, icon: <MailOutlined /> },
+    { label: 'Phone', value: props.profileData.phone, icon: <PhoneOutlined /> },
   ];
   function ItemRow(props) {
     return (
@@ -123,6 +130,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {generalInfo.map((item) => {
+          console.log(item);
           return <ItemRow {...item} />;
         })}
         <Divider />
@@ -134,6 +142,7 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {contactInfo.map((item) => {
+          console.log(item);
           return <ItemRow {...item} />;
         })}
       </Col>

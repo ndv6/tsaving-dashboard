@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import NavigationBar from "../components/NavigationBar";
-import SearchBar from "../components/SearchBar";
-import DataTable from "../components/DataTable";
-import FilterBar from "../components/FilterBar";
-import "../styles/Customers.css";
-import EditProfileModalContainer from "../components/EditProfileModalContainer";
-import { notification } from "antd";
-import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Popconfirm, message } from "antd";
-import * as Constants from "../constants/Constants";
-import config from "../config/config.json";
+import React, { useState } from 'react';
+import NavigationBar from '../components/NavigationBar';
+import SearchBar from '../components/SearchBar';
+import DataTable from '../components/DataTable';
+import FilterBar from '../components/FilterBar';
+import '../styles/Customers.css';
+import EditProfileModalContainer from '../components/EditProfileModalContainer';
+import { notification } from 'antd';
+import { InfoCircleTwoTone } from '@ant-design/icons';
+import { Popconfirm, message } from 'antd';
+import * as Constants from '../constants/Constants';
+import config from '../config/config.json';
 
-import axios from "axios";
+import axios from 'axios';
 
 import {
   CheckCircleOutlined,
@@ -21,8 +21,8 @@ import {
   DeleteTwoTone,
   LockTwoTone,
   MailTwoTone,
-} from "@ant-design/icons";
-import { useHistory } from "react-router";
+} from '@ant-design/icons';
+import { useHistory } from 'react-router';
 
 export default function Customers() {
   const history = useHistory();
@@ -30,87 +30,87 @@ export default function Customers() {
   const [countData, setCountData] = useState(0);
   const [loading, setLoading] = useState(false);
   const [paramDate, setDate] = useState(null);
-  const [paramSearch, setSearch] = useState("");
+  const [paramSearch, setSearch] = useState('');
   const [paramPage, setPage] = useState(1);
   const [isModalVisible, setModalVisibility] = useState(false);
-  const [accnum,setAccNum] = useState(0);
+  const [accnum, setAccNum] = useState(0);
   const [customerDataToBeEdited, setDataToEdit] = useState({
-    account_num: "",
-    cust_name: "",
-    cust_email: "",
-    cust_phone: "",
+    account_num: '',
+    cust_name: '',
+    cust_email: '',
+    cust_phone: '',
     is_verified: false,
   });
-  const token = window.localStorage.getItem("token");
+  const token = window.localStorage.getItem('token');
 
   function clickDetailCustomer(rowData) {
-    history.push("/admin/customer/" + rowData.cust_id);
+    history.push('/admin/customer/' + rowData.cust_id);
   }
 
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
     let customerToken = await getTokenCustomer(rowData.cust_email);
 
-    var hasil = await insertLog(rowData.account_num,"RESEND");
+    var hasil = await insertLog(rowData.account_num, 'RESEND');
 
-    if (hasil){
-        axios({
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            url: "http://localhost:8082/sendMail",
-            data: {
-              email: rowData.cust_email,
-              token: customerToken,
-            },
-          }).then((res) => {
-              
-              let args = {
-                message: "Resend Email",
-                description: "Email has been sent to the customer.",
-                duration: 2,
-                icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
-              };
-              notification.open(args);
-            }).catch((err) => {
-              if (!err.status) {
-                let args = {
-                  message: "Resend Email",
-                  description: "Network Error.",
-                  duration: 2,
-                  icon: <InfoCircleTwoTone twoToneColor="red" />,
-                };
-                notification.error(args);
-              } else if (err.response.status === 429) {
-                let args = {
-                  message: "Resend Email",
-                  description:
-                    "Too many request. Please wait for 10 seconds before sending another email.",
-                  duration: 2,
-                  icon: <InfoCircleTwoTone twoToneColor="red" />,
-                };
-                notification.error(args);
-              }
-            })
-            .finally(() => {
-              setLoading(false);
-            });
-    }else{
-        message.info("Resend Email failed");
+    if (hasil) {
+      axios({
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: 'http://localhost:8082/sendMail',
+        data: {
+          email: rowData.cust_email,
+          token: customerToken,
+        },
+      })
+        .then((res) => {
+          let args = {
+            message: 'Resend Email',
+            description: 'Email has been sent to the customer.',
+            duration: 2,
+            icon: <InfoCircleTwoTone style={{ color: '#108ee9' }} />,
+          };
+          notification.open(args);
+        })
+        .catch((err) => {
+          if (!err.status) {
+            let args = {
+              message: 'Resend Email',
+              description: 'Network Error.',
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          } else if (err.response.status === 429) {
+            let args = {
+              message: 'Resend Email',
+              description:
+                'Too many request. Please wait for 10 seconds before sending another email.',
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      message.info('Resend Email failed');
     }
-    
   }
 
   function getTokenCustomer(customerEmail) {
     return new Promise(function (resolve, reject) {
       axios({
         headers: {
-          "Content-Type": "application/json",
-          Authorization: window.localStorage.getItem("token"),
+          'Content-Type': 'application/json',
+          Authorization: window.localStorage.getItem('token'),
         },
-        method: "POST",
-        url: config.apiHost+"/v2/get-token",
+        method: 'POST',
+        url: config.apiHost + '/v2/get-token',
         data: {
           email: customerEmail,
         },
@@ -124,61 +124,60 @@ export default function Customers() {
     });
   }
 
-function insertLog(account_num, action){
-    return new Promise(function (resolve, reject){
-        var bool = true;
-        axios({
-            method : "POST",
-            url : config.apiHost+"v2/log/insert",
-            data :{
-                acc_num : account_num,
-                action : action,
-            },
-            headers:{
-              "Authorization": window.localStorage.getItem("token")
-            }
-          }).then((res) => {
-            //success
-            resolve(bool);
-          }).catch((err) => {
-            reject(err)
-          }).finally(() => {
-      
-          })
-    })
-}
+  function insertLog(account_num, action) {
+    return new Promise(function (resolve, reject) {
+      var bool = true;
+      axios({
+        method: 'POST',
+        url: config.apiHost + 'v2/log/insert',
+        data: {
+          acc_num: account_num,
+          action: action,
+        },
+        headers: {
+          Authorization: window.localStorage.getItem('token'),
+        },
+      })
+        .then((res) => {
+          //success
+          resolve(bool);
+        })
+        .catch((err) => {
+          reject(err);
+        })
+        .finally(() => {});
+    });
+  }
 
   function clickDeleteCustomer(account_num, setLoading, history) {
     setLoading(true);
     axios({
       headers: {
-        "Content-Type": "application/json",
-        Authorization: window.localStorage.getItem("token"),
+        'Content-Type': 'application/json',
+        Authorization: window.localStorage.getItem('token'),
       },
-      method: "POST",
-      url: config.apiHost+"/v2/customers/delete",
+      method: 'POST',
+      url: config.apiHost + '/v2/customers/delete',
       data: {
         account_num: account_num,
       },
     })
       .then((res) => {
-        insertLog(account_num, "DELETE")
+        insertLog(account_num, 'DELETE');
         message.info(res.data.message);
         setTimeout(function () {
           window.location.reload();
         }, 1500);
       })
       .catch((err) => {
-        if(err.response === undefined){
-            message.error("Network Error please try again later", 2);
-          }
-          else if (err.response.status === 401) {
-            localStorage.removeItem("token");
-            history.push("/admin/login");
-          }
-          else{
-              message.error("Failed to Get Data, please try again later", 2);
-          }
+        if (err.response === undefined) {
+          message.error('Network Error please try again later', 2);
+        } else if (err.response.status === 401) {
+          localStorage.removeItem('token');
+          history.push('/admin/login');
+        } else {
+          message.error('Failed to Get Data, please try again later', 2);
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -188,20 +187,20 @@ function insertLog(account_num, action){
   function getCustomerList(
     token,
     paramPage = 1,
-    paramDate = "",
-    paramSearch = "",
+    paramDate = '',
+    paramSearch = '',
     setListCust,
     setCountData,
-    setLoading
+    setLoading,
   ) {
     setLoading(true);
     axios({
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: token,
       },
-      method: "POST",
-      url: config.apiHost+"/v2/customers/list/" + paramPage,
+      method: 'POST',
+      url: config.apiHost + '/v2/customers/list/' + paramPage,
       data: {
         filter_date: paramDate,
         filter_search: paramSearch,
@@ -211,50 +210,50 @@ function insertLog(account_num, action){
         setCountData(res.data.data.total);
         const tableData = (res.data.data.list || []).map((value, index) => {
           let singleRow = {};
-          let field_verif = "";
+          let field_verif = '';
           if (value.is_verified === true) {
-            field_verif = "Verified";
+            field_verif = 'Verified';
           } else {
-            field_verif = "Unverified";
+            field_verif = 'Unverified';
           }
-          let created = value.created_at.split("T");
+          let created = value.created_at.split('T');
 
           //checkdeleted
-          let deletedraw = value.is_deleted.split("T");
+          let deletedraw = value.is_deleted.split('T');
           let deletedfix = true;
-          if (deletedraw[0] === "1970-01-01") {
+          if (deletedraw[0] === '1970-01-01') {
             deletedfix = false;
           }
-          singleRow["key"] = index;
-          singleRow["cust_name"] = value.cust_name;
-          singleRow["account_num"] = value.account_num;
-          singleRow["cust_email"] = value.cust_email;
-          singleRow["is_verified"] = field_verif; //value.is_verified
-          singleRow["date"] = created[0];
-          singleRow["is_deleted"] = deletedfix;
+          singleRow['key'] = index;
+          singleRow['cust_name'] = value.cust_name;
+          singleRow['account_num'] = value.account_num;
+          singleRow['cust_email'] = value.cust_email;
+          singleRow['is_verified'] = field_verif; //value.is_verified
+          singleRow['date'] = created[0];
+          singleRow['is_deleted'] = deletedfix;
           //prepare data param for action delete edit / detail just in case if needed u can add more(optional)
           let dataRow = {};
-          dataRow["cust_id"] = value.cust_id;
-          dataRow["cust_name"] = value.cust_name;
-          dataRow["account_num"] = value.account_num;
-          dataRow["cust_email"] = value.cust_email;
-          dataRow["is_verified"] = field_verif;
-          dataRow["cust_phone"] = value.cust_phone;
-          dataRow["is_deleted"] = deletedfix;
+          dataRow['cust_id'] = value.cust_id;
+          dataRow['cust_name'] = value.cust_name;
+          dataRow['account_num'] = value.account_num;
+          dataRow['cust_email'] = value.cust_email;
+          dataRow['is_verified'] = field_verif;
+          dataRow['cust_phone'] = value.cust_phone;
+          dataRow['is_deleted'] = deletedfix;
 
-          singleRow["action"] = dataRow;
+          singleRow['action'] = dataRow;
           return singleRow;
         });
         setListCust(tableData);
       })
       .catch((err) => {
         if (err.response === undefined) {
-          message.error("Network Error please try again later", 2);
+          message.error('Network Error please try again later', 2);
         } else if (err.response.status === 401) {
-          localStorage.removeItem("token");
-          history.push("/admin/login");
+          localStorage.removeItem('token');
+          history.push('/admin/login');
         } else {
-          message.error("Failed to Get Data, please try again later", 2);
+          message.error('Failed to Get Data, please try again later', 2);
         }
       })
       .finally(() => {
@@ -274,13 +273,13 @@ function insertLog(account_num, action){
     rowData = Object.assign(rowData, {
       is_verified:
         rowData.is_verified instanceof String ||
-        typeof rowData.is_verified == "string"
+        typeof rowData.is_verified == 'string'
           ? rowData.is_verified === Constants.VERIFIED
           : rowData.is_verified,
     });
     setDataToEdit(rowData);
     setModalVisibility(true);
-    setAccNum(rowData.account_num)
+    setAccNum(rowData.account_num);
   }
 
   function closeModal() {
@@ -297,10 +296,10 @@ function insertLog(account_num, action){
       let day = date.date().toString();
       let month = (date.month() + 1).toString();
       let year = date.year().toString();
-      let fixdate = year + "-" + month + "-" + day;
+      let fixdate = year + '-' + month + '-' + day;
       setDate(fixdate);
     } else {
-      setDate("");
+      setDate('');
     }
   }
 
@@ -319,32 +318,32 @@ function insertLog(account_num, action){
       paramSearch,
       setListCust,
       setCountData,
-      setLoading
+      setLoading,
     );
   }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible]);
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "cust_name",
-      key: "cust_name",
+      title: 'Name',
+      dataIndex: 'cust_name',
+      key: 'cust_name',
     },
     {
-      title: "Acc Num",
-      dataIndex: "account_num",
-      key: "account_num",
+      title: 'Acc Num',
+      dataIndex: 'account_num',
+      key: 'account_num',
     },
     {
-      title: "Email",
-      dataIndex: "cust_email",
-      key: "cust_email",
+      title: 'Email',
+      dataIndex: 'cust_email',
+      key: 'cust_email',
     },
     {
-      title: "Verified",
-      dataIndex: "is_verified",
-      key: "is_verified",
+      title: 'Verified',
+      dataIndex: 'is_verified',
+      key: 'is_verified',
       render: (text) => {
-        if (text === "Verified") {
+        if (text === 'Verified') {
           return <CheckCircleOutlined className="cus-icon verified" />;
         } else {
           return <CloseCircleOutlined className="cus-icon warn " />;
@@ -352,14 +351,14 @@ function insertLog(account_num, action){
       },
     },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Status",
-      dataIndex: "is_deleted",
-      key: "is_deleted",
+      title: 'Status',
+      dataIndex: 'is_deleted',
+      key: 'is_deleted',
       render: (text) => {
         if (text) {
           return <LockTwoTone twoToneColor="red" className="cus-icon warn" />;
@@ -369,10 +368,10 @@ function insertLog(account_num, action){
       },
     },
     {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: (text,record) => {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: (text, record) => {
         if (text.is_deleted) {
           return (
             <div className="field-action">
@@ -388,7 +387,7 @@ function insertLog(account_num, action){
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text,setLoading)}
+                onClick={() => clickMailCustomer(text, setLoading)}
               />
             </div>
           );
