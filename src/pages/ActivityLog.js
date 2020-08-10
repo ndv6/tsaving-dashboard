@@ -19,15 +19,16 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,search,histo
        modifDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
     }
     
-    if(date == null && search == null){
+    if(date == null && search == ""){
       url = config.apiHost+"/v2/log/"+pageNumber
-    }else if(date != null && search == null){
+    }else if(date != null && search == ""){
       url = config.apiHost+"/v2/log/d/"+modifDate+"/"+pageNumber;
-    }else if(date == null && search != null){
+    }else if(date == null && search != ""){
       url = config.apiHost+"/v2/log/u/"+search+"/"+pageNumber;
-    }else if(date != null && search != null){
+    }else if(date != null && search != ""){
       url = config.apiHost+"/v2/log/"+search+"/"+modifDate +"/" + pageNumber;
     }
+    console.log(url);
 
     axios({
       headers:{
@@ -75,7 +76,7 @@ export default function ActivityLog(){
   const [page,setPage] = useState(1);
   const [totalData,setTotaldata] = useState(0);
   const [date,setDate] = useState(null);
-  const [search,setSearch] = useState(null);
+  const [search,setSearch] = useState("");
   const token = window.localStorage.getItem("token")
   const history = useHistory();
 
