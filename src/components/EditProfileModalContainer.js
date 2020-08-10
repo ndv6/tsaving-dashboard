@@ -18,12 +18,13 @@ export default function EditProfileModalContainer(props) {
     if (
       formData[Constants.FORM_FIELDS.EMAIL] !==
         props.data[Constants.FORM_FIELDS.EMAIL] ||
-      formData[Constants.FORM_FIELDS.PHONE] !==
-        props.data[Constants.FORM_FIELDS.PHONE] ||
+      formData[Constants.FORM_FIELDS.PHONE_NUMBER] !==
+        props.data[Constants.FORM_FIELDS.PHONE_NUMBER] ||
       formData[Constants.FORM_FIELDS.IS_VERIFIED] !==
         props.data[Constants.FORM_FIELDS.IS_VERIFIED]
     ) {
       props.setLoading(true);
+
       Axios({
         headers: {
           [Constants.HEADER_TYPE.CONTENT_TYPE]: Constants.HEADER_CONTENTS.JSON,
@@ -48,7 +49,10 @@ export default function EditProfileModalContainer(props) {
             props.history.push(LOGIN);
           }
         })
-        .finally(props.setLoading(false));
+        .finally(() => {
+          props.setLoading(false);
+          props.setData(formData);
+        });
     } else {
       message.error(Constants.NO_CHANGES_SUBMITTED);
     }

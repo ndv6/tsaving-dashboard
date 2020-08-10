@@ -26,12 +26,13 @@ const EditProfileModal = (props) => {
       footer={[
         <Popconfirm
           title={Constants.QUIT_MODAL_CONFIRM}
+          key={Constants.BUTTON_BACK}
           icon={<QuestionCircleOutlined style={{ color: Constants.RED }} />}
           onConfirm={() => {
             props.onCancel();
           }}
         >
-          <Button key={Constants.BUTTON_BACK}>{Constants.BACK}</Button>
+          <Button>{Constants.BACK}</Button>
         </Popconfirm>,
         <Button
           key={Constants.BUTTON_SUBMIT}
@@ -99,8 +100,9 @@ const EditProfileModal = (props) => {
         <Form.Item
           name={Constants.FORM_FIELDS.IS_VERIFIED}
           label={Constants.FORM_LABELS.IS_VERIFIED}
+          valuePropName="checked"
         >
-          <Switch defaultChecked={props.initialValues.is_verified} />
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>
