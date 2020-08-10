@@ -1,27 +1,29 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Row, Col, Button } from 'antd';
-import '../styles/PageNotFound.css';
-import Err from '../static/404.png';
-import Logo from '../static/tsaving.png';
-import Msg from '../static/message.png';
-import Phone from '../static/phone.png';
-import Fb from '../static/fb.png';
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { Row, Col } from "antd";
+import "../styles/PageNotFound.css";
+import Err from "../static/404.png";
+import Logo from "../static/tsaving.png";
+import Msg from "../static/message.png";
+import Phone from "../static/phone.png";
+import Fb from "../static/fb.png";
+
+import { Button } from "antd";
 
 export default function PageNotFound() {
   const history = useHistory();
   function backHome() {
-    history.push('/admin/login');
+    history.push("/admin/login");
   }
   return (
     <div className="body">
-      <div className="header">
-        <Row>
-          <Col span={24}>
+      <Row>
+        <Col span={24}>
+          <div className="header">
             <h1>Oops !!</h1>
-          </Col>
-        </Row>
-      </div>
+          </div>
+        </Col>
+      </Row>
       <Row>
         <Col span={12}>
           <div className="ErrorLogo">
@@ -34,8 +36,8 @@ export default function PageNotFound() {
           </div>
           <div className="message">
             <p>
-              We Can't Seem to find <br />
-              the Page You're Looking For{' '}
+              We Can't Seem to find <br></br>
+              the Page You're Looking For{" "}
             </p>
           </div>
           <Button type="danger" htmlType="submit" onClick={backHome}>

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Modal, Form, Input, Switch, Popconfirm } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import * as Constants from '../constants/Constants';
+import React, { useEffect } from "react";
+import { Button, Modal, Form, Input, Switch, Popconfirm } from "antd";
+import * as Constants from "../constants/Constants";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 const layout = {
   labelCol: {
@@ -27,12 +27,13 @@ const EditProfileModal = (props) => {
       footer={[
         <Popconfirm
           title={Constants.QUIT_MODAL_CONFIRM}
+          key={Constants.BUTTON_BACK}
           icon={<QuestionCircleOutlined style={{ color: Constants.RED }} />}
           onConfirm={() => {
             props.onCancel();
           }}
         >
-          <Button key={Constants.BUTTON_BACK}>{Constants.BACK}</Button>
+          <Button>{Constants.BACK}</Button>
         </Popconfirm>,
         <Button
           key={Constants.BUTTON_SUBMIT}
@@ -98,8 +99,9 @@ const EditProfileModal = (props) => {
         <Form.Item
           name={Constants.FORM_FIELDS.IS_VERIFIED}
           label={Constants.FORM_LABELS.IS_VERIFIED}
+          valuePropName="checked"
         >
-          <Switch defaultChecked={initialValues.is_verified} />
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>

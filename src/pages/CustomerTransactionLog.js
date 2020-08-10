@@ -1,13 +1,14 @@
-import React from 'react';
-import axios from 'axios';
-import { message } from 'antd';
-import { Redirect } from 'react-router-dom';
-import DataTable from '../components/DataTable';
-import '../styles/CustomerTransactionLog.css';
-import FilterBar from '../components/FilterBar';
-import SearchBar from '../components/SearchBar';
-import FormatLogDescription from '../utils/Helper';
-import { Loader, Reloader } from './CustomerProfile';
+import React from "react";
+import DataTable from "../components/DataTable";
+import "../styles/CustomerTransactionLog.css";
+import FilterBar from "../components/FilterBar";
+import SearchBar from "../components/SearchBar";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
+import FormatLogDescription from "../utils/Helper";
+import { message } from "antd";
+import config from "../config/config.json";
+import { Loader, Reloader } from "./CustomerProfile";
 
 const columns = [
   {
@@ -50,15 +51,40 @@ function GetTransaction(
   setLoading,
   setStatus,
 ) {
-  let url = '';
-  if (day == null && month == null && year == null && search === '') {
-    url = `http://localhost:8000/v2/transactions/${accNum}/${page}`;
-  } else if (search !== '' && day == null && month == null && year == null) {
-    url = `http://localhost:8000/v2/transactions/${accNum}/${search}/${page}`;
-  } else if (search !== '' && day !== null && month !== null && year !== null) {
-    url = `http://localhost:8000/v2/transactions/${accNum}/${day}-${month}-${year}/${search}/${page}`;
-  } else if (search === '' && day !== null && month !== null && year !== null) {
-    url = `http://localhost:8000/v2/transactions/${accNum}/${day}-${month}-${year}/${page}`;
+  let url = "";
+  if (day == null && month == null && year == null && search === "") {
+    url = config.apiHost + "/v2/transactions/" + accNum + "/" + page;
+  } else if (search !== "" && day == null && month == null && year == null) {
+    url =
+      config.apiHost + "/v2/transactions/" + accNum + "/" + search + "/" + page;
+  } else if (search !== "" && day !== null && month !== null && year !== null) {
+    url =
+      config.apiHost +
+      "/v2/transactions/" +
+      accNum +
+      "/" +
+      day +
+      "-" +
+      month +
+      "-" +
+      year +
+      "/" +
+      search +
+      "/" +
+      page;
+  } else if (search === "" && day !== null && month !== null && year !== null) {
+    url =
+      config.apiHost +
+      "/v2/transactions/" +
+      accNum +
+      "/" +
+      day +
+      "-" +
+      month +
+      "-" +
+      year +
+      "/" +
+      page;
   }
 
   setLoading(true);
@@ -332,10 +358,6 @@ export default function CustomerTransactionLog(props) {
         }
       />
     );
-  }
-
-  if (loading) {
-    return <Loader />;
   }
 
   return (

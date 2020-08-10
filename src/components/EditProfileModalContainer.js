@@ -1,14 +1,20 @@
-import React from 'react';
-import { Form, message } from 'antd';
-import axios from 'axios';
-import * as Constants from '../constants/Constants';
-import config from '../config/config.json';
-import { EDIT_CUSTOMER_DATA, LOGIN } from '../constants/ApiEndpoints';
-import EditProfileModal from './EditProfileModal';
+import React, { useEffect } from "react";
+import { Form, message } from "antd";
+import * as Constants from "../constants/Constants";
+import Axios from "axios";
+import config from "../config/config.json";
+import { EDIT_CUSTOMER_DATA, LOGIN } from "../constants/ApiEndpoints";
+import EditProfileModal from "./EditProfileModal";
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();
   const { visible, data, loading, onOk, onCancel } = props;
+
+  useEffect(() => {
+    if (props.visible && form) {
+      form.resetFields();
+    }
+  }, [form, props.visible]);
 
   function onSubmit(formData) {
     const userToken = window.localStorage.getItem(
@@ -19,13 +25,14 @@ export default function EditProfileModalContainer(props) {
     if (
       formData[Constants.FORM_FIELDS.EMAIL] !==
         props.data[Constants.FORM_FIELDS.EMAIL] ||
-      formData[Constants.FORM_FIELDS.PHONE] !==
-        props.data[Constants.FORM_FIELDS.PHONE] ||
+      formData[Constants.FORM_FIELDS.PHONE_NUMBER] !==
+        props.data[Constants.FORM_FIELDS.PHONE_NUMBER] ||
       formData[Constants.FORM_FIELDS.IS_VERIFIED] !==
         props.data[Constants.FORM_FIELDS.IS_VERIFIED]
     ) {
       props.setLoading(true);
-      axios({
+
+      Axios({
         headers: {
           [Constants.HEADER_TYPE.CONTENT_TYPE]: Constants.HEADER_CONTENTS.JSON,
           Authorization: userToken,
@@ -49,7 +56,10 @@ export default function EditProfileModalContainer(props) {
             props.history.push(LOGIN);
           }
         })
-        .finally(props.setLoading(false));
+        .finally(() => {
+          props.setLoading(false);
+          props.setData(formData);
+        });
     } else {
       message.error(Constants.NO_CHANGES_SUBMITTED);
     }

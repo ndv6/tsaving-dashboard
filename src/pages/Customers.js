@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import NavigationBar from '../components/NavigationBar';
-import SearchBar from '../components/SearchBar';
-import DataTable from '../components/DataTable';
-import FilterBar from '../components/FilterBar';
-import '../styles/Customers.css';
-import EditProfileModalContainer from '../components/EditProfileModalContainer';
-import { notification } from 'antd';
-import { InfoCircleTwoTone } from '@ant-design/icons';
-import { Popconfirm, message, Button } from 'antd';
-import * as Constants from '../constants/Constants';
+import React, { useState } from "react";
+import NavigationBar from "../components/NavigationBar";
+import SearchBar from "../components/SearchBar";
+import DataTable from "../components/DataTable";
+import FilterBar from "../components/FilterBar";
+import "../styles/Customers.css";
+import EditProfileModalContainer from "../components/EditProfileModalContainer";
+import { notification } from "antd";
+import { InfoCircleTwoTone } from "@ant-design/icons";
+import { Popconfirm, message } from "antd";
+import * as Constants from "../constants/Constants";
+import config from "../config/config.json";
 
 import axios from 'axios';
 
@@ -32,6 +33,7 @@ export default function Customers() {
   const [paramSearch, setSearch] = useState('');
   const [paramPage, setPage] = useState(1);
   const [isModalVisible, setModalVisibility] = useState(false);
+  const [accnum,setAccNum] = useState(0);
   const [customerDataToBeEdited, setDataToEdit] = useState({
     account_num: '',
     cust_name: '',
@@ -39,7 +41,7 @@ export default function Customers() {
     cust_phone: '',
     is_verified: false,
   });
-  const token = window.localStorage.getItem('token');
+  const token = window.localStorage.getItem("token");
 
   function clickDetailCustomer(rowData) {
     history.push('/admin/customer/' + rowData.cust_id);
@@ -48,51 +50,56 @@ export default function Customers() {
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
     let customerToken = await getTokenCustomer(rowData.cust_email);
-    axios({
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      url: 'http://localhost:8082/sendMail',
-      data: {
-        email: rowData.cust_email,
-        token: customerToken,
-      },
-    })
-      .then((res) => {
-        let args = {
-          message: 'Resend Email',
-          description: 'Email has been sent to the customer.',
-          duration: 2,
-          icon: <InfoCircleTwoTone style={{ color: '#108ee9' }} />,
-        };
-        notification.open(args);
-      })
-      .catch((err) => {
-        if (!err.status) {
-          if (err.response.status == 429) {
-            let args = {
-              message: 'Resend Email',
-              description:
-                'Too many request. Please wait for 10 seconds before sending another email.',
-              duration: 2,
-              icon: <InfoCircleTwoTone twoToneColor="red" />,
-            };
-            notification.error(args);
-          } else {
-            let args = {
-              message: 'Resend Email',
-              description: 'Network Error.',
-              duration: 2,
-              icon: <InfoCircleTwoTone twoToneColor="red" />,
-            };
-            notification.error(args);
-          }
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    var hasil = await insertLog(rowData.account_num,"RESEND");
+
+    if (hasil){
+        axios({
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            url: "http://localhost:8082/sendMail",
+            data: {
+              email: rowData.cust_email,
+              token: customerToken,
+            },
+          }).then((res) => {
+              
+              let args = {
+                message: "Resend Email",
+                description: "Email has been sent to the customer.",
+                duration: 2,
+                icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
+              };
+              notification.open(args);
+            }).catch((err) => {
+              if (!err.status) {
+                let args = {
+                  message: "Resend Email",
+                  description: "Network Error.",
+                  duration: 2,
+                  icon: <InfoCircleTwoTone twoToneColor="red" />,
+                };
+                notification.error(args);
+              } else if (err.response.status === 429) {
+                let args = {
+                  message: "Resend Email",
+                  description:
+                    "Too many request. Please wait for 10 seconds before sending another email.",
+                  duration: 2,
+                  icon: <InfoCircleTwoTone twoToneColor="red" />,
+                };
+                notification.error(args);
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+    }else{
+        message.info("Resend Email failed");
+    }
+    
   }
 
   function getTokenCustomer(customerEmail) {
@@ -102,8 +109,8 @@ export default function Customers() {
           'Content-Type': 'application/json',
           Authorization: window.localStorage.getItem('token'),
         },
-        method: 'POST',
-        url: 'http://localhost:8000/v2/get-token',
+        method: "POST",
+        url: config.apiHost+"/v2/get-token",
         data: {
           email: customerEmail,
         },
@@ -117,6 +124,30 @@ export default function Customers() {
     });
   }
 
+function insertLog(account_num, action){
+    return new Promise(function (resolve, reject){
+        var bool = true;
+        axios({
+            method : "POST",
+            url : config.apiHost+"v2/log/insert",
+            data :{
+                acc_num : account_num,
+                action : action,
+            },
+            headers:{
+              "Authorization": window.localStorage.getItem("token")
+            }
+          }).then((res) => {
+            //success
+            resolve(bool);
+          }).catch((err) => {
+            reject(err)
+          }).finally(() => {
+      
+          })
+    })
+}
+
   function clickDeleteCustomer(account_num, setLoading, history) {
     setLoading(true);
     axios({
@@ -124,23 +155,30 @@ export default function Customers() {
         'Content-Type': 'application/json',
         Authorization: window.localStorage.getItem('token'),
       },
-      method: 'POST',
-      url: 'http://localhost:8000/v2/customers/delete',
+      method: "POST",
+      url: config.apiHost+"/v2/customers/delete",
       data: {
         account_num: account_num,
       },
     })
       .then((res) => {
+        insertLog(account_num, "DELETE")
         message.info(res.data.message);
         setTimeout(function () {
           window.location.reload();
         }, 1500);
       })
       .catch((err) => {
-        if (err.response.status === 401) {
-          localStorage.removeItem('token');
-          history.push('/admin/login');
-        }
+        if(err.response === undefined){
+            message.error("Network Error please try again later", 2);
+          }
+          else if (err.response.status === 401) {
+            localStorage.removeItem("token");
+            history.push("/admin/login");
+          }
+          else{
+              message.error("Failed to Get Data, please try again later", 2);
+          }
       })
       .finally(() => {
         setLoading(false);
@@ -162,8 +200,8 @@ export default function Customers() {
         'Content-Type': 'application/json',
         Authorization: token,
       },
-      method: 'POST',
-      url: 'http://localhost:8000/v2/customers/list/' + paramPage,
+      method: "POST",
+      url: config.apiHost+"/v2/customers/list/" + paramPage,
       data: {
         filter_date: paramDate,
         filter_search: paramSearch,
@@ -210,11 +248,13 @@ export default function Customers() {
         setListCust(tableData);
       })
       .catch((err) => {
-        if (!err.status) {
-          message.error('Network Error please try again later', 2);
+        if (err.response === undefined) {
+          message.error("Network Error please try again later", 2);
         } else if (err.response.status === 401) {
-          localStorage.removeItem('token');
-          history.push('/admin/login');
+          localStorage.removeItem("token");
+          history.push("/admin/login");
+        } else {
+          message.error("Failed to Get Data, please try again later", 2);
         }
       })
       .finally(() => {
@@ -240,6 +280,7 @@ export default function Customers() {
     });
     setDataToEdit(rowData);
     setModalVisibility(true);
+    setAccNum(rowData.account_num)
   }
 
   function closeModal() {
@@ -280,7 +321,7 @@ export default function Customers() {
       setCountData,
       setLoading,
     );
-  }, [token, setListCust, paramPage, paramDate, paramSearch]);
+  }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible]);
 
   const columns = [
     {
@@ -328,10 +369,10 @@ export default function Customers() {
       },
     },
     {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
-      render: (text, record) => {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text,record) => {
         if (text.is_deleted) {
           return (
             <div className="field-action">
@@ -347,7 +388,7 @@ export default function Customers() {
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text)}
+                onClick={() => clickMailCustomer(text,setLoading)}
               />
             </div>
           );
@@ -413,6 +454,7 @@ export default function Customers() {
             loading={loading}
           />
           <EditProfileModalContainer
+            setData={setDataToEdit}
             data={customerDataToBeEdited}
             onOk={closeModal}
             onCancel={closeModal}

@@ -7,10 +7,11 @@ import {
   HomeOutlined,
   PhoneOutlined,
   BankOutlined,
-} from '@ant-design/icons';
-import { Loader, Reloader, reqBuilder } from './CustomerProfile';
-import DebitCard from '../components/DebitCard';
-import '../styles/CustomerProfile.css';
+} from "@ant-design/icons";
+import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
+import DebitCard from "../components/DebitCard";
+import config from "../config/config.json";
+import "../styles/CustomerProfile.css";
 
 const { Title, Text } = Typography;
 
@@ -24,14 +25,13 @@ export default function ProfileTab({ profileData }) {
   const [cardData, setCardData] = useState(DEFAULT_CARD);
   const [fetching, setFetching] = useState(true);
   const [reload, setReload] = useState(false);
-
   useEffect(() => {
     if (!profileData.isLoading) {
       axios(
         reqBuilder(
-          'get',
-          `http://localhost:8000/v2/customers/cards/${profileData.accNum}`,
-        ),
+          "get",
+          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`
+        )
       )
         .then((response) => {
           if (response.data.status === 'SUCCESS') {
@@ -45,8 +45,12 @@ export default function ProfileTab({ profileData }) {
             setReload(false);
           }
         })
-        .catch(() => {
-          setReload(true);
+        .catch(function (error) {
+          if (error.response.status === 401) {
+            logOut();
+          } else {
+            setReload(true);
+          }
         })
         .finally(() => {
           setFetching(false);
@@ -73,7 +77,7 @@ export default function ProfileTab({ profileData }) {
           <ProfileDetail {...{ profileData }} />
         </Col>
         <Col span={9}>
-          <DebitCard {...{ cardData }} />
+          <DebitCard {...cardData} />
         </Col>
         <Col span={4} />
       </Row>
@@ -82,28 +86,27 @@ export default function ProfileTab({ profileData }) {
 }
 
 function ProfileDetail(props) {
-  const { name, accNum, address, email, phone, icon, label, value } = props;
   const generalInfo = [
-    { label: 'Name', value: name, icon: <UserOutlined /> },
-    { label: 'Account Number', value: accNum, icon: <BankOutlined /> },
-    { label: 'Address', value: address, icon: <HomeOutlined /> },
+    { label: 'Name', value: props.profileData.name, icon: <UserOutlined /> },
+    { label: 'Account Number', value: props.profileData.accNum, icon: <BankOutlined /> },
+    { label: 'Address', value: props.profileData.address, icon: <HomeOutlined /> },
   ];
   const contactInfo = [
-    { label: 'Email', value: email, icon: <MailOutlined /> },
-    { label: 'Phone', value: phone, icon: <PhoneOutlined /> },
+    { label: 'Email', value: props.profileData.email, icon: <MailOutlined /> },
+    { label: 'Phone', value: props.profileData.phone, icon: <PhoneOutlined /> },
   ];
-  function ItemRow() {
+  function ItemRow(props) {
     return (
       <Row gutter={[8, 8]}>
-        <Col span={1}>{icon}</Col>
+        <Col span={1}>{props.icon}</Col>
         <Col span={8}>
-          <Text>{label}</Text>
+          <Text>{props.label}</Text>
         </Col>
         <Col span={1}>
           <Text>:</Text>
         </Col>
         <Col span={14}>
-          <Text strong>{value}</Text>
+          <Text strong>{props.value}</Text>
         </Col>
       </Row>
     );
@@ -119,7 +122,8 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {generalInfo.map((item) => {
-          return <ItemRow {...{ item }} />;
+          console.log(item)
+          return <ItemRow {...item} />;
         })}
         <Divider />
         <div className="top-space">
@@ -130,7 +134,8 @@ function ProfileDetail(props) {
           </Row>
         </div>
         {contactInfo.map((item) => {
-          return <ItemRow {...{ item }} />;
+          console.log(item)
+          return <ItemRow {...item} />;
         })}
       </Col>
     </Row>
