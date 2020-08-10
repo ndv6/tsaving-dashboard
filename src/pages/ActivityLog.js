@@ -140,8 +140,8 @@ export default function ActivityLog(){
            <div className = "activity-log-content">
               <h1>Activity Log</h1>
               <div className = "activity-log-filterbar">
-                <span className = "filter-text">Filter by date : &ensp;</span> 
-                <FilterBar onChange = {(date) => dateChange(date)}/>
+                <span className = "filter-text"></span> 
+                <FilterBar onChange = {(date) => dateChange(date)}/> &ensp;
                 <Search
                   placeholder="username"
                   onSearch={value => setSearch(value)}
