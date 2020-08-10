@@ -50,7 +50,6 @@ function GetTransaction(
   setLoading,
   setStatus
 ) {
-  accNum = 2007236310;
   let url = "";
   if (day == null && month == null && year == null && search === "") {
     url = "http://localhost:8000/v2/transactions/" + accNum + "/" + page;

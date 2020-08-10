@@ -44,7 +44,7 @@ export default function Customers() {
 
 
   function clickDetailCustomer(rowData) {
-    console.log(rowData, "detail here");
+    history.push("/admin/customer/" + rowData.cust_id);
   }
 
   async function clickMailCustomer(rowData, setLoading) {

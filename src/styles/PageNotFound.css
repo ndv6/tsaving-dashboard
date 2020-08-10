@@ -1,0 +1,42 @@
+.body{
+    text-align: center;
+    background-image: url("../static/back.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover
+}
+.header h1{
+    font-size: 50px;
+    color: #cecece;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.ErrorLogo img{
+    width: 80%;
+}
+
+.logo img{
+    width: 35%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.message p{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    padding :10px;
+}
+
+.footer-icon img{
+    width: 10%;
+    background-color: #cecece;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.footer-icon p{
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px;
+}
