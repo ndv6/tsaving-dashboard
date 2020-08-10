@@ -9,6 +9,7 @@ import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Popconfirm, message } from "antd";
 import * as Constants from "../constants/Constants";
+import config from "../config/config.json";
 
 import axios from "axios";
 
@@ -109,7 +110,7 @@ export default function Customers() {
           Authorization: window.localStorage.getItem("token"),
         },
         method: "POST",
-        url: "http://localhost:8000/v2/get-token",
+        url: config.apiHost+"/v2/get-token",
         data: {
           email: customerEmail,
         },
@@ -128,7 +129,7 @@ function insertLog(account_num, action){
         var bool = true;
         axios({
             method : "POST",
-            url : "http://localhost:8000/v2/log/insert",
+            url : config.apiHost+"v2/log/insert",
             data :{
                 acc_num : account_num,
                 action : action,
@@ -155,7 +156,7 @@ function insertLog(account_num, action){
         Authorization: window.localStorage.getItem("token"),
       },
       method: "POST",
-      url: "http://localhost:8000/v2/customers/delete",
+      url: config.apiHost+"/v2/customers/delete",
       data: {
         account_num: account_num,
       },
@@ -194,7 +195,7 @@ function insertLog(account_num, action){
         Authorization: token,
       },
       method: "POST",
-      url: "http://localhost:8000/v2/customers/list/" + paramPage,
+      url: config.apiHost+"/v2/customers/list/" + paramPage,
       data: {
         filter_date: paramDate,
         filter_search: paramSearch,
