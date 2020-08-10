@@ -67,7 +67,7 @@ export default function VAList({ custId }) {
   }, [fetching, custId, page]);
 
   useEffect(() => {
-    const source = filtered.map((item) => {
+    const source = filtered && filtered.map((item) => {
       return {
         key: item.va_num,
         num: item.va_num,
