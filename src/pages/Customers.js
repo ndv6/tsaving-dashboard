@@ -54,51 +54,52 @@ export default function Customers() {
     // var hasil = await insertLog(rowData.account_num,"RESEND");
     // console.log(hasil)
 
-    if (true){
-        axios({
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            url: "http://localhost:8082/sendMail",
-            data: {
-              email: rowData.cust_email,
-              token: customerToken,
-            },
-          }).then((res) => {
-              
-              let args = {
-                message: "Resend Email",
-                description: "Email has been sent to the customer.",
-                duration: 2,
-                icon: <InfoCircleTwoTone style={{ color: "#108ee9" }} />,
-              };
-              notification.open(args);
-            }).catch((err) => {
-              if (!err.status) {
-                let args = {
-                  message: "Resend Email",
-                  description: "Network Error.",
-                  duration: 2,
-                  icon: <InfoCircleTwoTone twoToneColor="red" />,
-                };
-                notification.error(args);
-              } else if (err.response.status === 429) {
-                let args = {
-                  message: "Resend Email",
-                  description:
-                    "Too many request. Please wait for 10 seconds before sending another email.",
-                  duration: 2,
-                  icon: <InfoCircleTwoTone twoToneColor="red" />,
-                };
-                notification.error(args);
-              }
-            })
-            .finally(() => {
-              setLoading(false);
-            });
-    }else{
-        message.info("Resend Email failed");
+    if (true) {
+      axios({
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: 'http://localhost:8082/sendMail',
+        data: {
+          email: rowData.cust_email,
+          token: customerToken,
+        },
+      })
+        .then((res) => {
+          let args = {
+            message: 'Resend Email',
+            description: 'Email has been sent to the customer.',
+            duration: 2,
+            icon: <InfoCircleTwoTone style={{ color: '#108ee9' }} />,
+          };
+          notification.open(args);
+        })
+        .catch((err) => {
+          if (!err.status) {
+            let args = {
+              message: 'Resend Email',
+              description: 'Network Error.',
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          } else if (err.response.status === 429) {
+            let args = {
+              message: 'Resend Email',
+              description:
+                'Too many request. Please wait for 10 seconds before sending another email.',
+              duration: 2,
+              icon: <InfoCircleTwoTone twoToneColor="red" />,
+            };
+            notification.error(args);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      message.info('Resend Email failed');
     }
   }
 
@@ -340,10 +341,10 @@ export default function Customers() {
       key: 'cust_email',
     },
     {
-        title: 'Phone',
-        dataIndex: 'cust_phone',
-        key: 'cust_phone',
-    },	
+      title: 'Phone',
+      dataIndex: 'cust_phone',
+      key: 'cust_phone',
+    },
     {
       title: 'Verified',
       dataIndex: 'is_verified',
