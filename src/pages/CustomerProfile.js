@@ -10,6 +10,7 @@ import VAListTab from "./VAListTab";
 import ProfileTab from "./ProfileTab";
 import CustomerTransactionLog from "./CustomerTransactionLog";
 import "../styles/CustomerProfile.css";
+import config from "../config/config.json"
 
 const { Title, Text } = Typography;
 
@@ -64,7 +65,7 @@ export default function CustomerProfile() {
 
   function reqProfile(id) {
     return new Promise(function (resolve, reject) {
-      axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
+      axios(reqBuilder("get", `${config.apiHost}/v2/customers/${id}`))
         .then(function (response) {
           if (response.data.status === "SUCCESS") {
             resolve({

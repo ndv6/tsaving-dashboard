@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
 import DebitCard from "../components/DebitCard";
+import config from "../config/config.json";
 import "../styles/CustomerProfile.css";
 
 const { Title, Text } = Typography;
@@ -30,7 +31,7 @@ export default function ProfileTab({ profileData }) {
       axios(
         reqBuilder(
           "get",
-          `http://localhost:8000/v2/customers/cards/${profileData.accNum}`
+          `${config.apiHost}/v2/customers/cards/${profileData.accNum}`
         )
       )
         .then(function (response) {

@@ -3,6 +3,7 @@ import { Row, Col, Select } from "antd";
 import axios from "axios";
 import DataTable from "../components/DataTable";
 import { Loader, Reloader, reqBuilder, logOut } from "./CustomerProfile";
+import config from "../config/config.json";
 import "../styles/CustomerProfile.css";
 
 const columns = [
@@ -70,9 +71,9 @@ export default function VAList({ custId }) {
     if (fetching) {
       let url = "";
       if (color === "") {
-        url = `http://localhost:8000/v2/va/${custId}/${page}`;
+        url = `${config.apiHost}/v2/va/${custId}/${page}`;
       } else {
-        url = `http://localhost:8000/v2/va/${custId}/${color}/${page}`;
+        url = `${config.apiHost}/v2/va/${custId}/${color}/${page}`;
       }
       axios(reqBuilder("get", url))
         .then(function (response) {
