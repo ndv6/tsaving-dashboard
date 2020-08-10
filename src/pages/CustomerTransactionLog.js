@@ -7,6 +7,7 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { FormatLogDescription } from "../utils/Helper";
 import { message } from "antd";
+import config from "../config/config.json";
 import { Loader, Reloader } from "./CustomerProfile";
 
 const columns = [
@@ -50,21 +51,16 @@ function GetTransaction(
   setLoading,
   setStatus
 ) {
-  accNum = 2007236310;
   let url = "";
   if (day == null && month == null && year == null && search === "") {
-    url = "http://localhost:8000/v2/transactions/" + accNum + "/" + page;
+    url = config.apiHost + "/v2/transactions/" + accNum + "/" + page;
   } else if (search !== "" && day == null && month == null && year == null) {
     url =
-      "http://localhost:8000/v2/transactions/" +
-      accNum +
-      "/" +
-      search +
-      "/" +
-      page;
+      config.apiHost + "/v2/transactions/" + accNum + "/" + search + "/" + page;
   } else if (search !== "" && day !== null && month !== null && year !== null) {
     url =
-      "http://localhost:8000/v2/transactions/" +
+      config.apiHost +
+      "/v2/transactions/" +
       accNum +
       "/" +
       day +
@@ -78,7 +74,8 @@ function GetTransaction(
       page;
   } else if (search === "" && day !== null && month !== null && year !== null) {
     url =
-      "http://localhost:8000/v2/transactions/" +
+      config.apiHost +
+      "/v2/transactions/" +
       accNum +
       "/" +
       day +
@@ -361,10 +358,6 @@ export default function CustomerTransactionLog(props) {
         }
       />
     );
-  }
-
-  if (loading) {
-    return <Loader />;
   }
 
   return (

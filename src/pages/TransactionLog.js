@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const columns = [
     {
-        title: 'Acc Number',
+        title: 'Account Number',
         dataIndex: 'account_num',
         key : 'account_num'
     },
