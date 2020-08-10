@@ -156,9 +156,9 @@ function insertLog(account_num, action){
       .then((res) => {
         message.info(res.data.message);
         insertLog(account_num,"DELETE");
-        // setTimeout(function () {
-        //   window.location.reload();
-        // }, 1500);
+        setTimeout(function () {
+          window.location.reload();
+        }, 1500);
       })
       .catch((err) => {
         if (err.response.status === 401) {
