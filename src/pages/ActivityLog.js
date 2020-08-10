@@ -5,7 +5,7 @@ import axios from 'axios';
 import NavigationBar from "../components/NavigationBar"
 import FilterBar from "../components/FilterBar"
 import config from '../config/config.json'
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 
 const { Search } = Input;
 
@@ -53,7 +53,7 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,search){
       setTotaldata(res.data.data.count)
     }).catch((err) => {
       //failed
-      console.log(err,'error')
+      message.error("Network Error");
     }).finally(() => {
       console.log("finally")
       // setLoading(false);
