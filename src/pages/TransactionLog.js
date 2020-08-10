@@ -59,13 +59,13 @@ function getTransactionLog(token, paramPage=1,  paramDate='', paramSearch='', se
         url = config.apiHost + "/v2/transactions/list/" + paramPage
     }
     else if(paramDate != null && paramSearch === ""){
-        url = config.apiHost + "http://localhost:8000/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
+        url = config.apiHost + "/v2/transactions/list/d/"+ fixDate +"/" + paramPage;
     }
     else if(paramDate == null && paramSearch !== ""){
-        url = config.apiHost + "http://localhost:8000/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
+        url = config.apiHost + "/v2/transactions/list/a/"+ paramSearch +"/" + paramPage;
     }
     else if(paramDate != null && paramSearch !== ""){
-        url = config.apiHost + "http://localhost:8000/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
+        url = config.apiHost + "/v2/transactions/list/"+ paramSearch +"/" + fixDate + "/" + paramPage;
     }
     axios({
         headers: {
