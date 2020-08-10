@@ -6,7 +6,7 @@ import DataTable from "../components/DataTable";
 import "../styles/CustomerTransactionLog.css";
 import FilterBar from "../components/FilterBar";
 import SearchBar from "../components/SearchBar";
-import { FormatLogDescription } from "../utils/Helper";
+import FormatLogDescription from "../utils/Helper";
 import { Loader, Reloader } from "./CustomerProfile";
 
 const columns = [
@@ -50,7 +50,6 @@ function GetTransaction(
   setLoading,
   setStatus
 ) {
-  accNum = 2007236310;
   let url = "";
   if (day == null && month == null && year == null && search === "") {
     url = `http://localhost:8000/v2/transactions/${accNum}/${page}`;

@@ -14,73 +14,54 @@ import "../styles/CustomerProfile.css";
 
 const { Title, Text } = Typography;
 
-const DEFAULT_PROFILE = {
-  name: "",
-  email: "",
-  accNum: "",
-  address: "",
-  phone: "",
-};
-
 const DEFAULT_CARD = {
   cardNum: "",
   validThru: "",
   name: "",
 };
 
-export default function ProfileTab() {
-  const [profileData, setProfileData] = useState(DEFAULT_PROFILE);
+export default function ProfileTab({ profileData }) {
   const [cardData, setCardData] = useState(DEFAULT_CARD);
   const [fetching, setFetching] = useState(true);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    axios(
-      reqBuilder("get", "http://localhost:8000/v2/customers/cards/2008071802")
-    )
-      .then((response) => {
-        if (response.data.status === "SUCCESS") {
-          const validYear = response.data.data.expired.substring(2, 4);
-          const validMonth = response.data.data.expired.substring(5, 7);
-          setCardData({
-            cardNum: response.data.data.card_num,
-            validThru: `${validMonth}/${validYear}`,
-            name: "",
-          });
-        }
-      })
-      .catch(() => {
-        setReload(true);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
+    if (!profileData.isLoading) {
+      axios(
+        reqBuilder(
+          "get",
+          `http://localhost:8000/v2/customers/cards/${profileData.accNum}`
+        )
+      )
+        .then((response) => {
+          if (response.data.status === "SUCCESS") {
+            const validYear = response.data.data.expired.substring(2, 4);
+            const validMonth = response.data.data.expired.substring(5, 7);
+            setCardData({
+              cardNum: response.data.data.card_num,
+              validThru: `${validMonth}/${validYear}`,
+              name: "",
+            });
+            setReload(false);
+          }
+        })
+        .catch(() => {
+          setReload(true);
+        })
+        .finally(() => {
+          setFetching(false);
+        });
+    }
+  }, [profileData.accNum, profileData.isLoading]);
 
-    axios(reqBuilder("get", "http://localhost:8000/v2/customers/1"))
-      .then((response) => {
-        if (response.data.status === "SUCCESS") {
-          setProfileData({
-            name: response.data.data.cust_name,
-            email: response.data.data.cust_email,
-            accNum: response.data.data.account_num,
-            address: response.data.data.cust_address,
-            phone: response.data.data.cust_phone,
-          });
-        }
-      })
-      .catch(() => {
-        setReload(true);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
-  }, [fetching]);
-
-  if (fetching) {
+  if (fetching || profileData.isLoading) {
     return <Loader />;
   }
 
-  if (!fetching && reload) {
+  if (
+    (!fetching && reload) ||
+    (!profileData.isLoading && profileData.isError)
+  ) {
     return <Reloader reload={() => setFetching(true)} />;
   }
 

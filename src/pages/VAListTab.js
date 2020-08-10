@@ -44,6 +44,10 @@ export default function VAList({ custId }) {
     setFiltered(newData);
   }
 
+  function onChange(page) {
+    setPage(page);
+  }
+
   useEffect(() => {
     if (fetching) {
       axios(reqBuilder("get", `http://localhost:8000/v2/va/${custId}/${page}`))

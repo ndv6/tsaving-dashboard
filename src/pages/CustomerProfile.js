@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, Redirect } from "react-router-dom";
+import axios from "axios";
 import { Row, Col, Typography, Spin, Button } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import Tab from "../components/Tab";
@@ -11,8 +13,22 @@ import "../styles/CustomerProfile.css";
 
 const { Title, Text } = Typography;
 
+const DEFAULT_PROFILE = {
+  isLoading: true,
+  isError: false,
+  name: "",
+  email: "",
+  accNum: "",
+  address: "",
+  phone: "",
+};
+
+function getToken() {
+  return window.localStorage.getItem("token");
+}
+
 export function reqBuilder(method, url) {
-  const token = window.localStorage.getItem("token");
+  const token = getToken();
   return {
     method,
     url,
@@ -21,14 +37,46 @@ export function reqBuilder(method, url) {
 }
 
 export default function CustomerProfile() {
+  const { id } = useParams();
+  const [profileData, setProfileData] = useState(DEFAULT_PROFILE);
+
+  useEffect(() => {
+    if (!getToken()) {
+      return <Redirect to="/admin/login" />;
+    }
+  });
+
+  useEffect(() => {
+    axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
+      .then((response) => {
+        if (response.data.status === "SUCCESS") {
+          setProfileData({
+            isError: false,
+            isLoading: false,
+            name: response.data.data.cust_name,
+            email: response.data.data.cust_email,
+            accNum: response.data.data.account_num,
+            address: response.data.data.cust_address,
+            phone: response.data.data.cust_phone,
+          });
+        }
+      })
+      .catch(() => {
+        setProfileData({
+          ...DEFAULT_PROFILE,
+          isLoading: false,
+          isError: true,
+        });
+      });
+  }, [id]);
+
   return (
-    <div className="customers-constraint">
+    <div className="customer-profile-constraint">
       <NavigationBar />
-      <div className="customers-content">
+      <div className="customer-profile-content">
         <div>
           <Row justify="center" align="middle">
             <Col flex={1}>
-              <div className="blue-bg bg-height" />
               <div className="bg-height" />
             </Col>
             <div className="picture-container">
@@ -37,21 +85,28 @@ export default function CustomerProfile() {
                 alt="Profile Placeholder"
                 src={ProfilePlaceholder}
               />
-              <Title level={3}>Andreas</Title>
+              <Title level={3}>{profileData.name}</Title>
             </div>
           </Row>
           <Row>
             <Col flex={1}>
               <Tab
                 tabs={[
-                  { tabname: "Profile", components: <ProfileTab /> },
+                  {
+                    tabname: "Profile",
+                    components: (
+                      <ProfileTab custId={id} profileData={profileData} />
+                    ),
+                  },
                   {
                     tabname: "Virtual Accounts",
                     components: <VAListTab custId={1} />,
                   },
                   {
                     tabname: "Transaction History",
-                    components: <CustomerTransactionLog />,
+                    components: (
+                      <CustomerTransactionLog accNum={profileData.accNum} />
+                    ),
                   },
                 ]}
                 size={3}

@@ -7,7 +7,7 @@ import master from "../static/master.svg";
 const { Title, Text } = Typography;
 
 export default function DebitCard(props) {
-  const { cardNum, validThru, name } = props;
+  const { cardNum, validThru } = props
   return (
     <div className="card-container">
       <Row>
@@ -19,9 +19,10 @@ export default function DebitCard(props) {
       </Row>
       <Row>
         <Col>
-          <img className="image-logo" alt="chip" src={chip} />
+          <img className="image-logo" alt="chip" src={chip}></img>
         </Col>
       </Row>
+
       <Row>
         <Col>
           <div className="title">
@@ -29,20 +30,19 @@ export default function DebitCard(props) {
           </div>
         </Col>
       </Row>
+
       <Row justify="center">
         <Col>
-          <Text className="validLabel">VALID THRU</Text>
-          <Text className="validThru">{validThru}</Text>
-        </Col>
-      </Row>
-      <Row justify="space-between" align="middle">
-        <Col>
           <div className="title">
-            <Title level={3}>{name}</Title>
+            <Text>Valid Thru</Text>
+            <Text> {validThru}</Text>
           </div>
         </Col>
+      </Row>
+
+      <Row justify="end">
         <Col>
-          <img className="image-logo" alt="master-logo" src={master} />
+          <img className="image-logo" alt="master-logo" src={master}></img>
         </Col>
       </Row>
     </div>
