@@ -198,10 +198,10 @@ export default function Dashboard() {
                                                         title={<h3>{DASHBOARD_NUM_USER_TODAY}</h3>}
                                                         contentHeight={36}
                                                         total={<h4>{data.data.dashboard_user.new_user_today + DASHBOARD_USER_ACQUIRE}</h4>}
-                                                        content={<p>
+                                                        content={data.data.dashboard_user.new_user_yesterday <= 0 ? "" : <p>
                                                             {data.data.dashboard_user.new_user_today > data.data.dashboard_user.new_user_yesterday ?
                                                                 <span style={{ color: "green" }}>+</span> : <span style={{ color: "red" }}>-</span>}
-                                                            {Math.abs(data.data.dashboard_user.new_user_today - data.data.dashboard_user.new_user_yesterday) / data.data.dashboard_user.new_user_yesterday * 100}% compared to yesterday
+                                                            {Math.abs(data.data.dashboard_user.new_user_today - data.data.dashboard_user.new_user_yesterday) / data.data.dashboard_user.new_user_yesterday * 100  + "% compared to yesterday"}
                                                     </p>}
                                                     />
                                                 </div>,
@@ -257,7 +257,7 @@ export default function Dashboard() {
                                                         title={<h3>{DASHBOARD_CASH_FLOW_TODAY}</h3>}
                                                         contentHeight={36}
                                                         total={<h4>{"Rp. " + data.data.dashboard_amount.total_transaction_today + DASHBOARD_CASH_FLOW}</h4>}
-                                                        content={<p>
+                                                        content={data.data.dashboard_amount.total_transaction_yesterday <= 0 ? "" : <p>
                                                             {data.data.dashboard_amount.total_transaction_today > data.data.dashboard_amount.total_transaction_yesterday ?
                                                                 <span style={{ color: "green" }}>+</span> : <span style={{ color: "red" }}>-</span>}
                                                             {Math.abs(data.data.dashboard_amount.total_transaction_today - data.data.dashboard_amount.total_transaction_yesterday) / data.data.dashboard_amount.total_transaction_yesterday * 100}% compared to yesterday
