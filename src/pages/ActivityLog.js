@@ -7,6 +7,7 @@ import FilterBar from '../components/FilterBar';
 import config from '../config/config.json';
 import { Input, message } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { CompassOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -32,27 +33,17 @@ function getActivityLog(
       ('0' + dateFormat[2]).slice(-2);
   }
 
-  if (date == null && search == '') {
+  if (date === null && search === '') {
     url = config.apiHost + '/v2/log/' + pageNumber;
-  } else if (date != null && search == '') {
+  } else if (date !== null && search === '') {
     url = config.apiHost + '/v2/log/d/' + modifDate + '/' + pageNumber;
-  } else if (date == null && search != '') {
+  } else if (date === null && search !== '') {
     url = config.apiHost + '/v2/log/u/' + search + '/' + pageNumber;
-  } else if (date != null && search != '') {
+  } else if (date !== null && search !== '') {
     url =
       config.apiHost + '/v2/log/' + search + '/' + modifDate + '/' + pageNumber;
   }
 
-  if (date == null && search == null) {
-    url = config.apiHost + '/v2/log/' + pageNumber;
-  } else if (date != null && search == null) {
-    url = config.apiHost + '/v2/log/d/' + modifDate + '/' + pageNumber;
-  } else if (date == null && search != null) {
-    url = config.apiHost + '/v2/log/u/' + search + '/' + pageNumber;
-  } else if (date != null && search != null) {
-    url =
-      config.apiHost + '/v2/log/' + search + '/' + modifDate + '/' + pageNumber;
-  }
 
   axios({
     headers: {
@@ -64,6 +55,7 @@ function getActivityLog(
   })
     .then((res) => {
       //success
+      console.log(res);
       const tableData = (res.data.data.list || []).map((value, index) => {
         let singleRow = {};
 
@@ -130,11 +122,11 @@ export default function ActivityLog() {
       dataIndex: 'action',
       key: 'action',
       render: (text) => {
-        if (text.toUpperCase() == 'EDIT') {
+        if (text.toUpperCase() === 'EDIT') {
           return <div className="edit-label">{text}</div>;
-        } else if (text.toUpperCase() == 'DELETE') {
+        } else if (text.toUpperCase() === 'DELETE') {
           return <div className="delete-label">{text}</div>;
-        } else if (text.toUpperCase() == 'RESEND') {
+        } else if (text.toUpperCase() === 'RESEND') {
           return <div className="resend-label">{text}</div>;
         }
         return;

@@ -97,6 +97,7 @@ function GetTransaction(
     url,
   })
     .then((res) => {
+      console.log(res)
       const tableList = (res.data.data.list || []).map((value, index) => {
         const singleData = {};
         const formatter = new Intl.NumberFormat('id', {
