@@ -1,16 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./styles/index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './styles/index.css';
 import 'antd/dist/antd.css';
-import * as serviceWorker from "./serviceWorker";
+import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
-import Routes from "./pages/Routes";
+import Routes from './pages/Routes';
 
 ReactDOM.render(
   <React.StrictMode>
     <Routes />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

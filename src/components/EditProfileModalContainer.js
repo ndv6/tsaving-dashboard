@@ -1,10 +1,10 @@
-import React from "react";
-import { Form, message } from "antd";
-import axios from "axios";
-import * as Constants from "../constants/Constants";
-import config from "../config/config.json";
-import { EDIT_CUSTOMER_DATA, LOGIN } from "../constants/ApiEndpoints";
-import EditProfileModal from "./EditProfileModal";
+import React from 'react';
+import { Form, message } from 'antd';
+import axios from 'axios';
+import * as Constants from '../constants/Constants';
+import config from '../config/config.json';
+import { EDIT_CUSTOMER_DATA, LOGIN } from '../constants/ApiEndpoints';
+import EditProfileModal from './EditProfileModal';
 
 export default function EditProfileModalContainer(props) {
   const [form] = Form.useForm();
@@ -12,7 +12,7 @@ export default function EditProfileModalContainer(props) {
 
   function onSubmit(formData) {
     const userToken = window.localStorage.getItem(
-      Constants.HEADER_CONTENTS.TOKEN
+      Constants.HEADER_CONTENTS.TOKEN,
     );
     form.submit();
 
@@ -36,7 +36,7 @@ export default function EditProfileModalContainer(props) {
           is_email_changed:
             props.data.cust_email !==
             form.getFieldValue(Constants.FORM_FIELDS.EMAIL),
-          username: JSON.parse(window.localStorage.getItem("STORES")).username,
+          username: JSON.parse(window.localStorage.getItem('STORES')).username,
         }),
       })
         .then((response) => {

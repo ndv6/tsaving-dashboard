@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Redirect } from "react-router-dom";
-import axios from "axios";
-import { Row, Col, Typography, Spin, Button } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
-import Tab from "../components/Tab";
-import NavigationBar from "../components/NavigationBar";
-import ProfilePlaceholder from "../static/profile_placeholder.svg";
-import VAListTab from "./VAListTab";
-import ProfileTab from "./ProfileTab";
-import CustomerTransactionLog from "./CustomerTransactionLog";
-import "../styles/CustomerProfile.css";
+import React, { useState, useEffect } from 'react';
+import { useParams, Redirect } from 'react-router-dom';
+import axios from 'axios';
+import { Row, Col, Typography, Spin, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
+import Tab from '../components/Tab';
+import NavigationBar from '../components/NavigationBar';
+import ProfilePlaceholder from '../static/profile_placeholder.svg';
+import VAListTab from './VAListTab';
+import ProfileTab from './ProfileTab';
+import CustomerTransactionLog from './CustomerTransactionLog';
+import '../styles/CustomerProfile.css';
 
 const { Title, Text } = Typography;
 
 const DEFAULT_PROFILE = {
   isLoading: true,
   isError: false,
-  name: "",
-  email: "",
-  accNum: "",
-  address: "",
-  phone: "",
+  name: '',
+  email: '',
+  accNum: '',
+  address: '',
+  phone: '',
 };
 
 function getToken() {
-  return window.localStorage.getItem("token");
+  return window.localStorage.getItem('token');
 }
 
 export function reqBuilder(method, url) {
@@ -47,9 +47,9 @@ export default function CustomerProfile() {
   });
 
   useEffect(() => {
-    axios(reqBuilder("get", `http://localhost:8000/v2/customers/${id}`))
+    axios(reqBuilder('get', `http://localhost:8000/v2/customers/${id}`))
       .then((response) => {
-        if (response.data.status === "SUCCESS") {
+        if (response.data.status === 'SUCCESS') {
           setProfileData({
             isError: false,
             isLoading: false,
@@ -93,17 +93,17 @@ export default function CustomerProfile() {
               <Tab
                 tabs={[
                   {
-                    tabname: "Profile",
+                    tabname: 'Profile',
                     components: (
                       <ProfileTab custId={id} profileData={profileData} />
                     ),
                   },
                   {
-                    tabname: "Virtual Accounts",
+                    tabname: 'Virtual Accounts',
                     components: <VAListTab custId={1} />,
                   },
                   {
-                    tabname: "Transaction History",
+                    tabname: 'Transaction History',
                     components: (
                       <CustomerTransactionLog accNum={profileData.accNum} />
                     ),

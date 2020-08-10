@@ -1,7 +1,7 @@
-import React from "react";
-import { Button, Modal, Form, Input, Switch, Popconfirm } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import * as Constants from "../constants/Constants";
+import React from 'react';
+import { Button, Modal, Form, Input, Switch, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import * as Constants from '../constants/Constants';
 
 const layout = {
   labelCol: {
@@ -84,7 +84,7 @@ const EditProfileModal = (props) => {
           label={Constants.FORM_LABELS.EMAIL}
           rules={[
             {
-              type: "email",
+              type: 'email',
               message: Constants.INVALID_EMAIL,
             },
             {

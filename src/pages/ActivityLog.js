@@ -1,7 +1,7 @@
-import React from "react";
-import NavigationBar from "../components/NavigationBar";
+import React from 'react';
+import NavigationBar from '../components/NavigationBar';
 
-import "../styles/ActivityLog.css";
+import '../styles/ActivityLog.css';
 
 export default function ActivityLog() {
   return (

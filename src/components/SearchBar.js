@@ -1,7 +1,7 @@
-import React from "react";
-import { Input } from "antd";
+import React from 'react';
+import { Input } from 'antd';
 
-import "../styles/SearchBar.css";
+import '../styles/SearchBar.css';
 
 const { Search } = Input;
 

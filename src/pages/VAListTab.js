@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, DatePicker } from "antd";
-import axios from "axios";
-import moment from "moment";
-import DataTable from "../components/DataTable";
-import { Loader, Reloader, reqBuilder } from "./CustomerProfile";
-import "../styles/CustomerProfile.css";
+import React, { useState, useEffect } from 'react';
+import { Row, Col, DatePicker } from 'antd';
+import axios from 'axios';
+import moment from 'moment';
+import DataTable from '../components/DataTable';
+import { Loader, Reloader, reqBuilder } from './CustomerProfile';
+import '../styles/CustomerProfile.css';
 
 const columns = [
   {
-    title: "VA Number",
-    dataIndex: "num",
-    key: "num",
+    title: 'VA Number',
+    dataIndex: 'num',
+    key: 'num',
   },
   {
-    title: "Label",
-    dataIndex: "label",
-    key: "label",
+    title: 'Label',
+    dataIndex: 'label',
+    key: 'label',
   },
   {
-    title: "Color",
-    dataIndex: "color",
-    key: "color",
+    title: 'Color',
+    dataIndex: 'color',
+    key: 'color',
   },
   {
-    title: "Balance",
-    dataIndex: "balance",
-    key: "balance",
+    title: 'Balance',
+    dataIndex: 'balance',
+    key: 'balance',
   },
 ];
 
@@ -39,7 +39,7 @@ export default function VAList({ custId }) {
 
   function onDatePickerChange(date) {
     const newData = data.filter((item) =>
-      moment(item.created_at.substring(0, 10)).isSame(date, "date")
+      moment(item.created_at.substring(0, 10)).isSame(date, 'date'),
     );
     setFiltered(newData);
   }
@@ -50,9 +50,9 @@ export default function VAList({ custId }) {
 
   useEffect(() => {
     if (fetching) {
-      axios(reqBuilder("get", `http://localhost:8000/v2/va/${custId}/${page}`))
+      axios(reqBuilder('get', `http://localhost:8000/v2/va/${custId}/${page}`))
         .then((response) => {
-          if (response.data.status === "SUCCESS") {
+          if (response.data.status === 'SUCCESS') {
             setData(response.data.data.data);
             setFiltered(response.data.data.data);
           }

@@ -1,13 +1,13 @@
-import React from "react";
-import { Row, Col, Typography } from "antd";
-import "../styles/DebitCard.css";
-import chip from "../static/chip.png";
-import master from "../static/master.svg";
+import React from 'react';
+import { Row, Col, Typography } from 'antd';
+import '../styles/DebitCard.css';
+import chip from '../static/chip.png';
+import master from '../static/master.svg';
 
 const { Title, Text } = Typography;
 
 export default function DebitCard(props) {
-  const { cardNum, validThru } = props
+  const { cardNum, validThru } = props;
   return (
     <div className="card-container">
       <Row>

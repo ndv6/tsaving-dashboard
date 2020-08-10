@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { DatePicker, Space } from "antd";
-import moment from "moment";
+import React, { useState } from 'react';
+import { DatePicker, Space } from 'antd';
+import moment from 'moment';
 
 export default function FilterBar(props) {
   const { onChange } = props;
@@ -11,7 +11,7 @@ export default function FilterBar(props) {
   function onChangeDate(date) {
     setStartDate(date);
     const newData = list.filter((item) =>
-      moment(item.created_at.substring(0, 10)).isSame(date, "date")
+      moment(item.created_at.substring(0, 10)).isSame(date, 'date'),
     );
     setDataFilter(newData);
   }

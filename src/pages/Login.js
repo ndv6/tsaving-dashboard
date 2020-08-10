@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import axios from "axios";
-import { useHistory, Redirect } from "react-router-dom";
-import { Form, Input, Button, Checkbox, message } from "antd";
-import logo from "../static/ic_tsaving.png";
-import "../styles/Login.css";
-import config from "../config/config.json";
-import { AppContext } from "../context/AppContext";
+import React, { useContext } from 'react';
+import axios from 'axios';
+import { useHistory, Redirect } from 'react-router-dom';
+import { Form, Input, Button, Checkbox, message } from 'antd';
+import logo from '../static/ic_tsaving.png';
+import '../styles/Login.css';
+import config from '../config/config.json';
+import { AppContext } from '../context/AppContext';
 
 const layout = {
   labelCol: {
@@ -34,8 +34,8 @@ export default function Login() {
         password: values.password,
       })
       .then((res) => {
-        window.localStorage.setItem("token", res.data.data.token);
-        history.push("/admin/dashboard");
+        window.localStorage.setItem('token', res.data.data.token);
+        history.push('/admin/dashboard');
         appConfig.action.changeUser({ username: res.data.data.username });
       })
       .catch(() => {
@@ -46,7 +46,7 @@ export default function Login() {
       });
   };
 
-  if (window.localStorage.getItem("token")) {
+  if (window.localStorage.getItem('token')) {
     return <Redirect to="/admin/dashboard" />;
   }
 
@@ -69,7 +69,7 @@ export default function Login() {
           rules={[
             {
               required: true,
-              message: "Please input your username!",
+              message: 'Please input your username!',
             },
           ]}
         >
@@ -82,7 +82,7 @@ export default function Login() {
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: 'Please input your password!',
             },
           ]}
         >

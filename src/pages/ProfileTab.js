@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Row, Col, Typography, Divider } from "antd";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Row, Col, Typography, Divider } from 'antd';
 import {
   UserOutlined,
   MailOutlined,
   HomeOutlined,
   PhoneOutlined,
   BankOutlined,
-} from "@ant-design/icons";
-import { Loader, Reloader, reqBuilder } from "./CustomerProfile";
-import DebitCard from "../components/DebitCard";
-import "../styles/CustomerProfile.css";
+} from '@ant-design/icons';
+import { Loader, Reloader, reqBuilder } from './CustomerProfile';
+import DebitCard from '../components/DebitCard';
+import '../styles/CustomerProfile.css';
 
 const { Title, Text } = Typography;
 
 const DEFAULT_CARD = {
-  cardNum: "",
-  validThru: "",
-  name: "",
+  cardNum: '',
+  validThru: '',
+  name: '',
 };
 
 export default function ProfileTab({ profileData }) {
@@ -29,18 +29,18 @@ export default function ProfileTab({ profileData }) {
     if (!profileData.isLoading) {
       axios(
         reqBuilder(
-          "get",
-          `http://localhost:8000/v2/customers/cards/${profileData.accNum}`
-        )
+          'get',
+          `http://localhost:8000/v2/customers/cards/${profileData.accNum}`,
+        ),
       )
         .then((response) => {
-          if (response.data.status === "SUCCESS") {
+          if (response.data.status === 'SUCCESS') {
             const validYear = response.data.data.expired.substring(2, 4);
             const validMonth = response.data.data.expired.substring(5, 7);
             setCardData({
               cardNum: response.data.data.card_num,
               validThru: `${validMonth}/${validYear}`,
-              name: "",
+              name: '',
             });
             setReload(false);
           }
@@ -84,13 +84,13 @@ export default function ProfileTab({ profileData }) {
 function ProfileDetail(props) {
   const { name, accNum, address, email, phone, icon, label, value } = props;
   const generalInfo = [
-    { label: "Name", value: name, icon: <UserOutlined /> },
-    { label: "Account Number", value: accNum, icon: <BankOutlined /> },
-    { label: "Address", value: address, icon: <HomeOutlined /> },
+    { label: 'Name', value: name, icon: <UserOutlined /> },
+    { label: 'Account Number', value: accNum, icon: <BankOutlined /> },
+    { label: 'Address', value: address, icon: <HomeOutlined /> },
   ];
   const contactInfo = [
-    { label: "Email", value: email, icon: <MailOutlined /> },
-    { label: "Phone", value: phone, icon: <PhoneOutlined /> },
+    { label: 'Email', value: email, icon: <MailOutlined /> },
+    { label: 'Phone', value: phone, icon: <PhoneOutlined /> },
   ];
   function ItemRow() {
     return (

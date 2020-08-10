@@ -1,7 +1,7 @@
-import React from "react";
-import NavigationBar from "../components/NavigationBar";
+import React from 'react';
+import NavigationBar from '../components/NavigationBar';
 
-import "../styles/TransactionLog.css";
+import '../styles/TransactionLog.css';
 
 export default function TransactionLog() {
   return (

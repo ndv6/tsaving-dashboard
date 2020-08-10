@@ -1,8 +1,8 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from 'react';
 
 const DEFAULT_VALUE = {
   store: {
-    username: "",
+    username: '',
   },
 };
 
@@ -10,7 +10,7 @@ export const AppContext = createContext(DEFAULT_VALUE);
 
 export const AppContextProvider = (props) => {
   const [state, setState] = useState(
-    JSON.parse(window.localStorage.getItem("STORES")) || DEFAULT_VALUE.store
+    JSON.parse(window.localStorage.getItem('STORES')) || DEFAULT_VALUE.store,
   );
   const action = {
     changeUser: (username) => {
@@ -18,7 +18,7 @@ export const AppContextProvider = (props) => {
     },
   };
   useEffect(() => {
-    window.localStorage.setItem("STORES", JSON.stringify(state));
+    window.localStorage.setItem('STORES', JSON.stringify(state));
   }, [state]);
   return (
     <AppContext.Provider value={{ store: state, action }}>
