@@ -4,9 +4,11 @@
 
 ### Joseph
 - User Statistic UI = 1
-- User Statistic Integration = 2
 - Transaction Statistic UI = 1
-- Transaction Statistic Integration = 2
+- Dashboard Integration 
+- Transaction Amount UI = 1
+- API Dashboard
+    - Total Transaction Query (total, va, main, deposit)
 
 ### Caesar
 - Build Admin API + Database = 2
