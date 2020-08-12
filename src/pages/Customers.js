@@ -262,7 +262,7 @@ export default function Customers() {
         setLoading(false);
       });
   }
-
+ 
   function clickEditCustomer(rowData) {
     /* rowData keeps user verification status as string, e.g "Verified", "Unverified"
         while EditCustomerData API processes user's verification status as boolean
