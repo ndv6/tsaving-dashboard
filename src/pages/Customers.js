@@ -51,9 +51,13 @@ export default function Customers() {
     setLoading(true);
     let customerToken = await getTokenCustomer(rowData.cust_email);
 
-    var hasil = await insertLog(rowData.account_num,"RESEND");
+    let hasil = await insertLog(rowData.account_num,"RESEND");
 
-    if (hasil){
+    if(hasil){
+        console.log(hasil);
+    }else{
+        console.log(hasil);
+    }
         axios({
             headers: {
               "Content-Type": "application/json",
@@ -96,9 +100,7 @@ export default function Customers() {
             .finally(() => {
               setLoading(false);
             });
-    }else{
-        message.info("Resend Email failed");
-    }
+    
     
   }
 
@@ -125,7 +127,6 @@ export default function Customers() {
   }
 
 function insertLog(account_num, action){
-    return new Promise(function (resolve, reject){
         var bool = true;
         axios({
             method : "POST",
@@ -139,13 +140,14 @@ function insertLog(account_num, action){
             }
           }).then((res) => {
             //success
-            resolve(bool);
+            console.log(res);
+            console.log("insert log admin success");
           }).catch((err) => {
-            reject(err)
+            console.log("insert log admin error");
+            console.log(err)
           }).finally(() => {
-      
+            
           })
-    })
 }
 
   function clickDeleteCustomer(account_num, setLoading, history) {

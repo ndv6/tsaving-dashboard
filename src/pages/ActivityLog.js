@@ -14,6 +14,7 @@ function getActivityLog(token, setList,pageNumber,setTotaldata,date,search,histo
     //catch untuk nge throw error. kalau success bakal ke then.
     let url ="";
     let modifDate = "";
+    console.log(search)
     if(date != null){
        let dateFormat = date.split("-");
        modifDate = dateFormat[0] + "-" + ('0'+dateFormat[1]).slice(-2) +"-" + ('0'+dateFormat[2]).slice(-2);
@@ -153,6 +154,7 @@ export default function ActivityLog(){
                 <Search
                   placeholder="search"
                   onSearch={value => setSearch(value)}
+                  onChange = {(event) => setSearch(event.target.value)}
                   style={{ width: 200 }}/>
               </div>
               <p>Total Data : {totalData}</p>
