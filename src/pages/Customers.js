@@ -53,7 +53,10 @@ export default function Customers() {
 
     let hasil = await insertLog(rowData.account_num,"RESEND");
 
+    console.log("ini hasil");
+    console.log(hasil)
     if(hasil){
+      console.log("masuk sini");
       axios({
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +128,7 @@ export default function Customers() {
   }
 
 function insertLog(account_num, action){
-        var bool = true;
+  return new Promise(function (resolve, reject) {
         axios({
             method : "POST",
             url : config.apiHost+"/v2/log/insert",
@@ -137,15 +140,13 @@ function insertLog(account_num, action){
               "Authorization": window.localStorage.getItem("token")
             }
           }).then((res) => {
-            //success
-            console.log(res);
-            console.log("insert log admin success");
+            resolve(true)
           }).catch((err) => {
-            console.log("insert log admin error");
-            console.log(err)
+            reject(err);
           }).finally(() => {
             
           })
+        })
 }
 
   function clickDeleteCustomer(account_num, setLoading, history) {
