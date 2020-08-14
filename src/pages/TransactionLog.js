@@ -14,6 +14,11 @@ import axios from 'axios';
 
 const columns = [
   {
+    title: 'No',
+    dataIndex: 'no',
+    key: 'no',
+  },
+  {
     title: 'Account Number',
     dataIndex: 'account_num',
     key: 'account_num',
@@ -106,6 +111,7 @@ function getTransactionLog(
           minimumFractionDigits: 2,
         });
         singleRow['key'] = index;
+        singleRow['no'] = (paramPage - 1) * 20 + (index + 1);
         singleRow['account_num'] = value.account_num;
         singleRow['from_account'] = value.from_account;
         singleRow['dest_account'] = value.dest_account;

@@ -12,6 +12,11 @@ import { Reloader } from './CustomerProfile';
 
 const columns = [
   {
+    title: 'No',
+    dataIndex: 'no',
+    key: 'no',
+  },
+  {
     title: 'From',
     dataIndex: 'from_account',
     key: 'from_account',
@@ -92,6 +97,7 @@ function GetTransaction(
         });
 
         singleData.key = index;
+        singleData.no = (page - 1) * 20 + (index + 1);
         singleData.from_account = value.from_account;
         singleData.dest_account = value.dest_account;
         singleData.description = FormatLogDescription(value.description);
