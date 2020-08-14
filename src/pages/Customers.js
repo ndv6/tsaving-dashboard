@@ -53,8 +53,6 @@ export default function Customers() {
 
     let hasil = await insertLog(rowData.account_num,"RESEND");
 
-    console.log("ini hasil");
-    console.log(hasil)
     if(hasil){
       axios({
         headers: {
@@ -99,6 +97,7 @@ export default function Customers() {
           setLoading(false);
         });
     }else{
+      setLoading(false);
       let args = {
         message: "Failed to Insert Log",
         description: "Network Error.",
