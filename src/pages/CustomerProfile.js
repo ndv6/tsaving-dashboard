@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Redirect } from "react-router-dom";
-import axios from "axios";
-import { Row, Col, Typography, Spin, Button, message } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
-import Tab from "../components/Tab";
-import NavigationBar from "../components/NavigationBar";
-import ProfilePlaceholder from "../static/profile_placeholder.svg";
-import VAListTab from "./VAListTab";
-import ProfileTab from "./ProfileTab";
-import CustomerTransactionLog from "./CustomerTransactionLog";
-import "../styles/CustomerProfile.css";
-import config from "../config/config.json"
+import React, { useState, useEffect } from 'react';
+import { useParams, Redirect } from 'react-router-dom';
+import axios from 'axios';
+import { Row, Col, Typography, Spin, Button, message } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
+import Tab from '../components/Tab';
+import NavigationBar from '../components/NavigationBar';
+import ProfilePlaceholder from '../static/profile_placeholder.svg';
+import VAListTab from './VAListTab';
+import ProfileTab from './ProfileTab';
+import CustomerTransactionLog from './CustomerTransactionLog';
+import '../styles/CustomerProfile.css';
+import config from '../config/config.json';
 
 const { Title, Text } = Typography;
 
 const DEFAULT_PROFILE = {
   isLoading: true,
   isError: false,
-  name: "",
-  email: "",
-  accNum: "",
-  address: "",
-  phone: "",
+  name: '',
+  email: '',
+  accNum: '',
+  address: '',
+  phone: '',
 };
 
 function getToken() {
-  return window.localStorage.getItem("token");
+  return window.localStorage.getItem('token');
 }
 
 export function reqBuilder(method, url) {
@@ -38,8 +38,8 @@ export function reqBuilder(method, url) {
 }
 
 export function logOut() {
-  message.error("Your session is over, please login again", 1.5);
-  window.localStorage.removeItem("token");
+  message.error('Your session is over, please login again', 1.5);
+  window.localStorage.removeItem('token');
   return <Redirect to="/admin/login" />;
 }
 
@@ -65,9 +65,9 @@ export default function CustomerProfile() {
 
   function reqProfile(id) {
     return new Promise(function (resolve, reject) {
-      axios(reqBuilder("get", `${config.apiHost}/v2/customers/${id}`))
+      axios(reqBuilder('get', `${config.apiHost}/v2/customers/${id}`))
         .then(function (response) {
-          if (response.data.status === "SUCCESS") {
+          if (response.data.status === 'SUCCESS') {
             resolve({
               isError: false,
               isLoading: false,
@@ -94,13 +94,13 @@ export default function CustomerProfile() {
 
   return (
     <div className="customer-profile-constraint">
-      <NavigationBar></NavigationBar>
+      <NavigationBar />
       <div className="customer-profile-content">
         {loading ? (
           <Loader />
         ) : (
           <div>
-            <Row justify="center" align="middle" style={{ position: "sticky" }}>
+            <Row justify="center" align="middle" style={{ position: 'sticky' }}>
               <Col flex={1}>
                 <div className="bg-height" />
               </Col>
@@ -118,17 +118,17 @@ export default function CustomerProfile() {
                 <Tab
                   tabs={[
                     {
-                      tabname: "Profile",
+                      tabname: 'Profile',
                       components: (
                         <ProfileTab custId={id} profileData={profileData} />
                       ),
                     },
                     {
-                      tabname: "Virtual Accounts",
+                      tabname: 'Virtual Accounts',
                       components: <VAListTab custId={id} />,
                     },
                     {
-                      tabname: "Transaction History",
+                      tabname: 'Transaction History',
                       components: (
                         <CustomerTransactionLog accNum={profileData.accNum} />
                       ),

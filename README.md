@@ -8,7 +8,8 @@
 - Dashboard Integration 
 - Transaction Amount UI = 1
 - API Dashboard
-- Total Transaction Query for dashboard (total, va, main, deposit)
+    - Total Transaction Query for dashboard (total, va, main, deposit)
+    - Active, Inactive user Query for dashboard
 
 ### Caesar
 - Build Admin API + Database = 2

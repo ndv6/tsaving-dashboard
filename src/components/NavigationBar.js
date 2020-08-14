@@ -1,16 +1,15 @@
-import React, { useContext } from "react";
-import { NavLink, useHistory, Redirect } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
-
-import logo from "../static/ic_tsaving.png";
-import "../styles/NavigationBar.css";
+import React, { useContext } from 'react';
+import { NavLink, useHistory, Redirect } from 'react-router-dom';
 import {
   BarChartOutlined,
   TeamOutlined,
   TransactionOutlined,
   FileTextOutlined,
   LogoutOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
+import { AppContext } from '../context/AppContext';
+import logo from '../static/ic_tsaving.png';
+import '../styles/NavigationBar.css';
 
 export default function NavigationBar() {
   const context = useContext(AppContext);
@@ -18,10 +17,10 @@ export default function NavigationBar() {
   const history = useHistory();
 
   function doLogout() {
-    window.localStorage.removeItem("token");
-    history.push("/admin/login");
+    window.localStorage.removeItem('token');
+    history.push('/admin/login');
   }
-  if (!window.localStorage.getItem("token")) {
+  if (!window.localStorage.getItem('token')) {
     return <Redirect to="/admin/login" />;
   }
   return (

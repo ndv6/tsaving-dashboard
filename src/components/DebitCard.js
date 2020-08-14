@@ -1,12 +1,13 @@
-import React from "react";
-import { Row, Col, Typography } from "antd";
-import "../styles/DebitCard.css";
-import chip from "../static/chip.png";
-import master from "../static/master.svg";
+import React from 'react';
+import { Row, Col, Typography } from 'antd';
+import '../styles/DebitCard.css';
+import chip from '../static/chip.png';
+import master from '../static/master.svg';
 
 const { Title, Text } = Typography;
 
 export default function DebitCard(props) {
+  const { cardNum, validThru } = props;
   return (
     <div className="card-container">
       <Row>
@@ -16,7 +17,6 @@ export default function DebitCard(props) {
           </div>
         </Col>
       </Row>
-
       <Row>
         <Col>
           <img className="image-logo" alt="chip" src={chip}></img>
@@ -26,7 +26,7 @@ export default function DebitCard(props) {
       <Row>
         <Col>
           <div className="title">
-            <Title level={2}>{props.cardNum}</Title>
+            <Title level={2}>{cardNum}</Title>
           </div>
         </Col>
       </Row>
@@ -35,7 +35,7 @@ export default function DebitCard(props) {
         <Col>
           <div className="title">
             <Text>Valid Thru</Text>
-            <Text> {props.validThru}</Text>
+            <Text> {validThru}</Text>
           </div>
         </Col>
       </Row>

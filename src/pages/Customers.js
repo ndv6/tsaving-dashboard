@@ -96,7 +96,10 @@ export default function Customers() {
         .finally(() => {
           setLoading(false);
         });
+
     }
+        
+    
   }
 
   function getTokenCustomer(customerEmail) {
