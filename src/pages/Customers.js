@@ -56,7 +56,6 @@ export default function Customers() {
     console.log("ini hasil");
     console.log(hasil)
     if(hasil){
-      console.log("masuk sini");
       axios({
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +98,14 @@ export default function Customers() {
         .finally(() => {
           setLoading(false);
         });
-
+    }else{
+      let args = {
+        message: "Failed to Insert Log",
+        description: "Network Error.",
+        duration: 2,
+        icon: <InfoCircleTwoTone twoToneColor="red" />,
+      };
+      notification.error(args);
     }
         
     
