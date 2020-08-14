@@ -165,6 +165,11 @@ export default function TransactionLog() {
     setPage(1);
     setSearch(value);
   }
+  function onChangeSearch(keyword) {
+    setPage(1);
+    setSearch(keyword);
+  }
+  
 
   useEffect(() => {
     getTransactionLog(
@@ -188,6 +193,7 @@ export default function TransactionLog() {
           <FilterBar onChange={(date) => filterDate(date)} />
           <SearchBar
             className="search-content"
+            onChange={(event) => onChangeSearch(event.target.value)}
             onSearch={(value) => searchTL(value)}
           />
         </div>
