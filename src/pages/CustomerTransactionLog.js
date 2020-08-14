@@ -162,6 +162,11 @@ export default function CustomerTransactionLog(props) {
     setSearch(keyword);
   }
 
+  function onChangeSearch(keyword) {
+    setPage(1);
+    setSearch(keyword);
+  }
+
   if (status === 401) {
     message.error('Your session is over, please login again', 1.5);
     window.localStorage.removeItem('token');
@@ -211,6 +216,7 @@ export default function CustomerTransactionLog(props) {
         <div className="filter-search">
           <FilterBar onChange={(date) => filterDate(date)} />
           <SearchBar
+            onChange={(event) => onChangeSearch(event.target.value)}
             onSearch={(value) => filterSearch(value)}
             className="search-content"
           />

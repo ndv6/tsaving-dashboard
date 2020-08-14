@@ -292,6 +292,11 @@ export default function Customers() {
     setPage(page);
   }
 
+  function onChangeSearch(keyword) {
+    setPage(1);
+    setSearch(keyword);
+  }
+
   function filterDate(date) {
     setPage(1);
     if (date !== null) {
@@ -443,6 +448,7 @@ export default function Customers() {
           <FilterBar onChange={(date) => filterDate(date)} />
           <SearchBar
             className="search-content"
+            onChange={(event) => onChangeSearch(event.target.value)}
             onSearch={(value) => searchCust(value)}
           />
         </div>
