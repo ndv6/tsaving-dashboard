@@ -226,6 +226,7 @@ export default function Customers() {
             deletedfix = false;
           }
           singleRow['key'] = index;
+          singleRow['no'] = (paramPage - 1) * 20 + (index + 1);
           singleRow['cust_name'] = value.cust_name;
           singleRow['account_num'] = value.account_num;
           singleRow['cust_email'] = value.cust_email;
@@ -325,6 +326,11 @@ export default function Customers() {
   }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible]);
 
   const columns = [
+    {
+      title: 'No',
+      dataIndex: 'no',
+      key: 'no',
+    },
     {
       title: 'Name',
       dataIndex: 'cust_name',
