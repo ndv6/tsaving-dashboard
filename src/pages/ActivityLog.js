@@ -153,32 +153,31 @@ export default function ActivityLog() {
     getActivityLog(token, setList, page, setTotaldata, date, search, history);
   }, [setList, date, page, search]);
 
-  return (
-    <div className="activity-log-constraint">
-      <NavigationBar />
-      <div className="activity-log-content">
-        <h1>Activity Log</h1>
-        <div className="activity-log-filterbar">
-          <FilterBar onChange={(date) => dateChange(date)} /> &ensp;
-          <Search
-            placeholder="search"
-            onSearch={(value) => setSearch(value)}
-            style={{ width: 200 }}
-          />
-        </div>
-        <p>Total Data : {totalData}</p>
-        <div className="table">
-          <DataTable
-            current={page}
-            columns={columns}
-            data={list}
-            pagePosition="bottomRight"
-            pageSize={20}
-            totalData={totalData}
-            onPageChange={(page) => onChange(page)}
-          />
-        </div>
-      </div>
-    </div>
-  );
+    return(
+        <div className = "activity-log-constraint">
+           <NavigationBar/>
+           <div className = "activity-log-content">
+              <h1>Activity Log</h1>
+              <div className = "activity-log-filterbar">
+                <FilterBar onChange = {(date) => dateChange(date)}/> &ensp;
+                <Search
+                  placeholder="search"
+                  onSearch={value => setSearch(value)}
+                  onChange = {(event) => setSearch(event.target.value)}
+                  style={{ width: 200 }}/>
+              </div>
+              <p>Total Data : {totalData}</p>
+              <div className = "table">
+                  <DataTable 
+                    current={page}
+                    columns={columns} 
+                    data={list} 
+                    pagePosition="bottomRight" 
+                    pageSize={20} 
+                    totalData={totalData} 
+                    onPageChange={(page) => onChange(page)}/>
+                </div>
+            </div>
+        </div>   
+    )
 }
