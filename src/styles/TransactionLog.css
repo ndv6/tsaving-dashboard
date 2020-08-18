@@ -1,0 +1,22 @@
+.content-table-tl{
+    padding: 24px;
+    font-weight: bold;
+}
+.tl-title{
+    text-align: center;
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding-bottom: 36px;
+}
+.transaction-log-constraint {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+}
+
+.transaction-log-content {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  padding:24px;
+}

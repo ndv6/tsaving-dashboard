@@ -1,0 +1,40 @@
+.login-form {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 8%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.login-form .ant-form {
+  margin-top: 10%;
+}
+
+.login-form .ant-col {
+  display: contents;
+}
+
+.login-form .ant-row {
+  display: grid;
+}
+
+.login-form .ant-form-item-explain div {
+  text-align: left;
+}
+
+.login-form .ant-btn-primary {
+  width: auto;
+  background: #d5152b;
+  border-color: #d5152b;
+}
+
+.login-form .ant-btn-primary:hover {
+  width: auto;
+  background: #d5152b;
+  border-color: #d5152b;
+}
+
+.login-form .ant-btn-primary:focus {
+  background: #d5152b;
+  border-color: #d5152b;
+}

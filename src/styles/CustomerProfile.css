@@ -1,0 +1,35 @@
+.customer-profile-constraint {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.customer-profile-content {
+  width: 100vw;
+  height: 100%;
+  overflow: auto;
+}
+
+.title-row .ant-row {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.bg-height {
+  height: 240px;
+}
+
+.picture-container {
+  position: absolute;
+  text-align: center;
+}
+
+.picture {
+  border-radius: "50%";
+  width: 150px;
+  height: 150px;
+}
+
+.top-space {
+  margin-top: 20px;
+}

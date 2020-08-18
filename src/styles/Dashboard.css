@@ -1,0 +1,51 @@
+.dashboard-constraint {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.dashboard-content {
+    width: 100vw;
+  height: 100vh;
+  overflow: auto;
+}
+
+.dashboard-content-section {
+    width: 90%;
+    margin: auto;
+    padding-top: 2%;
+}
+
+.dashboard-content-left {
+    width: 30%;
+}
+
+.dashboard-content-right {
+    width: 70%;
+}
+
+.dashboard-content-chart {
+    display: flex;
+    height: 100%;
+}
+
+.dashboard-chart-card{
+    width: 48%;
+}
+
+.err-msg {
+    color: red;
+    font-weight: bold;
+    font-size: large;
+    text-align: center;
+}
+
+.dashboard-content-chart-card {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.dashboard-card-footer {
+    width: 100%;
+}
