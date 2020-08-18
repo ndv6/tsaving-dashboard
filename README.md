@@ -3,6 +3,7 @@
 ## Task List
 
 ### Joseph
+
 - User Statistic UI = 1
 - Transaction Statistic UI = 1
 - Dashboard Integration 
@@ -69,3 +70,4 @@
 - Build List All Customer API = 1
 - Transaction History List Page UI = 1
 - Transaction History List Page Integration = 1
+
