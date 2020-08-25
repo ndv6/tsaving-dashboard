@@ -2,7 +2,6 @@ trigger:
   - feature/azure-pipeline
 
   - stage: test
-    dependsOn: CodeQuality
     jobs:
       - job: test_azure_pipeline
         displayName: "Test Pipeline"
