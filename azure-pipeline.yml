@@ -37,10 +37,12 @@ stages:
             displayName: Helm deploy
             inputs:
               connectionType: "Kubernetes Service Connection"
+              azureResourceGroup: ba-it-tools
+              kubernetesCluster: ba-it-aks-cluster
               kubernetesServiceEndpoint: baitkubernetescluster
               command: upgrade
               chartType: filepath
-              chartPath: tsaving-dashboard/values.yaml
+              chartPath: tsaving-dashboard
               releaseName: tsaving-dashboard-testing
               install: true
               waitForExecution: false
