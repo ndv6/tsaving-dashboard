@@ -2,16 +2,39 @@ trigger:
   - feature/azure-pipeline
 
 stages:
-  - stage: test
+  - stage: testing
     jobs:
-      - job: test_azure_pipeline
-        displayName: "Test Pipeline"
+      - job: tsaving_dashboard_test_pipeline
+        displayName: "Tsaving Dashboard Test Pipeline"
         pool:
           vmImage: "ubuntu-18.04"
         steps:
           - checkout: self
+
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerregistrytype: "Container Registry"
+              dockerRegistryEndpoint: baitregistry
+
+          - task: Docker@2
+            displayName: Build and Push
+            inputs:
+              command: buildAndPush
+              repository: baitregistry.azurecr.io/tsaving-dashboard
+              tags: |
+                $(Date:yyyyMMdd)-$(Hours)$(Minutes)$(Seconds)
+
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
               helmVersionToInstall: "latest"
+
+          - task: HelmDeploy@0
+            displayName: Helm deploy
+            inputs:
+              connectionType: "Kubernetes Service Connection"
+              kubernetesServiceConnection: baitkubernetescluster
+
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/feature/azure-pipeline')
