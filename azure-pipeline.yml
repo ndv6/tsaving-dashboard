@@ -27,7 +27,7 @@ stages:
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
               tags: |
-                '$(Date:yyyyMMdd)_$(Hours)$(Minutes)$(Seconds)'
+                latest
 
           - task: HelmInstaller@1
             displayName: Install Helm
