@@ -1,6 +1,7 @@
 trigger:
   - feature/azure-pipeline
 
+stages:
   - stage: test
     jobs:
       - job: test_azure_pipeline
