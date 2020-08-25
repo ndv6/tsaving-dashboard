@@ -15,7 +15,7 @@ stages:
             displayName: Login to ACR
             inputs:
               command: login
-              containerregistrytype: "Container Registry"
+              containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
 
           - task: Docker@2
