@@ -8,7 +8,7 @@ image:
   repository: baitregistry.azurecr.io/tsaving-dashboard #imagename
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "20200805" #tag img
+  tag: "latest" #tag img
 
 imagePullSecrets: []
 nameOverride: ""
