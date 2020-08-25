@@ -43,6 +43,7 @@ stages:
               chartType: filepath
               chartPath: tsaving-dashboard
               releaseName: tsaving-dashboard-testing
+              overrideValues: "latest"
               install: true
               waitForExecution: false
 
