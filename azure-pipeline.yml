@@ -25,7 +25,7 @@ stages:
               dockerfile: 'Dockerfile'
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
-              tags: ${Build.BuildId}
+              tags: "latest"
 
           - task: HelmInstaller@1
             displayName: Install Helm
