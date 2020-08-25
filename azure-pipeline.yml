@@ -21,12 +21,11 @@ stages:
             displayName: Build and Push
             inputs:
               command: buildAndPush
-              repository: baitregistry.azurecr.io/tsaving-dashboard
+              repository: tsaving-dashboard
               dockerfile: 'Dockerfile'
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
-              tags: |
-                latest
+              tags: ${Build.BuildId}
 
           - task: HelmInstaller@1
             displayName: Install Helm
