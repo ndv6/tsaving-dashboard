@@ -23,7 +23,7 @@ stages:
             inputs:
               command: buildAndPush
               repository: baitregistry.azurecr.io/tsaving-dashboard
-              dockerfile: .
+              dockerfile: 'Dockerfile'
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
               tags: |
