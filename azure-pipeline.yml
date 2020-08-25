@@ -38,5 +38,11 @@ stages:
             inputs:
               connectionType: "Kubernetes Service Connection"
               kubernetesServiceConnection: baitkubernetescluster
+              command: upgrade
+              chartType: filepath
+              chartPath: ./tsaving-dashboard/Chart.yaml
+              releaseName: tsaving-dashboard-testing
+              install: true
+              waitForExecution: false
 
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/feature/azure-pipeline')
