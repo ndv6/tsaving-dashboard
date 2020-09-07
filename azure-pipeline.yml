@@ -30,7 +30,7 @@ stages:
               dockerfile: 'Dockerfile'
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
-              tag: "latest"
+              tag: $(Build.BuildId)
 
           - task: HelmInstaller@1
             displayName: Install Helm
@@ -49,7 +49,7 @@ stages:
               chartPath: tsaving-dashboard
               chartName: tsaving-dashboard
               releaseName: tsaving-dashboard
-              overrideValues: "image.tag=latest"
+              overrideValues: "image.tag=$(Build.BuildId)"
               install: true
               waitForExecution: false
 
