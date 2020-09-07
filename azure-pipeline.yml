@@ -35,7 +35,7 @@ stages:
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
-              helmVersionToInstall: "latest"
+              helmVersionToInstall: 3.3.0
 
           - task: HelmDeploy@0
             displayName: Helm deploy
@@ -47,6 +47,7 @@ stages:
               command: upgrade
               chartType: filepath
               chartPath: tsaving-dashboard
+              chartName: tsaving-dashboard
               releaseName: tsaving-dashboard-testing
               overrideValues: "image.tag=latest"
               install: true
