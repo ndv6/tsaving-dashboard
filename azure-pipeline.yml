@@ -52,4 +52,4 @@ stages:
               install: true
               waitForExecution: false
 
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/feature/azure-pipeline')
+        condition: eq(variables['Build.SourceBranch'], 'refs/')
