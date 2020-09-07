@@ -50,7 +50,9 @@ export default function Customers() {
 
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
-    let customerToken = await getTokenCustomer(rowData.cust_email);
+    let customerToken = await getTokenCustomer(rowData.cust_email).catch(err => {
+      message.error("Error getting customer token")
+    });
 
     let hasil = await insertLog(rowData.account_num,"RESEND");
 
@@ -66,7 +68,6 @@ export default function Customers() {
           token: customerToken,
         },
       }).then((res) => {
-          
           let args = {
             message: "Resend Email",
             description: "Email has been sent to the customer.",
@@ -107,8 +108,6 @@ export default function Customers() {
       };
       notification.error(args);
     }
-        
-    
   }
 
   function getTokenCustomer(customerEmail) {
@@ -327,6 +326,7 @@ function insertLog(account_num, action){
     );
   }, [token, setListCust, paramPage, paramDate, paramSearch, setModalVisibility, isModalVisible]);
 
+  var isDisabled = true
   const columns = [
     {
       title: "Name",
@@ -392,7 +392,8 @@ function insertLog(account_num, action){
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text,setLoading)}
+                twoToneColor={text.is_verified === "Verified" && "lightgrey"}
+                onClick={() => text.is_verified === "Unverified" ? clickMailCustomer(text, setLoading) : sendAlert()}
               />
             </div>
           );
@@ -411,7 +412,8 @@ function insertLog(account_num, action){
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text, setLoading)}
+                twoToneColor={text.is_verified === "Verified" && "lightgrey"}
+                onClick={() => text.is_verified === "Unverified" ? clickMailCustomer(text, setLoading) : sendAlert()}
               />
 
               <Popconfirm
@@ -472,4 +474,8 @@ function insertLog(account_num, action){
       </div>
     </div>
   );
+}
+
+function sendAlert () {
+  message.info("User is already verified", 1)
 }
