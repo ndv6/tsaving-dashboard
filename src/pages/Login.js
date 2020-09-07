@@ -26,6 +26,8 @@ export default function Login() {
   const [loading, setLoading] = React.useState(false);
   const history = useHistory();
   const appConfig = useContext(AppContext);
+
+  console.log(config.apiHost)
   const fetchLogin = (values) => {
     setLoading(true);
     axios
