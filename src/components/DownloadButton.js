@@ -5,6 +5,7 @@ import { CSVLink } from 'react-csv';
 import { DownloadOutlined } from '@ant-design/icons';
 import FormatLogDescription from '../utils/Helper';
 import { Loader } from '../pages/CustomerProfile';
+import config from '../config/config.json';
 
 function getDownloadButton(
   token,
@@ -27,22 +28,22 @@ function getDownloadButton(
       ('0' + dateFormat[2]).slice(-2);
   }
   if (paramDate == null && paramSearch === '') {
-    url = `http://localhost:8000/v2/transactions/list/${paramPage}`;
+    url = `${config.apiHost}/v2/transactions/list/${paramPage}`
   } else if (paramDate != null && paramSearch === '') {
     url =
-      'http://localhost:8000/v2/transactions/list/d/' +
+      config.apiHost + '/v2/transactions/list/d/' +
       fixDate +
       '/' +
       paramPage;
   } else if (paramDate == null && paramSearch !== '') {
     url =
-      'http://localhost:8000/v2/transactions/list/a/' +
+      config.apiHost + '/v2/transactions/list/a/' +
       paramSearch +
       '/' +
       paramPage;
   } else if (paramDate != null && paramSearch !== '') {
     url =
-      'http://localhost:8000/v2/transactions/list/' +
+    config.apiHost + '/v2/transactions/list/' +
       paramSearch +
       '/' +
       fixDate +
@@ -72,7 +73,7 @@ function getDownloadButton(
       singleRow['dest_account'] = value.dest_account;
       singleRow['tran_amount'] = formatter.format(value.tran_amount);
       singleRow['description'] = FormatLogDescription(value.description);
-      singleRow['date'] = new Date(value.created_at).toUTCString();
+      singleRow['date'] = new Date(value.created_at).toString();
       return singleRow;
     });
     setList(tableData);
@@ -94,7 +95,7 @@ function getDownloadButton(
           singleRow['from_account'] = value.from_account;
           singleRow['dest_account'] = value.dest_account;
           singleRow['tran_amount'] = FormatLogDescription(value.description);
-          singleRow['date'] = new Date(value.created_at).toUTCString();
+          singleRow['date'] = new Date(value.created_at).toString();
           return singleRow;
         });
         setList(tableData);

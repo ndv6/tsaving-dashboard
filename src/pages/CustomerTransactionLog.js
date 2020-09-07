@@ -9,6 +9,7 @@ import FormatLogDescription from '../utils/Helper';
 import { message } from 'antd';
 import config from '../config/config.json';
 import { Reloader } from './CustomerProfile';
+import { LOGGED_OUT_MESSAGE } from '../constants/StaticText';
 
 const columns = [
   {
@@ -102,7 +103,7 @@ function GetTransaction(
         singleData.dest_account = value.dest_account;
         singleData.description = FormatLogDescription(value.description);
         singleData.tran_amount = formatter.format(value.tran_amount);
-        singleData.created_at = new Date(value.created_at).toUTCString();
+        singleData.created_at = new Date(value.created_at).toString();
         return singleData;
       });
 
@@ -174,7 +175,7 @@ export default function CustomerTransactionLog(props) {
   }
 
   if (status === 401) {
-    message.error('Your session is over, please login again', 1.5);
+    message.error(LOGGED_OUT_MESSAGE, 2);
     window.localStorage.removeItem('token');
     return <Redirect to="/admin/login" />;
   }

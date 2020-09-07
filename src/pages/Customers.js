@@ -443,6 +443,7 @@ function insertLog(account_num, action){
           <SearchBar
             className="search-content"
             onSearch={(value) => searchCust(value)}
+            onChange = {(event) => searchCust(event.target.value)}
           />
         </div>
 

@@ -9,6 +9,7 @@ import { message } from 'antd';
 import FormatLogDescription from '../utils/Helper';
 import config from '../config/config.json';
 import '../styles/TransactionLog.css';
+import { LOGGED_OUT_MESSAGE } from '../constants/StaticText';
 
 import axios from 'axios';
 
@@ -52,7 +53,7 @@ const columns = [
 
 function getTransactionLog(
   token,
-  paramPage = 1,
+  paramPage,
   paramDate = '',
   paramSearch = '',
   setListTL,
@@ -73,10 +74,10 @@ function getTransactionLog(
   }
   let url = '';
   if (paramDate == null && paramSearch === '') {
-    url = config.apiHost + '/v2/transactions/list/' + paramPage;
+    url = config.apiHost + '/v2/transactions/list/' + 1;
   } else if (paramDate != null && paramSearch === '') {
     url =
-      config.apiHost + '/v2/transactions/list/d/' + fixDate + '/' + paramPage;
+      config.apiHost + '/v2/transactions/list/d/' + fixDate + '/' + 1;
   } else if (paramDate == null && paramSearch !== '') {
     url =
       config.apiHost +
@@ -92,7 +93,7 @@ function getTransactionLog(
       '/' +
       fixDate +
       '/' +
-      paramPage;
+      1;
   }
   axios({
     headers: {
@@ -117,7 +118,7 @@ function getTransactionLog(
         singleRow['dest_account'] = value.dest_account;
         singleRow['tran_amount'] = formatter.format(value.tran_amount);
         singleRow['description'] = FormatLogDescription(value.description);
-        singleRow['created_at'] = new Date(value.created_at).toUTCString();
+        singleRow['created_at'] = new Date(value.created_at).toString();
         return singleRow;
       });
       setCountData(res.data.data.count);
@@ -127,6 +128,7 @@ function getTransactionLog(
       if (err.response === undefined) {
         message.error('Network Error please try again later', 2);
       } else if (err.response.status === 401) {
+        message.error(LOGGED_OUT_MESSAGE, 2);
         localStorage.removeItem('token');
         history.push('/admin/login');
       } else {
