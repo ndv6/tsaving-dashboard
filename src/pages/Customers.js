@@ -60,7 +60,7 @@ export default function Customers() {
           "Content-Type": "application/json",
         },
         method: "POST",
-        url: "http://localhost:8082/sendMail",
+        url: config.apiHostEmail +  "/sendMail",
         data: {
           email: rowData.cust_email,
           token: customerToken,

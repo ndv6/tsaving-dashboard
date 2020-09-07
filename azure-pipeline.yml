@@ -1,5 +1,10 @@
 trigger:
   - feature/azure-pipeline
+  - develop
+  - master
+
+pr: 
+  - develop
 
 stages:
   - stage: testing
