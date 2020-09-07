@@ -11,6 +11,7 @@ import ProfileTab from './ProfileTab';
 import CustomerTransactionLog from './CustomerTransactionLog';
 import '../styles/CustomerProfile.css';
 import config from '../config/config.json';
+import { LOGGED_OUT_MESSAGE } from '../constants/StaticText';
 
 const { Title, Text } = Typography;
 
@@ -38,7 +39,7 @@ export function reqBuilder(method, url) {
 }
 
 export function logOut() {
-  message.error('Your session is over, please login again', 1.5);
+  message.error(LOGGED_OUT_MESSAGE, 2);
   window.localStorage.removeItem('token');
   return <Redirect to="/admin/login" />;
 }

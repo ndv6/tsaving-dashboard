@@ -8,6 +8,7 @@ import config from '../config/config.json';
 import { Input, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { CompassOutlined } from '@ant-design/icons';
+import { LOGGED_OUT_MESSAGE } from '../constants/StaticText';
 
 const { Search } = Input;
 
@@ -16,10 +17,12 @@ function getActivityLog(
   setList,
   pageNumber,
   setTotaldata,
+  setLoading,
   date,
   search,
   history,
 ) {
+  setLoading(true)
   //catch untuk nge throw error. kalau success bakal ke then.
   let url = '';
   let modifDate = '';
@@ -56,13 +59,14 @@ function getActivityLog(
       //success
       console.log(res);
       const tableData = (res.data.data.list || []).map((value, index) => {
+        
         let singleRow = {};
 
         singleRow['key'] = index;
         singleRow['no'] = (pageNumber - 1) * 20 + (index + 1);
         singleRow['username'] = value.username;
         singleRow['acc_num'] = value.acc_num;
-        singleRow['action_time'] = new Date(value.action_time).toUTCString();
+        singleRow['action_time'] = new Date(value.action_time).toString();
         singleRow['action'] = value.action;
         return singleRow;
       });
@@ -74,6 +78,7 @@ function getActivityLog(
       if (err.response === undefined) {
         message.error('Network Error please try again later', 2);
       } else if (err.response.status === 401) {
+        message.error(LOGGED_OUT_MESSAGE, 2);
         localStorage.removeItem('token');
         history.push('/admin/login');
       } else {
@@ -81,11 +86,12 @@ function getActivityLog(
       }
     })
     .finally(() => {
-      // setLoading(false);
+      setLoading(false);
     });
 }
 
 export default function ActivityLog() {
+  const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
   const [totalData, setTotaldata] = useState(0);
@@ -150,7 +156,7 @@ export default function ActivityLog() {
   }
 
   React.useEffect(() => {
-    getActivityLog(token, setList, page, setTotaldata, date, search, history);
+    getActivityLog(token, setList, page, setTotaldata, setLoading, date, search, history);
   }, [setList, date, page, search]);
 
     return(
@@ -175,7 +181,8 @@ export default function ActivityLog() {
                     pagePosition="bottomRight" 
                     pageSize={20} 
                     totalData={totalData} 
-                    onPageChange={(page) => onChange(page)}/>
+                    onPageChange={(page) => onChange(page)}
+                    loading={loading}/>
                 </div>
             </div>
         </div>   
