@@ -32,6 +32,13 @@ export default function EditProfileModalContainer(props) {
     ) {
       props.setLoading(true);
 
+      if (
+        formData[Constants.FORM_FIELDS.EMAIL] !==
+          props.data[Constants.FORM_FIELDS.EMAIL]
+      ) {
+        formData[Constants.FORM_FIELDS.IS_VERIFIED] = false
+      }
+      
       Axios({
         headers: {
           [Constants.HEADER_TYPE.CONTENT_TYPE]: Constants.HEADER_CONTENTS.JSON,
