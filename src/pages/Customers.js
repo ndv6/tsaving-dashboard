@@ -33,6 +33,7 @@ export default function Customers() {
   const [paramSearch, setSearch] = useState("");
   const [paramPage, setPage] = useState(1);
   const [isModalVisible, setModalVisibility] = useState(false);
+  const [isDeleted, setCustomerDeleted] = useState(false);
   const [accnum,setAccNum] = useState(0);
   const [customerDataToBeEdited, setDataToEdit] = useState({
     account_num: "",
@@ -148,14 +149,12 @@ function insertLog(account_num, action){
             resolve(true)
           }).catch((err) => {
             reject(err);
-          }).finally(() => {
-            
           })
         })
 }
 
-  function clickDeleteCustomer(account_num, setLoading, history) {
-    setLoading(true);
+  function clickDeleteCustomer(account_num, history, setDelete) {
+    setDelete(true);
     axios({
       headers: {
         "Content-Type": "application/json",
@@ -169,9 +168,9 @@ function insertLog(account_num, action){
     })
       .then((res) => {
         message.info(res.data.message);
-        setTimeout(function () {
-          window.location.reload();
-        }, 1500);
+        // setTimeout(function () {
+          
+        // }, 1500);
       })
       .catch((err) => {
         if(err.response === undefined){
@@ -186,7 +185,7 @@ function insertLog(account_num, action){
           }
       })
       .finally(() => {
-        setLoading(false);
+        setDelete(false);
       });
   }
 
@@ -419,7 +418,7 @@ function insertLog(account_num, action){
                 placement="top"
                 title="Are you sure?"
                 onConfirm={() =>
-                  clickDeleteCustomer(record.account_num, setLoading, history)
+                  clickDeleteCustomer(record.account_num, history, setCustomerDeleted)
                 }
                 okText="Yes"
                 cancelText="No"
