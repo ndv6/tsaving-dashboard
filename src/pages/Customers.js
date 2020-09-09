@@ -198,6 +198,7 @@ function insertLog(account_num, action){
     setLoading
   ) {
     setLoading(true);
+    setListCust([]);
     axios({
       headers: {
         "Content-Type": "application/json",
@@ -251,6 +252,7 @@ function insertLog(account_num, action){
         setListCust(tableData);
       })
       .catch((err) => {
+        setListCust([]);
         if (err.response === undefined) {
           message.error("Network Error please try again later", 2);
         } else if (err.response.status === 401) {
@@ -324,6 +326,7 @@ function insertLog(account_num, action){
       setCountData,
       setLoading
     );
+    console.log("use effect triggered", isModalVisible)
   }, [token, setListCust, paramPage, paramDate, paramSearch, setModalVisibility, isModalVisible]);
 
   var isDisabled = true
