@@ -26,7 +26,11 @@ import { useHistory } from "react-router";
 
 export default function Customers() {
   const history = useHistory();
-  const [listCust, setListCust] = useState([]);
+  const [listCust, setListCust] = useState({
+    loading: false,
+    total: 0,
+    list: []
+  });
   const [countData, setCountData] = useState(0);
   const [loading, setLoading] = useState(false);
   const [paramDate, setDate] = useState(null);
@@ -194,11 +198,13 @@ function insertLog(account_num, action){
     paramDate = "",
     paramSearch = "",
     setListCust,
-    setCountData,
-    setLoading
   ) {
-    setLoading(true);
-    setListCust([]);
+    // setLoading(true);
+    setListCust({
+      loading: true,
+      data: [],
+      total: 0
+    });
     axios({
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +218,7 @@ function insertLog(account_num, action){
       },
     })
       .then((res) => {
-        setCountData(res.data.data.total);
+        // setCountData(res.data.data.total);
         const tableData = (res.data.data.list || []).map((value, index) => {
           let singleRow = {};
           let field_verif = "";
@@ -249,10 +255,20 @@ function insertLog(account_num, action){
           singleRow["action"] = dataRow;
           return singleRow;
         });
-        setListCust(tableData);
+        // setListCust(tableData);
+        setListCust({
+          loading: false,
+          data: tableData,
+          total: res.data.data.total
+        });
       })
       .catch((err) => {
-        setListCust([]);
+        // setListCust([]);
+        setListCust({
+          loading: true,
+          data: [],
+          total: 0
+        });
         if (err.response === undefined) {
           message.error("Network Error please try again later", 2);
         } else if (err.response.status === 401) {
@@ -261,9 +277,6 @@ function insertLog(account_num, action){
         } else {
           message.error("Failed to Get Data, please try again later", 2);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }
 
@@ -323,8 +336,6 @@ function insertLog(account_num, action){
       paramDate,
       paramSearch,
       setListCust,
-      setCountData,
-      setLoading
     );
     console.log("use effect triggered", isModalVisible)
   }, [token, setListCust, paramPage, paramDate, paramSearch, setModalVisibility, isModalVisible]);
@@ -451,7 +462,7 @@ function insertLog(account_num, action){
           />
         </div>
 
-        <p>Total Data : {countData}</p>
+        <p>Total Data : {listCust.total}</p>
         <div className="cl-table">
           {/* <DataTable
             current={: paramPage}
@@ -465,7 +476,7 @@ function insertLog(account_num, action){
           /> */}
           <Table
             columns={columns}
-            dataSource={listCust}
+            dataSource={listCust.data}
             size="middle"
             loading={loading}
             onChange={() => {}}
@@ -474,7 +485,7 @@ function insertLog(account_num, action){
               showSizeChanger: false,
               position: "bottomRight",
               pageSize: 20,
-              total: countData,
+              total: listCust.total,
               onChange: pageChange,
             }}
             // scroll={{ x, y }}
