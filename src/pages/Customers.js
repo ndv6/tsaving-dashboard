@@ -326,7 +326,7 @@ function insertLog(account_num, action){
       setCountData,
       setLoading
     );
-  }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible]);
+  }, [token, setListCust, paramPage, paramDate, paramSearch, setModalVisibility, isModalVisible]);
 
   const columns = [
     {
