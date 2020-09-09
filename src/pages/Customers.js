@@ -7,7 +7,7 @@ import "../styles/Customers.css";
 import EditProfileModalContainer from "../components/EditProfileModalContainer";
 import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Popconfirm, message } from "antd";
+import { Popconfirm, message, Table } from "antd";
 import * as Constants from "../constants/Constants";
 import config from "../config/config.json";
 
@@ -453,8 +453,8 @@ function insertLog(account_num, action){
 
         <p>Total Data : {countData}</p>
         <div className="cl-table">
-          <DataTable
-            current={paramPage}
+          {/* <DataTable
+            current={: paramPage}
             columns={columns}
             data={listCust}
             pagePosition="bottomRight"
@@ -462,6 +462,22 @@ function insertLog(account_num, action){
             totalData={countData}
             onPageChange={(page) => pageChange(page)}
             loading={loading}
+          /> */}
+          <Table
+            columns={columns}
+            dataSource={listCust}
+            size="middle"
+            loading={loading}
+            onChange={() => {}}
+            pagination={{
+              current: paramPage,
+              showSizeChanger: false,
+              position: "bottomRight",
+              pageSize: 20,
+              total: countData,
+              onChange: pageChange,
+            }}
+            // scroll={{ x, y }}
           />
           <EditProfileModalContainer
             setData={setDataToEdit}
