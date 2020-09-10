@@ -7,7 +7,7 @@ import "../styles/Customers.css";
 import EditProfileModalContainer from "../components/EditProfileModalContainer";
 import { notification } from "antd";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Popconfirm, message } from "antd";
+import { Popconfirm, message, Table } from "antd";
 import * as Constants from "../constants/Constants";
 import config from "../config/config.json";
 import { AppContext } from '../context/AppContext';
@@ -26,7 +26,11 @@ import { useHistory } from "react-router";
 
 export default function Customers() {
   const history = useHistory();
-  const [listCust, setListCust] = useState([]);
+  const [listCust, setListCust] = useState({
+    loading: false,
+    total: 0,
+    list: []
+  });
   const [countData, setCountData] = useState(0);
   const [loading, setLoading] = useState(false);
   const [paramDate, setDate] = useState(null);
@@ -50,7 +54,9 @@ export default function Customers() {
 
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
-    let customerToken = await getTokenCustomer(rowData.cust_email)
+    let customerToken = await getTokenCustomer(rowData.cust_email).catch(err => {
+      message.error("Error getting customer token")
+    });
 
     let hasil = await insertLog(rowData.account_num,"RESEND");
 
@@ -60,13 +66,12 @@ export default function Customers() {
           "Content-Type": "application/json",
         },
         method: "POST",
-        url: "http://localhost:8082/sendMail",
+        url: config.apiHostEmail +  "/sendMail",
         data: {
           email: rowData.cust_email,
           token: customerToken,
         },
       }).then((res) => {
-          
           let args = {
             message: "Resend Email",
             description: "Email has been sent to the customer.",
@@ -107,8 +112,6 @@ export default function Customers() {
       };
       notification.error(args);
     }
-        
-    
   }
 
   function getTokenCustomer(customerEmail) {
@@ -196,10 +199,13 @@ function insertLog(username, account_num, action){
     paramDate = "",
     paramSearch = "",
     setListCust,
-    setCountData,
-    setLoading
   ) {
-    setLoading(true);
+    // setLoading(true);
+    setListCust({
+      loading: true,
+      data: [],
+      total: 0
+    });
     axios({
       headers: {
         "Content-Type": "application/json",
@@ -213,7 +219,7 @@ function insertLog(username, account_num, action){
       },
     })
       .then((res) => {
-        setCountData(res.data.data.total);
+        // setCountData(res.data.data.total);
         const tableData = (res.data.data.list || []).map((value, index) => {
           let singleRow = {};
           let field_verif = "";
@@ -250,9 +256,20 @@ function insertLog(username, account_num, action){
           singleRow["action"] = dataRow;
           return singleRow;
         });
-        setListCust(tableData);
+        // setListCust(tableData);
+        setListCust({
+          loading: false,
+          data: tableData,
+          total: res.data.data.total
+        });
       })
       .catch((err) => {
+        // setListCust([]);
+        setListCust({
+          loading: true,
+          data: [],
+          total: 0
+        });
         if (err.response === undefined) {
           message.error("Network Error please try again later", 2);
         } else if (err.response.status === 401) {
@@ -261,9 +278,6 @@ function insertLog(username, account_num, action){
         } else {
           message.error("Failed to Get Data, please try again later", 2);
         }
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }
 
@@ -323,11 +337,11 @@ function insertLog(username, account_num, action){
       paramDate,
       paramSearch,
       setListCust,
-      setCountData,
-      setLoading
     );
-  }, [token, setListCust, paramPage, paramDate, paramSearch, isModalVisible, isDeleted]);
+    console.log("use effect triggered", isModalVisible)
+  }, [token, setListCust, paramPage, paramDate, paramSearch, setModalVisibility, isModalVisible]);
 
+  var isDisabled = true
   const columns = [
     {
       title: "Name",
@@ -393,7 +407,8 @@ function insertLog(username, account_num, action){
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text,setLoading)}
+                twoToneColor={text.is_verified === "Verified" && "lightgrey"}
+                onClick={() => text.is_verified === "Unverified" ? clickMailCustomer(text, setLoading) : sendAlert()}
               />
             </div>
           );
@@ -412,8 +427,8 @@ function insertLog(username, account_num, action){
 
               <MailTwoTone
                 className="cus-icon-action"
-                onClick={() => clickMailCustomer(text, setLoading)}
-                twoToneColor="grey"
+                twoToneColor={text.is_verified === "Verified" && "lightgrey"}
+                onClick={() => text.is_verified === "Unverified" ? clickMailCustomer(text, setLoading) : sendAlert()}
               />
 
               <Popconfirm
@@ -448,10 +463,10 @@ function insertLog(username, account_num, action){
           />
         </div>
 
-        <p>Total Data : {countData}</p>
+        <p>Total Data : {listCust.total}</p>
         <div className="cl-table">
-          <DataTable
-            current={paramPage}
+          {/* <DataTable
+            current={: paramPage}
             columns={columns}
             data={listCust}
             pagePosition="bottomRight"
@@ -459,6 +474,22 @@ function insertLog(username, account_num, action){
             totalData={countData}
             onPageChange={(page) => pageChange(page)}
             loading={loading}
+          /> */}
+          <Table
+            columns={columns}
+            dataSource={listCust.data}
+            size="middle"
+            loading={loading}
+            onChange={() => {}}
+            pagination={{
+              current: paramPage,
+              showSizeChanger: false,
+              position: "bottomRight",
+              pageSize: 20,
+              total: listCust.total,
+              onChange: pageChange,
+            }}
+            // scroll={{ x, y }}
           />
           <EditProfileModalContainer
             setData={setDataToEdit}
@@ -474,4 +505,8 @@ function insertLog(username, account_num, action){
       </div>
     </div>
   );
+}
+
+function sendAlert () {
+  message.info("User is already verified", 1)
 }

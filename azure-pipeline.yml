@@ -1,5 +1,10 @@
 trigger:
   - feature/azure-pipeline
+  - develop
+  - master
+
+pr: 
+  - develop
 
 stages:
   - stage: testing
@@ -25,12 +30,12 @@ stages:
               dockerfile: 'Dockerfile'
               containerregistrytype: 'Container Registry'
               dockerRegistryEndpoint: baitregistry
-              tags: "latest"
+              tag: $(Build.BuildId)
 
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
-              helmVersionToInstall: "latest"
+              helmVersionToInstall: 3.3.0
 
           - task: HelmDeploy@0
             displayName: Helm deploy
@@ -42,9 +47,10 @@ stages:
               command: upgrade
               chartType: filepath
               chartPath: tsaving-dashboard
-              releaseName: tsaving-dashboard-testing
-              overrideValues: "image.tag=latest"
+              chartName: tsaving-dashboard
+              releaseName: tsaving-dashboard
+              overrideValues: "image.tag=$(Build.BuildId)"
               install: true
               waitForExecution: false
 
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/feature/azure-pipeline')
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/')

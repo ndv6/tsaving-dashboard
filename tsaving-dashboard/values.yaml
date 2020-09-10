@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: baitregistry.azurecr.io/tsaving-dashboard #imagename
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "" #tag img
 
@@ -81,3 +81,5 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
