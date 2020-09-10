@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import NavigationBar from "../components/NavigationBar";
 import SearchBar from "../components/SearchBar";
 import DataTable from "../components/DataTable";
@@ -10,7 +10,7 @@ import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Popconfirm, message } from "antd";
 import * as Constants from "../constants/Constants";
 import config from "../config/config.json";
-
+import { AppContext } from '../context/AppContext';
 import axios from "axios";
 
 import {
@@ -50,7 +50,7 @@ export default function Customers() {
 
   async function clickMailCustomer(rowData, setLoading) {
     setLoading(true);
-    let customerToken = await getTokenCustomer(rowData.cust_email);
+    let customerToken = await getTokenCustomer(rowData.cust_email)
 
     let hasil = await insertLog(rowData.account_num,"RESEND");
 
@@ -133,12 +133,13 @@ export default function Customers() {
     });
   }
 
-function insertLog(account_num, action){
+function insertLog(username, account_num, action){
   return new Promise(function (resolve, reject) {
         axios({
             method : "POST",
             url : config.apiHost+"/v2/log/insert",
             data :{
+                username : username,
                 acc_num : account_num,
                 action : action,
             },
@@ -168,9 +169,9 @@ function insertLog(account_num, action){
     })
       .then((res) => {
         message.info(res.data.message);
-        // setTimeout(function () {
-          
-        // }, 1500);
+        setTimeout(function () {
+          window.location.reload();
+        }, 1000);
       })
       .catch((err) => {
         if(err.response === undefined){
@@ -412,6 +413,7 @@ function insertLog(account_num, action){
               <MailTwoTone
                 className="cus-icon-action"
                 onClick={() => clickMailCustomer(text, setLoading)}
+                twoToneColor="grey"
               />
 
               <Popconfirm
